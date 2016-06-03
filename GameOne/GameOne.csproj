@@ -38,7 +38,10 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Source\Entities\Characters\Character.cs" />
     <Compile Include="Source\Entities\Entity.cs" />
+    <Compile Include="Source\Entities\Interfaces\IPosition.cs" />
+    <Compile Include="Source\Entities\Items\Item.cs" />
     <Compile Include="Source\Level\Level.cs" />
     <Compile Include="Source\Level\Tile.cs" />
     <Compile Include="Source\Loop.cs" />
