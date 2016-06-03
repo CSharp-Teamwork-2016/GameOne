@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace GameOne
+namespace GameOne.Source
 {
 #if WINDOWS || LINUX
     /// <summary>
     /// The main class.
     /// </summary>
-    public static class Program
+    public static class Startup
     {
         /// <summary>
         /// The main entry point for the application.
@@ -14,7 +14,7 @@ namespace GameOne
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new MonoInit())
                 game.Run();
         }
     }
