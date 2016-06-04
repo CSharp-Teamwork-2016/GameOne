@@ -2,6 +2,8 @@
 {
 	public enum ItemType
 	{
-
-	}
+        PotionHealth,
+        BadItem,
+        EndKey
+    }
 }
