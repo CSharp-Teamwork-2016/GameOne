@@ -24,29 +24,33 @@
 
         public int XpLevel { get; set; }
 
-        public void changeXPLevel(int level)
+        public void ChangeXPLevel(int level)
         {
-            // TODO
+            this.XpLevel += level;
         }
 
-        public void addHealthPotion(int health)
-        {   
-            // TODO
-        }
-
-        public void drinkPotion(int health)
+        public void AddHealthPotion(int health)
         {
-            // TODO
+            this.HealthPotions++;
         }
 
+        public void DrinkPotion(int health)
+        {
+            if (this.HealthPotions > 0)
+            {
+                this.HealthPotions--;
+                this.Health += 20;
+            }
+        }
+            
         public void ApplyItemEffectsToHealth(int health)
         {
-            // TODO
+            this.Health += health;
         }
 
         public void ApplyItemEffectsToAmmo(int ammo)
         {
-            // TODO
+            this.Ammo += ammo;
         }
 
         public override void Update()
@@ -56,7 +60,7 @@
 
 		public override void Render()
 		{
-
+            // TODO
 		}
 	}
 }

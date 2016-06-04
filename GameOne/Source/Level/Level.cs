@@ -4,6 +4,7 @@
     using System.Collections.Generic;
 
     using GameOne.Source.Entities;
+    using GameOne.Source.Enumerations;
 
     public class Level
 	{
@@ -49,6 +50,7 @@
         {
             int items = 1 + (int)Math.Sqrt(currentLevel);
             Random rnd = new Random();
+            Tile a = new Tile(1,2, TileType.Door);
 
             // TODO
         }

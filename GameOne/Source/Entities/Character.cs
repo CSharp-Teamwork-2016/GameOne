@@ -18,9 +18,19 @@
 		}
 
 
-		public int Health { get { return health; } }
+		public int Health
+		{
+		    get
+		    {
+		        return health;
+		    }
+		    set
+		    {
+		        this.health = value;
+		    }
+		}
 
-		public int Damage { get { return damage; } }
+	    public int Damage { get { return damage; } }
 
 		public AttackType AttackType { get { return attackType; } }
 
@@ -33,5 +43,15 @@
         {
             enemy.health -= this.damage;
         }
+
+	    public bool isDead()
+	    {
+	        if (this.Health <= 0)
+	        {
+                return false;
+            }
+
+	        return true;
+	    }
     }
 }
