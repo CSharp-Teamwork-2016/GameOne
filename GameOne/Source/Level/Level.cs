@@ -50,8 +50,6 @@
         {
             int items = 1 + (int)Math.Sqrt(currentLevel);
             Random rnd = new Random();
-            Tile a = new Tile(1,2, TileType.Door);
-
             // TODO
         }
     }
