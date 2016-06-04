@@ -27,9 +27,29 @@
             this.tileType = tileType;
         }
 
+        public TileType GetTileType()
+        {
+            return this.tileType;
+        }
+
         public void SetTransparancy()
         {
             this.transparent = true;
+        }
+
+        public double GetX()
+        {
+            return this.x;
+        }
+
+        public double GetY()
+        {
+            return this.y;
+        }
+
+        public bool IsTransparent()
+        {
+            return this.transparent;
         }
     }
 }
