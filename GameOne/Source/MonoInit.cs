@@ -23,15 +23,15 @@ namespace GameOne.Source
 
 		protected override void Initialize()
 		{
-			loop = new Loop(Keyboard.GetState(), Mouse.GetState());
-
 			base.Initialize();
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			loop = new Loop(Keyboard.GetState(), Mouse.GetState());
+			Renderer.Output.Init(spriteBatch, GraphicsDevice);
 		}
 
 		protected override void LoadContent()
 		{
-			spriteBatch = new SpriteBatch(GraphicsDevice);
-			loop.SetFont(Content.Load<SpriteFont>("Font"));
+			Renderer.Output.SetFont(Content.Load<SpriteFont>("Font"));
 		}
 
 		protected override void UnloadContent()
@@ -54,7 +54,7 @@ namespace GameOne.Source
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
 			spriteBatch.Begin();
-			loop.Render(spriteBatch);
+			loop.Render();
 			spriteBatch.End();
 
 			base.Draw(gameTime);

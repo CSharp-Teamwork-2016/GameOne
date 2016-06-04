@@ -17,12 +17,19 @@ namespace GameOne.Tests
 		public static void Init()
 		{
 			tests.Add("SAMPLE", Sample);
+			tests.Add("SHAPES", DrawShapes);
 			// Добавете нови тестове тук. Името на метода се пише без скоби, по този начин го изпращате по рефенция
 		}
 
 		static void Sample()
 		{
 			Source.Loop.DebugInfo += "This is a test";
+		}
+
+		static void DrawShapes()
+		{
+			Source.Renderer.Output.FillRect(60, 60, 100, 200);
+			Source.Renderer.Output.StrokeRect(80, 90, 200, 100);
 		}
 	}
 }

@@ -55,6 +55,8 @@
     <Compile Include="Source\Level\Tile.cs" />
     <Compile Include="Source\Loop.cs" />
     <Compile Include="Source\MonoInit.cs" />
+    <Compile Include="Source\Renderer\Primitive.cs" />
+    <Compile Include="Source\Renderer\Output.cs" />
     <Compile Include="Source\Renderer\Spritesheet.cs" />
     <Compile Include="Source\Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

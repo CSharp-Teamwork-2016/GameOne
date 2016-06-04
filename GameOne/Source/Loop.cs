@@ -2,8 +2,8 @@
 {
 	using System;
 	using Microsoft.Xna.Framework;
-	using Microsoft.Xna.Framework.Graphics;
 	using Microsoft.Xna.Framework.Input;
+	using Renderer;
 
 	// Game contents
 	// Level
@@ -15,7 +15,6 @@
 		static string debugInfo;
 		static string console;
 		private Input input;
-		private SpriteFont font;
 
 		public Loop(KeyboardState keyboardState, MouseState mouseState)
 		{
@@ -28,11 +27,6 @@
 
 		public static string Console {  get { return console; } set { console = value; } }
 
-		internal void SetFont(SpriteFont spriteFont)
-		{
-			font = spriteFont;
-		}
-
 		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState)
 		{
 			input.Update(keyboardState, mouseState);
@@ -41,20 +35,20 @@
 			// Debug info
 			debugInfo = string.Format($"Framerate {(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}");
 			debugInfo += string.Format($"Mouse position: {mouseState.X}, {mouseState.Y}{Environment.NewLine}");
+#endif
+		}
+
+		internal void Render()
+		{
+#if DEBUG
 			// Execute tests
 			foreach (Action test in Tests.ListOf.activeTests)
 			{
 				test();
 			}
-#endif
-		}
-
-		internal void Render(SpriteBatch spriteBatch)
-		{
-#if DEBUG
 			// Output debug info
-			spriteBatch.DrawString(font, debugInfo, new Vector2(10, 10), Color.Black);
-			spriteBatch.DrawString(font, string.Format($"~/> {console}_"), new Vector2(10, 450), Color.Black);
+			Output.DrawText(debugInfo, 10, 10, Color.Black);
+			Output.DrawText(string.Format($"~/> {console}_"), 10, 450, Color.Black);
 #endif
 		}
 	}
