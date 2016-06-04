@@ -5,13 +5,13 @@
 
     public class Enemy : Character
     {
-		private EnemyType type;
+        private EnemyType type;
         private int xpAward;
 
         public Enemy(EnemyType type, double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, int xpAward, AttackType attackType = AttackType.Melee)
             : base(x, y, direction, radius, sprite, health, damage, attackType)
         {
-			this.type = type;
+            this.type = type;
             this.xpAward = xpAward;
         }
 
@@ -20,9 +20,9 @@
             throw new System.NotImplementedException();
         }
 
-		public override void Render()
-		{
-
-		}
+        public override void Render()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

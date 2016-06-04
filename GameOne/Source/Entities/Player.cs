@@ -1,10 +1,9 @@
 ﻿namespace GameOne.Source.Entities
 {
-	using System;
-	using GameOne.Source.Enumerations;
-	using GameOne.Source.Renderer;
+    using GameOne.Source.Enumerations;
+    using GameOne.Source.Renderer;
 
-	public class Player : Character
+    public class Player : Character
     {
         private int xpLevel = 1;
         private const int healthPotions = 0;
@@ -17,7 +16,7 @@
             this.HealthPotions = healthPotions;
             this.Ammo = ammo;
         }
-            
+
         public int Ammo { get; set; }
 
         public int HealthPotions { get; set; }
@@ -42,7 +41,7 @@
                 this.Health += 20;
             }
         }
-            
+
         public void ApplyItemEffectsToHealth(int health)
         {
             this.Health += health;
@@ -58,9 +57,9 @@
             // TODO
         }
 
-		public override void Render()
-		{
+        public override void Render()
+        {
             // TODO
-		}
-	}
+        }
+    }
 }
