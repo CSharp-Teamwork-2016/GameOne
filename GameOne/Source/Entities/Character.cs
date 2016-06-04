@@ -1,26 +1,29 @@
 ﻿namespace GameOne.Source.Entities
 {
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Renderer;
+	using GameOne.Source.Enumerations;
+	using GameOne.Source.Renderer;
 
-    using Microsoft.Xna.Framework;
+	public abstract class Character : Model
+	{
+		protected int health;
+		protected int damage;
+		protected AttackType attackType;
 
-    public abstract class Character : Model
-    {
-        protected Character(string id, Vector2 position, string direction, double radius, Spritesheet sprite, State state, int health, int damage, AttackType attackType)
-            : base(id, position, direction, radius, sprite, state)
-        {
-            this.Health = health;
-            this.Damage = damage;
-            this.AttackType = attackType;
-        }
+		protected Character(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType = AttackType.Melee)
+			: base(x, y, direction, radius, sprite)
+		{
+			this.health = health;
+			this.damage = damage;
+			this.attackType = attackType;
+		}
 
 
-        public int Health { get; set; }
+		public int Health { get { return health; } }
 
-        public int Damage { get; set; }
+		public int Damage { get { return damage; } }
 
-        public AttackType AttackType { get; set; }
+		public AttackType AttackType { get { return attackType; } }
 
-    }
+		// TODO damage taking methods, attacking methods
+	}
 }

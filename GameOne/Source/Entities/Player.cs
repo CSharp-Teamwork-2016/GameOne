@@ -1,20 +1,17 @@
 ﻿namespace GameOne.Source.Entities
 {
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Renderer;
+	using System;
+	using GameOne.Source.Enumerations;
+	using GameOne.Source.Renderer;
 
-    using Microsoft.Xna.Framework;
-
-    public class Player : Character
+	public class Player : Character
     {
-        private const int health = 100;
-        private const int damage = 10;
-        private const int xpLevel = 1;
+        private int xpLevel = 1;
         private const int healthPotions = 0;
         private const int ammo = 200;
 
-        public Player(string id, Vector2 position, string direction, double radius, Spritesheet sprite, State state, AttackType attackType)
-            : base(id, position, direction, radius, sprite, state, health, damage, attackType)
+        public Player(double x, double y, double direction)
+            : base(x, y, direction, 0.25, new Spritesheet(), 100, 10, AttackType.Melee)
         {
             this.XpLevel = xpLevel;
             this.HealthPotions = healthPotions;
@@ -56,5 +53,10 @@
         {
             // TODO
         }
-    }
+
+		public override void Render()
+		{
+
+		}
+	}
 }

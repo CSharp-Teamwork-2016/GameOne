@@ -3,24 +3,26 @@
     using GameOne.Source.Enumerations;
     using GameOne.Source.Renderer;
 
-    using Microsoft.Xna.Framework;
-
     public class Enemy : Character
     {
+		private EnemyType type;
+        private int xpAward;
 
-        private const int xpAward = 1;
-
-        public Enemy(string id, Vector2 position, string direction, double radius, Spritesheet sprite, State state, int health, int damage, AttackType attackType)
-            : base(id, position, direction, radius, sprite, state, health, damage, attackType)
+        public Enemy(EnemyType type, double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, int xpAward, AttackType attackType = AttackType.Melee)
+            : base(x, y, direction, radius, sprite, health, damage, attackType)
         {
-            this.XPAward = xpAward;
+			this.type = type;
+            this.xpAward = xpAward;
         }
-
-        public int XPAward { get; set; }
 
         public override void Update()
         {
             throw new System.NotImplementedException();
         }
+
+		public override void Render()
+		{
+
+		}
     }
 }

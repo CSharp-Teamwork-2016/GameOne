@@ -1,33 +1,37 @@
 ﻿namespace GameOne.Source.Entities
 {
     using GameOne.Source.Enumerations;
+	using GameOne.Source.Interfaces;
     using GameOne.Source.Renderer;
 
-    using Microsoft.Xna.Framework;
-
-    public abstract class Model : Entity
+    public abstract class Model : Entity, IRenderable
     {
-        protected Model(string id, Vector2 position, string direction, double radius, Spritesheet sprite, State state)
-            : base(id)
+		protected System.Windows.Vector position;
+		protected double direction;
+		protected double radius;
+		protected Spritesheet sprite;
+		protected State state;
+
+        protected Model(double x, double y, double direction, double radius, Spritesheet sprite)
         {
-            this.Position = position;
-            this.Direction = direction;
-            this.Radius = radius;
-            this.Sprite = sprite;
-            this.State = state;
+            position = new System.Windows.Vector(x, y);
+            this.direction = direction;
+            this.radius = radius;
+            this.sprite = sprite;
+            state = State.IDLE;
         }
         
 
-        public Vector2 Position { get; set; }
+        public double X { get { return position.X; } }
 
-        public string Direction { get; set; }
+		public double Y { get { return position.Y; } }
 
-        public double Radius { get; set; }
+		public double Direction { get { return direction; } set { direction = value; } }
 
-        public Spritesheet Sprite { get; set; }
+        public double Radius { get { return radius; } set { radius = value; } }
 
-        public State State { get; set; }
+        public State State { get { return state; } }
 
-        public abstract override void Update();
+		public abstract void Render();
     }
 }

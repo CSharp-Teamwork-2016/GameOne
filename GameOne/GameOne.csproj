@@ -38,10 +38,18 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Source\Entities\Characters\Character.cs" />
+    <Compile Include="Source\Entities\Character.cs" />
+    <Compile Include="Source\Entities\Enemy.cs" />
     <Compile Include="Source\Entities\Entity.cs" />
-    <Compile Include="Source\Entities\Interfaces\IPosition.cs" />
-    <Compile Include="Source\Entities\Items\Item.cs" />
+    <Compile Include="Source\Entities\Item.cs" />
+    <Compile Include="Source\Entities\Model.cs" />
+    <Compile Include="Source\Entities\Player.cs" />
+    <Compile Include="Source\Enumerations\AttackType.cs" />
+    <Compile Include="Source\Enumerations\EnemyType.cs" />
+    <Compile Include="Source\Enumerations\GameState.cs" />
+    <Compile Include="Source\Enumerations\ItemType.cs" />
+    <Compile Include="Source\Enumerations\State.cs" />
+    <Compile Include="Source\Interfaces\IRenderable.cs" />
     <Compile Include="Source\Level\Level.cs" />
     <Compile Include="Source\Level\Tile.cs" />
     <Compile Include="Source\Loop.cs" />
@@ -57,6 +65,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />

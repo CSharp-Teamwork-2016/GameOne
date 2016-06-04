@@ -2,6 +2,7 @@
 {
     public enum AttackType
     {
-        // TODO
+        Melee,
+		Ranged
     }
 }
