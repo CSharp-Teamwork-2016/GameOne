@@ -49,6 +49,7 @@
     <Compile Include="Source\Enumerations\GameState.cs" />
     <Compile Include="Source\Enumerations\ItemType.cs" />
     <Compile Include="Source\Enumerations\State.cs" />
+    <Compile Include="Source\Input.cs" />
     <Compile Include="Source\Interfaces\IRenderable.cs" />
     <Compile Include="Source\Level\Level.cs" />
     <Compile Include="Source\Level\Tile.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Source\Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\UI\UserInterface.cs" />
+    <Compile Include="Tests\ListOf.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
