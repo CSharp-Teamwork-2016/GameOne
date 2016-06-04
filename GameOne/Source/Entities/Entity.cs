@@ -1,17 +1,17 @@
 ﻿namespace GameOne.Source.Entities
 {
-    public abstract class Entity
+	/// Base class for all non-geometry (non-Tile, see Level) objects
+	public abstract class Entity
     {
-        // Base class for all non-geometry (non-Tile, see Level) objects
-        // All objects have location fields
-        // Interfaces to be implemented by child-classes IMovable, IRenderable
+		private static ulong nextId = 0;
+		private ulong id;
 
-        protected Entity(string id)
+        protected Entity()
         {
-            this.Id = id;
+			id = nextId++;
         }
 
-        public string Id { get; private set; }
+		public ulong ID { get { return id; } }
 
         public abstract void Update();
     }
