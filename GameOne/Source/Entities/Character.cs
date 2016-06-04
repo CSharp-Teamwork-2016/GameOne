@@ -24,6 +24,14 @@
 
 		public AttackType AttackType { get { return attackType; } }
 
-		// TODO damage taking methods, attacking methods
-	}
+	    public void TakeDamage(int damage)
+	    {
+	        this.health -= damage;
+	    }
+        
+        public void ProduceAttack(Enemy enemy)
+        {
+            enemy.health -= this.damage;
+        }
+    }
 }
