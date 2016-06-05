@@ -50,6 +50,11 @@
             {
                 return this.attackType;
             }
+
+            protected set
+            {
+                this.attackType = value;
+            }
         }
 
         public void TakeDamage(int damage)
@@ -64,12 +69,14 @@
 
         public bool IsDead()
         {
-            if (this.Health <= 0)
-            {
-                return false;
-            }
+            return this.Health <= 0;
 
-            return true;
+            //if (this.Health <= 0)
+            //{
+            //    return false;
+            //}
+
+            //return true;
         }
     }
 }

@@ -45,6 +45,7 @@
     <Compile Include="Source\Entities\Model.cs" />
     <Compile Include="Source\Entities\Player.cs" />
     <Compile Include="Source\Enumerations\AttackType.cs" />
+    <Compile Include="Source\Enumerations\EnemyRank.cs" />
     <Compile Include="Source\Enumerations\EnemyType.cs" />
     <Compile Include="Source\Enumerations\GameState.cs" />
     <Compile Include="Source\Enumerations\ItemType.cs" />

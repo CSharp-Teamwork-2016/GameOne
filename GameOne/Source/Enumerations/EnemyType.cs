@@ -1,10 +1,15 @@
 ﻿namespace GameOne.Source.Enumerations
 {
     public enum EnemyType
-	{
+    {
         Zombie,
         Crabs,
         Monster,
-        Dragon
+        Dragon,
+        Orc,
+        Ghoul,
+        Skeleton,
+        Scavanger,
+        Wraith
     }
 }

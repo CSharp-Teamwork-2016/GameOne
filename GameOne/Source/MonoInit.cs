@@ -1,63 +1,63 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-namespace GameOne.Source
+﻿namespace GameOne.Source
 {
-	public class MonoInit : Game
-	{
-		// Main loop
-		Loop loop;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
-		// Graphics context
-		private GraphicsDeviceManager graphics;
-		SpriteBatch spriteBatch;
+    public class MonoInit : Game
+    {
+        // Main loop
+        private Loop loop;
 
-		public MonoInit()
-		{
-			graphics = new GraphicsDeviceManager(this);
-			Content.RootDirectory = "Content";
+        // Graphics context
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
 
-			IsMouseVisible = true;
-		}
+        public MonoInit()
+        {
+            this.graphics = new GraphicsDeviceManager(this);
+            this.Content.RootDirectory = "Content";
 
-		protected override void Initialize()
-		{
-			base.Initialize();
-			spriteBatch = new SpriteBatch(GraphicsDevice);
-			loop = new Loop(Keyboard.GetState(), Mouse.GetState());
-			Renderer.Output.Init(spriteBatch, GraphicsDevice);
-		}
+            this.IsMouseVisible = true;
+        }
 
-		protected override void LoadContent()
-		{
-			Renderer.Output.SetFont(Content.Load<SpriteFont>("Font"));
-		}
+        protected override void Initialize()
+        {
+            base.Initialize();
+            this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
+            this.loop = new Loop(Keyboard.GetState(), Mouse.GetState());
+            Renderer.Output.Init(this.spriteBatch, this.GraphicsDevice);
+        }
 
-		protected override void UnloadContent()
-		{
-			// TODO: Unload any non ContentManager content here
-		}
+        protected override void LoadContent()
+        {
+            Renderer.Output.SetFont(this.Content.Load<SpriteFont>("Font"));
+        }
 
-		protected override void Update(GameTime gameTime)
-		{
-			if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-				Exit();
-			
-			loop.Update(gameTime, Keyboard.GetState(), Mouse.GetState());
+        protected override void UnloadContent()
+        {
+            // TODO: Unload any non ContentManager content here
+        }
 
-			base.Update(gameTime);
-		}
+        protected override void Update(GameTime gameTime)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 
-		protected override void Draw(GameTime gameTime)
-		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+            this.loop.Update(gameTime, Keyboard.GetState(), Mouse.GetState());
 
-			spriteBatch.Begin();
-			loop.Render();
-			spriteBatch.End();
+            base.Update(gameTime);
+        }
 
-			base.Draw(gameTime);
-		}
-	}
+        protected override void Draw(GameTime gameTime)
+        {
+            this.GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            this.spriteBatch.Begin();
+            this.loop.Render();
+            this.spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+    }
 }

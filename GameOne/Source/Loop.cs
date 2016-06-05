@@ -20,16 +20,36 @@
 		{
 			debugInfo = "";
 			console = "";
-			input = new Input(keyboardState, mouseState);
+			this.input = new Input(keyboardState, mouseState);
 		}
 
-		public static string DebugInfo { get { return debugInfo; } set { debugInfo = value; } }
+	    public static string DebugInfo
+	    {
+	        get
+	        {
+	            return debugInfo;
+	        }
+	        set
+	        {
+	            debugInfo = value;
+	        }
+	    }
 
-		public static string Console {  get { return console; } set { console = value; } }
+	    public static string Console
+	    {
+	        get
+	        {
+	            return console;
+	        }
+	        set
+	        {
+	            console = value;
+	        }
+	    }
 
 		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState)
 		{
-			input.Update(keyboardState, mouseState);
+			this.input.Update(keyboardState, mouseState);
 
 #if DEBUG
 			// Debug info

@@ -94,7 +94,7 @@
                 // produce other items "no EndKey" randomly
                 Tile currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
                 int enumEnemyValue = rnd.Next(1, 5);
-                Enemy enemy = new Enemy((EnemyType)enumEnemyValue, currentTile.GetX(), currentTile.GetY(), 0, 2, new Spritesheet(), 50, 5, 0); // hardcoded values for enemy
+                Enemy enemy = new Enemy((EnemyType)enumEnemyValue, currentTile.GetX(), currentTile.GetY(), 0, 2, new Spritesheet(), 50, 5, 0, AttackType.Melee); // hardcoded values for enemy
                 this.entities.Add(enemy);
             }
         }
