@@ -17,7 +17,7 @@
 
         private static int nextId;
 
-        private float x, y;
+        private double x, y;
 
         private TileType tileType;
 
@@ -25,7 +25,7 @@
 
         private string texture;
 
-        public Tile(float x, float y, TileType tileType, string textureName)
+        public Tile(double x, double y, TileType tileType, string textureName)
         {
             this.x = x;
             this.y = y;
@@ -49,12 +49,12 @@
             this.transparent = true;
         }
 
-        public float GetX()
+        public double GetX()
         {
             return this.x;
         }
 
-        public float GetY()
+        public double GetY()
         {
             return this.y;
         }

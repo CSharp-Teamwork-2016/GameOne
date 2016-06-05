@@ -6,11 +6,17 @@
 
     using GameOne.Source.Entities;
     using GameOne.Source.Enumerations;
+    using GameOne.Source.Factories;
     using GameOne.Source.Renderer;
 
     public class Level
     {
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
+
+        private int width;
+
+        private int height;
+        
         private Player player;
 
         private List<Entity> entities;
@@ -21,17 +27,63 @@
 
         private static int currentLevel = 1;
 
-        public Level()
+        public Level(int width, int height)
         {
+            this.width = width;
+            this.height = height;
             this.player = new Player(0, 0, 0f);
             this.entities = new List<Entity>();
             this.geometry = new List<Tile>();
-            this.geometryMap = new Dictionary<long, Tile>();
             this.entities.Add(this.player);
+            this.GenerateGeometry();
+            this.geometryMap = new Dictionary<long, Tile>();
+        }
+
+        private void GenerateGeometry()
+        {
+            foreach (Tile tile in this.geometry)
+            {
+                long uniqueKey = this.GetUniqueKey(tile.GetX(), tile.GetY());
+                this.geometryMap.Add(uniqueKey, tile);
+            }
+        }
+
+       
+        public void ProcessWalls()
+        {
+            for (int col = 0; col < this.width; col++)
+            {
+                for (int row = 0; row < this.height; row++)
+                {
+                    if (col == 0 || col == this.width - 1 || row == 0 || row == this.height - 1)
+                    {
+                        long uniqueKey = this.GetUniqueKey(col, row);
+                        if (!this.geometryMap.ContainsKey(uniqueKey))
+                        {
+                            this.geometryMap.Add(uniqueKey, TileFactory.getTile(col, row, TileType.Wall));
+                        }
+                    }
+                    else
+                    {
+                        long uniqueKey = this.GetUniqueKey(col, row);
+                        if (!this.geometryMap.ContainsKey(uniqueKey))
+                        {
+                            this.geometryMap.Add(uniqueKey, TileFactory.getTile(col, row, TileType.Floor));
+                        }
+                    }
+                }
+            }
+        }
+
+        private long GetUniqueKey(double col, double row)
+        {
+            return (long)((this.width * row + col));
         }
 
         public void NextLevel()
         {
+            currentLevel++;
+
             // TODO
         }
 
