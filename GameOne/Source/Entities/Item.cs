@@ -3,11 +3,11 @@
     using GameOne.Source.Enumerations;
     using GameOne.Source.Renderer;
 
-    public abstract class Item : Model
+    public class Item : Model
     {
         private ItemType type;
 
-        protected Item(ItemType type, double x, double y, double direction, double radius, Spritesheet sprite)
+        public Item(ItemType type, double x, double y, double direction, double radius, Spritesheet sprite)
             : base(x, y, direction, radius, sprite)
         {
             this.type = type;
@@ -19,6 +19,16 @@
             {
                 return this.type;
             }
+        }
+
+        public override void Update()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
