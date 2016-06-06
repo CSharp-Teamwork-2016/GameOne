@@ -27,22 +27,35 @@
 
 		public static string Console {  get { return console; } set { console = value; } }
 
+		public static bool ShowFPS { get; set; }
+
 		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState)
 		{
 			input.Update(keyboardState, mouseState);
 
+			// TODO update objects
+
 #if DEBUG
+			// Execute tests
+			foreach (Action test in Tests.ListOf.OnUpdate)
+			{
+				test();
+			}
 			// Debug info
-			debugInfo = string.Format($"Framerate {(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}");
-			debugInfo += string.Format($"Mouse position: {mouseState.X}, {mouseState.Y}{Environment.NewLine}");
+			debugInfo = "";
+			if (ShowFPS)
+				debugInfo += string.Format($"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}");
 #endif
 		}
 
 		internal void Render()
 		{
+
+			// TODO render objects
+
 #if DEBUG
 			// Execute tests
-			foreach (Action test in Tests.ListOf.activeTests)
+			foreach (Action test in Tests.ListOf.OnDraw)
 			{
 				test();
 			}

@@ -1,8 +1,6 @@
 ﻿namespace GameOne.Source
 {
 	using Microsoft.Xna.Framework.Input;
-	using System.Collections.Generic;
-	using System;
 
 	public class Input
 	{
@@ -14,7 +12,7 @@
 			kbPrevious = keyboardState;
 			msPrevious = mouseState;
 #if DEBUG
-			Tests.ListOf.Init();
+			Tests.Developer.Init();
 #endif
 		}
 
@@ -64,10 +62,7 @@
 							break;
 #if DEBUG
 						case Keys.Enter:
-							if (Tests.ListOf.tests.ContainsKey(Loop.Console))
-							{
-								Tests.ListOf.activeTests.Add(Tests.ListOf.tests[Loop.Console]);
-							}
+							Tests.Developer.Exec(Loop.Console);
 							Loop.Console = "";
 							break;
 #endif

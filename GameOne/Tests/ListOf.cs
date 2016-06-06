@@ -12,7 +12,8 @@ namespace GameOne.Tests
 	public class ListOf
 	{
 		public static Dictionary<string, Action> tests = new Dictionary<string, Action>();
-		public static List<Action> activeTests = new List<Action>();
+		public static List<Action> OnDraw = new List<Action>();
+		public static List<Action> OnUpdate = new List<Action>();
 
 		public static void Init()
 		{
@@ -23,13 +24,19 @@ namespace GameOne.Tests
 
 		static void Sample()
 		{
-			Source.Loop.DebugInfo += "This is a test";
+			Source.Loop.DebugInfo += string.Format($"This is a test{Environment.NewLine}");
+		}
+
+		public static void ShowFPS()
+		{
+			Source.Loop.ShowFPS = !Source.Loop.ShowFPS;
 		}
 
 		static void DrawShapes()
 		{
-			Source.Renderer.Output.FillRect(60, 60, 100, 200);
-			Source.Renderer.Output.StrokeRect(80, 90, 200, 100);
+			//Source.Renderer.Output.FillRect(60, 60, 100, 200);
+			//Source.Renderer.Output.StrokeRect(80, 90, 200, 100);
+			Source.Renderer.Output._FillEllipse(0, 0, 100, 200, Microsoft.Xna.Framework.Color.Black);
 		}
 	}
 }
