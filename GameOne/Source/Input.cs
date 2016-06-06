@@ -1,6 +1,7 @@
 ﻿namespace GameOne.Source
 {
 	using Microsoft.Xna.Framework.Input;
+	using Enumerations;
     
     public class Input
     {
@@ -16,15 +17,31 @@
 #endif
         }
 
-        internal void Update(KeyboardState keyboardState, MouseState mouseState)
+        internal UserInput Update(KeyboardState keyboardState, MouseState mouseState)
         {
+			UserInput result = UserInput.Empty;
             foreach (Keys key in keyboardState.GetPressedKeys())
             {
+				switch (key)
+				{
+					case Keys.Up:
+						result = UserInput.MoveUp;
+						break;
+					case Keys.Down:
+						result = UserInput.MoveDown;
+						break;
+					case Keys.Left:
+						result = UserInput.MoveLeft;
+						break;
+					case Keys.Right:
+						result = UserInput.MoveRight;
+						break;
+				}
                 if (this.kbPrevious.IsKeyUp(key))
                 {
                     switch (key)
                     {
-                        case Keys.Back:
+						case Keys.Back:
                             if (Loop.Console.Length > 0)
                             {
                                 Loop.Console = Loop.Console.Substring(0, Loop.Console.Length - 1);
@@ -78,6 +95,7 @@
 
             this.kbPrevious = keyboardState;
             this.msPrevious = mouseState;
+			return result;
         }
     }
 }

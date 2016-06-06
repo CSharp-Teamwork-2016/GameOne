@@ -391,9 +391,9 @@
 		/// <param name="width">Bounding rectangle width</param>
 		/// <param name="height">Bounding rectangle height</param>
 		/// <param name="color">Fill color</param>
-		public static void FillOval(int left, int top, int width, int height, Color color)
+		public static void FillOval(double left, double top, double width, double height, Color color)
 		{
-			_FillOval(left, top, width, height, color);
+			_FillOval((int) left, (int)top, (int)width, (int)height, color);
 		}
 		///
 		/// <summary>
@@ -403,9 +403,9 @@
 		/// <param name="top">Bounding rectangle top offset</param>
 		/// <param name="width">Bounding rectangle width</param>
 		/// <param name="height">Bounding rectangle height</param>
-		public static void FillOval(int left, int top, int width, int height)
+		public static void FillOval(double left, double top, double width, double height)
 		{
-			_FillOval(left, top, width, height, brushColor);
+			_FillOval((int)left, (int)top, (int)width, (int)height, brushColor);
 		}
 		///
 		/// <summary>
@@ -484,9 +484,9 @@
 		/// <param name="height">Bounding rectangle height</param>
 		/// <param name="color">Outline color</param>
 		/// <param name="stroke">Outline thickness</param>
-		public static void StrokeOval(int left, int top, int width, int height, Color color, int stroke)
+		public static void StrokeOval(double left, double top, double width, double height, Color color, double stroke)
 		{
-			_StrokeOval(left, top, width, height, color, stroke);
+			_StrokeOval((int)left, (int)top, (int)width, (int)height, color, (int)stroke);
 		}
 		///
 		/// <summary>
@@ -497,9 +497,9 @@
 		/// <param name="width">Bounding rectangle width</param>
 		/// <param name="height">Bounding rectangle height</param>
 		/// <param name="color">Outline color</param>
-		public static void StrokeOval(int left, int top, int width, int height, Color color)
+		public static void StrokeOval(double left, double top, double width, double height, Color color)
 		{
-			_StrokeOval(left, top, width, height, color, penWidth);
+			_StrokeOval((int)left, (int)top, (int)width, (int)height, color, penWidth);
 		}
 		///
 		/// <summary>
@@ -510,9 +510,9 @@
 		/// <param name="width">Bounding rectangle width</param>
 		/// <param name="height">Bounding rectangle height</param>
 		/// <param name="stroke">Outline thickness</param>
-		public static void StrokeOval(int left, int top, int width, int height, int stroke)
+		public static void StrokeOval(double left, double top, double width, double height, double stroke)
 		{
-			_StrokeOval(left, top, width, height, penColor, stroke);
+			_StrokeOval((int)left, (int)top, (int)width, (int)height, penColor, (int)stroke);
 		}
 		///
 		/// <summary>
@@ -522,9 +522,9 @@
 		/// <param name="top">Bounding rectangle top offset</param>
 		/// <param name="width">Bounding rectangle width</param>
 		/// <param name="height">Bounding rectangle height</param>
-		public static void StrokeOval(int left, int top, int width, int height)
+		public static void StrokeOval(double left, double top, double width, double height)
 		{
-			_StrokeOval(left, top, width, height, penColor, penWidth);
+			_StrokeOval((int)left, (int)top, (int)width, (int)height, penColor, penWidth);
 		}
 
 		private static int Index(int x, int y, int width)

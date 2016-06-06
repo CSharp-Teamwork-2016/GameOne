@@ -35,11 +35,27 @@
 			}
 		}
 
-        public Level(int width, int height)
+		public List<Entity> Entities
+		{
+			get
+			{
+				return entities;
+			}
+		}
+
+		public Player Player
+		{
+			get
+			{
+				return player;
+			}
+		}
+
+		public Level(int width, int height)
         {
             this.width = width;
             this.height = height;
-            this.player = new Player(0, 0, 0f);
+            this.player = new Player(5, 5, 0.0);
             this.entities = new List<Entity>();
             this.geometry = new List<Tile>();
             this.entities.Add(this.player);

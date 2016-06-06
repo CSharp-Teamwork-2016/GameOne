@@ -1,6 +1,7 @@
 ﻿namespace GameOne.Source
 {
 	using System;
+	using System.Linq;
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Input;
 	using Renderer;
@@ -57,9 +58,15 @@
 
 		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState)
 		{
-			this.input.Update(keyboardState, mouseState);
+			debugInfo = "";
+			level.Player.Input(this.input.Update(keyboardState, mouseState));
 
 			// TODO update objects
+			foreach (Entities.Entity entity in level.Entities)
+			{
+				debugInfo += "Updating...\n";
+				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
+			}
 
 #if DEBUG
 			// Execute tests
@@ -68,7 +75,6 @@
 				test();
 			}
 			// Debug info
-			debugInfo = "";
 			if (ShowFPS)
 				debugInfo += string.Format($"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}");
 #endif
@@ -79,6 +85,11 @@
 
 			// TODO render objects
 			level.Geometry.ForEach(tile => Primitive.DrawTile(tile));
+			foreach (Entities.Model model in level.Entities.Where(e => e is Entities.Model))
+			{
+				debugInfo += "Rendering...\n";
+				Primitive.DrawModel(model);
+			}
 
 #if DEBUG
 			// Execute tests
@@ -87,7 +98,7 @@
 				test();
 			}
 			// Output debug info
-			Output.DrawText(debugInfo, 10, 10, Color.Black);
+			Output.DrawText(debugInfo, 660, 10, Color.Black);
 			Output.DrawText(string.Format($"~/> {console}_"), 10, 450, Color.Black);
 #endif
 		}

@@ -6,7 +6,7 @@
 
     public abstract class Model : Entity, IRenderable
     {
-        private System.Windows.Vector position;
+        protected System.Windows.Vector position;
         private double direction;
         private double radius;
         private Spritesheet sprite;

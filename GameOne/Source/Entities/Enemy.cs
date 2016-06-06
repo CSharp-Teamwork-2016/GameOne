@@ -16,7 +16,7 @@
             this.AttackType = attackType;
         }
 
-        public override void Update()
+        public override void Update(double time)
         {
             throw new System.NotImplementedException();
         }

@@ -19,6 +19,6 @@
             }
         }
 
-        public abstract void Update();
+        public abstract void Update(double time);
     }
 }
