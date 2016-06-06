@@ -1,4 +1,4 @@
-﻿namespace GameOne.Source.Level
+﻿namespace GameOne.Source.World
 {
 	using System.Collections.Generic;
 

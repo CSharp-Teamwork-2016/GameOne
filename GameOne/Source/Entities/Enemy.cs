@@ -18,12 +18,12 @@
 
         public override void Update(double time)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public override void Render()
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

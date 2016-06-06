@@ -5,6 +5,7 @@
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Input;
 	using Renderer;
+	using Enumerations;
 
 	// Game contents
 	// Level
@@ -14,7 +15,7 @@
 	public class Loop
 	{
 		// Game objects
-		Level.Level level;
+		World.Level level;
 
 		// Debug
 		static string debugInfo;
@@ -23,7 +24,7 @@
 
 		public Loop(KeyboardState keyboardState, MouseState mouseState)
 		{
-			level = new Level.Level(0, 0);
+			level = new World.Level(0, 0);
 
 			debugInfo = "";
 			console = "";
@@ -67,6 +68,8 @@
 				debugInfo += "Updating...\n";
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
 			}
+			World.Physics.CollisionResolution(level.Entities.Where(entity => entity is Entities.Model).Select(entity => (Entities.Model)entity).ToList());
+			World.Physics.BoundsCheck(level.Entities.Where(entity => entity is Entities.Model).Select(entity => (Entities.Model)entity).ToList(), level.Geometry.Where(tile => tile.GetTileType() == TileType.Wall).ToList());
 
 #if DEBUG
 			// Execute tests

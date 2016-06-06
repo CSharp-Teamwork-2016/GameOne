@@ -21,13 +21,28 @@
             this.state = State.IDLE;
         }
 
+		public System.Windows.Vector Position
+		{
+			get
+			{
+				return position;
+			}
+			set
+			{
+				position = value;
+			}
+		}
 
-        public double X
+		public double X
         {
             get
             {
                 return this.position.X;
             }
+			set
+			{
+				position.X = value;
+			}
         }
 
         public double Y
@@ -36,7 +51,11 @@
             {
                 return this.position.Y;
             }
-        }
+			set
+			{
+				position.Y = value;
+			}
+		}
 
         public double Direction
         {

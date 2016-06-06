@@ -1,4 +1,4 @@
-﻿namespace GameOne.Source.Level
+﻿namespace GameOne.Source.World
 {
     using System;
     using System.Collections.Generic;
@@ -59,7 +59,9 @@
             this.entities = new List<Entity>();
             this.geometry = new List<Tile>();
             this.entities.Add(this.player);
-            this.GenerateGeometry();
+			this.entities.Add(new Enemy(EnemyType.Zombie, 8, 8, 0, 0.3, new Spritesheet(), 100, 10, 0, AttackType.Melee));
+			this.entities.Add(new Enemy(EnemyType.Zombie, 15, 12, 0, 0.3, new Spritesheet(), 100, 10, 0, AttackType.Melee));
+			this.GenerateGeometry();
             this.geometryMap = new Dictionary<long, Tile>();
         }
 
@@ -142,7 +144,7 @@
             Tile currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
 
             // produce EndKey
-            Item itemEndKey = new Item(ItemType.EndKey, currentTile.GetX(), currentTile.GetY(), 0, 1, new Spritesheet());
+            Item itemEndKey = new Item(ItemType.EndKey, currentTile.X, currentTile.Y, 0, 1, new Spritesheet());
             this.entities.Add(itemEndKey);
 
             for (int i = 0; i < items; i++)
@@ -150,7 +152,7 @@
                 // produce other items "no EndKey"
                 currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
                 int enumItemValue = rnd.Next(1, 3);
-                Item item = new Item((ItemType)enumItemValue, currentTile.GetX(), currentTile.GetY(), 0, 1, new Spritesheet());
+                Item item = new Item((ItemType)enumItemValue, currentTile.X, currentTile.Y, 0, 1, new Spritesheet());
                 this.entities.Add(item);
             }
         }
@@ -172,7 +174,7 @@
                 // produce other items "no EndKey" randomly
                 Tile currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
                 int enumEnemyValue = rnd.Next(1, 5);
-                Enemy enemy = new Enemy((EnemyType)enumEnemyValue, currentTile.GetX(), currentTile.GetY(), 0, 2, new Spritesheet(), 50, 5, 0, AttackType.Melee); // hardcoded values for enemy
+                Enemy enemy = new Enemy((EnemyType)enumEnemyValue, currentTile.X, currentTile.Y, 0, 2, new Spritesheet(), 50, 5, 0, AttackType.Melee); // hardcoded values for enemy
                 this.entities.Add(enemy);
             }
         }

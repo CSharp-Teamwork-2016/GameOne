@@ -1,7 +1,7 @@
 ﻿namespace GameOne.Source.Factories
 {
     using Enumerations;
-    using Level;
+    using World;
 
     public class TileFactory
     {

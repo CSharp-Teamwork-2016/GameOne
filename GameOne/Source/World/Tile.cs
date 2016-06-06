@@ -1,4 +1,4 @@
-﻿namespace GameOne.Source.Level
+﻿namespace GameOne.Source.World
 {
     using GameOne.Source.Enumerations;
 
@@ -49,14 +49,20 @@
             this.transparent = true;
         }
 
-        public double GetX()
+        public double X
         {
+			get
+			{
             return this.x;
+			}
         }
 
-        public double GetY()
+        public double Y
         {
+			get
+			{
             return this.y;
+			}
         }
 
         public bool IsTransparent()
