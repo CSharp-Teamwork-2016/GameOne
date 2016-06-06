@@ -323,66 +323,208 @@
 		}
 		///
 		/// <summary>
-		/// Draw solid circle
+		/// Draw solid oval/ellipse
 		/// </summary>
-		private static void _FillCircle(int left, int top, int width, int height, Color color)
+		private static void _FillOval(int left, int top, int width, int height, Color color)
 		{
-			//Color[] data = new Color[width * height];
-			//Texture2D rect = new Texture2D(GD, width, height);
-			//for (int i = 0; i < data.Length; i++)
-			//	data[i] = Color.Transparent;
+			int cx = left + width / 2;
+			int cy = top + height / 2;
+			int a = width / 2;
+			int b = height / 2;
+			int a2 = a * a;
+			int b2 = b * b;
+			int twoa2 = 2 * a2;
+			int twob2 = 2 * b2;
+			int p;
+			int x = 0;
+			int y = b;
+			int px = 0;
+			int py = twoa2 * y;
 
-			int xc = left + width / 2;
-			int yc = top + height / 2;
-			int a2 = width * width;
-			int b2 = height * height;
-			int fa2 = 4 * a2, fb2 = 4 * b2;
-			int x, y, sigma;
 
-			/* first half */
-			for (x = 0, y = height, sigma = 2 * b2 + a2 * (1 - 2 * height); b2 * x <= a2 * y; x++)
+			/* Plot the initial point in each quadrant. */
+			_DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
+			_DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
+
+			/* Region 1 */
+			p = (int)(b2 - (a2 * b) + (0.25 * a2));
+			while (px < py)
 			{
-				/*
-				data[Index(xc + x, yc + y, width)] = color;
-				data[Index(xc - x, yc + y, width)] = color;
-				data[Index(xc + x, yc - y, width)] = color;
-				data[Index(xc - x, yc - y, width)] = color;
-				*/
-				_FillRect(xc + x, yc + y, 1, 1, Color.Black);
-				_FillRect(xc - x, yc + y, 1, 1, Color.Black);
-				_FillRect(xc + x, yc - y, 1, 1, Color.Black);
-				_FillRect(xc - x, yc - y, 1, 1, Color.Black);
-				if (sigma >= 0)
+				x++;
+				px += twob2;
+				if (p < 0)
+					p += b2 + px;
+				else
 				{
-					sigma += fa2 * (1 - y);
 					y--;
+					py -= twoa2;
+					p += b2 + px - py;
 				}
-				sigma += b2 * ((4 * x) + 6);
+				_DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
+				_DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
 			}
 
-			/* second half */
-			for (x = width, y = 0, sigma = 2 * a2 + b2 * (1 - 2 * width); a2 * y <= b2 * x; y++)
+			/* Region 2 */
+			p = (int)(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
+			while (y > 0)
 			{
-				/*
-				data[Index(xc + x, yc + y, width)] = color;
-				data[Index(xc - x, yc + y, width)] = color;
-				data[Index(xc + x, yc - y, width)] = color;
-				data[Index(xc - x, yc - y, width)] = color;
-				*/
-				_FillRect(xc + x, yc + y, 1, 1, Color.Black);
-				_FillRect(xc - x, yc + y, 1, 1, Color.Black);
-				_FillRect(xc + x, yc - y, 1, 1, Color.Black);
-				_FillRect(xc - x, yc - y, 1, 1, Color.Black);
-				if (sigma >= 0)
+				y--;
+				py -= twoa2;
+				if (p > 0)
+					p += a2 - py;
+				else
 				{
-					sigma += fb2 * (1 - x);
-					x--;
+					x++;
+					px += twob2;
+					p += a2 - py + px;
 				}
-				sigma += a2 * ((4 * y) + 6);
+				_DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
+				_DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
+			}
+		}
+		///
+		/// <summary>
+		/// Draw a solid oval inside the rectangle, specified by the given coordinates and color
+		/// </summary>
+		/// <param name="left">Bounding rectangle left offset</param>
+		/// <param name="top">Bounding rectangle top offset</param>
+		/// <param name="width">Bounding rectangle width</param>
+		/// <param name="height">Bounding rectangle height</param>
+		/// <param name="color">Fill color</param>
+		public static void FillOval(int left, int top, int width, int height, Color color)
+		{
+			_FillOval(left, top, width, height, color);
+		}
+		///
+		/// <summary>
+		/// Draw a solid oval inside the rectangle, specified by the given coordinates and current BrushColor
+		/// </summary>
+		/// <param name="left">Bounding rectangle left offset</param>
+		/// <param name="top">Bounding rectangle top offset</param>
+		/// <param name="width">Bounding rectangle width</param>
+		/// <param name="height">Bounding rectangle height</param>
+		public static void FillOval(int left, int top, int width, int height)
+		{
+			_FillOval(left, top, width, height, brushColor);
+		}
+		///
+		/// <summary>
+		/// Draw oval/ellipse outline
+		/// </summary>
+		private static void _StrokeOval(int left, int top, int width, int height, Color color, int stroke)
+		{
+			int cx = left + width / 2;
+			int cy = top + height / 2;
+			int a = width / 2;
+			int b = height / 2;
+			int a2 = a * a;
+			int b2 = b * b;
+			int twoa2 = 2 * a2;
+			int twob2 = 2 * b2;
+			int p;
+			int x = 0;
+			int y = b;
+			int px = 0;
+			int py = twoa2 * y;
+
+
+			/* Plot the initial point in each quadrant. */
+			_DrawPoint(cx + x, cy + y, stroke, color);
+			_DrawPoint(cx - x, cy + y, stroke, color);
+			_DrawPoint(cx + x, cy - y, stroke, color);
+			_DrawPoint(cx - x, cy - y, stroke, color);
+
+			/* Region 1 */
+			p = (int)(b2 - (a2 * b) + (0.25 * a2));
+			while (px < py)
+			{
+				x++;
+				px += twob2;
+				if (p < 0)
+					p += b2 + px;
+				else
+				{
+					y--;
+					py -= twoa2;
+					p += b2 + px - py;
+				}
+				_DrawPoint(cx + x, cy + y, stroke, color);
+				_DrawPoint(cx - x, cy + y, stroke, color);
+				_DrawPoint(cx + x, cy - y, stroke, color);
+				_DrawPoint(cx - x, cy - y, stroke, color);
 			}
 
-			//rect.SetData(data);
-			//batch.Draw(rect, new Rectangle(left, top, width, height), Color.White);
+			/* Region 2 */
+			p = (int)(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
+			while (y > 0)
+			{
+				y--;
+				py -= twoa2;
+				if (p > 0)
+					p += a2 - py;
+				else
+				{
+					x++;
+					px += twob2;
+					p += a2 - py + px;
+				}
+				_DrawPoint(cx + x, cy + y, stroke, color);
+				_DrawPoint(cx - x, cy + y, stroke, color);
+				_DrawPoint(cx + x, cy - y, stroke, color);
+				_DrawPoint(cx - x, cy - y, stroke, color);
+			}
+		}
+		///
+		/// <summary>
+		/// Draw the outline of the oval insid the rectangle, specified by the given coordinates, color and thickness
+		/// </summary>
+		/// <param name="left">Bounding rectangle left offset</param>
+		/// <param name="top">Bounding rectangle top offset</param>
+		/// <param name="width">Bounding rectangle width</param>
+		/// <param name="height">Bounding rectangle height</param>
+		/// <param name="color">Outline color</param>
+		/// <param name="stroke">Outline thickness</param>
+		public static void StrokeOval(int left, int top, int width, int height, Color color, int stroke)
+		{
+			_StrokeOval(left, top, width, height, color, stroke);
+		}
+		///
+		/// <summary>
+		/// Draw the outline of the oval insid the rectangle, specified by the given coordinates, color and current PenWidth
+		/// </summary>
+		/// <param name="left">Bounding rectangle left offset</param>
+		/// <param name="top">Bounding rectangle top offset</param>
+		/// <param name="width">Bounding rectangle width</param>
+		/// <param name="height">Bounding rectangle height</param>
+		/// <param name="color">Outline color</param>
+		public static void StrokeOval(int left, int top, int width, int height, Color color)
+		{
+			_StrokeOval(left, top, width, height, color, penWidth);
+		}
+		///
+		/// <summary>
+		/// Draw the outline of the oval insid the rectangle, specified by the given coordinates, thickness and current PenColor
+		/// </summary>
+		/// <param name="left">Bounding rectangle left offset</param>
+		/// <param name="top">Bounding rectangle top offset</param>
+		/// <param name="width">Bounding rectangle width</param>
+		/// <param name="height">Bounding rectangle height</param>
+		/// <param name="stroke">Outline thickness</param>
+		public static void StrokeOval(int left, int top, int width, int height, int stroke)
+		{
+			_StrokeOval(left, top, width, height, penColor, stroke);
+		}
+		///
+		/// <summary>
+		/// Draw the outline of the oval insid the rectangle, specified by the given coordinates and current PenColor and PenWidth
+		/// </summary>
+		/// <param name="left">Bounding rectangle left offset</param>
+		/// <param name="top">Bounding rectangle top offset</param>
+		/// <param name="width">Bounding rectangle width</param>
+		/// <param name="height">Bounding rectangle height</param>
+		public static void StrokeOval(int left, int top, int width, int height)
+		{
+			_StrokeOval(left, top, width, height, penColor, penWidth);
 		}
 
 		private static int Index(int x, int y, int width)
