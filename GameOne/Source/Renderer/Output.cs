@@ -1,27 +1,60 @@
 ﻿namespace GameOne.Source.Renderer
 {
-	using Microsoft.Xna.Framework;
-	using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
-	public class Output
-	{
-		private static SpriteBatch batch;
-		private static GraphicsDevice GD;
-		private static SpriteFont font;
+    public class Output
+    {
+        private static SpriteBatch batch;
+        private static GraphicsDevice GD;
+        private static SpriteFont font;
+        private static int penWidth;
+        private static Color penColor;
+        private static Color brushColor;
 
 		#region Properties
 		/// <summary>
 		/// Width of the stroke made with operations that draw outlines of shapes
 		/// </summary>
-		public static int PenWidth { get; set; }
+		public static int PenWidth
+		{
+			get
+			{
+				return penWidth;
+			}
+			set
+			{
+				penWidth = value;
+			}
+		}
 		/// <summary>
 		/// Color of the stroke made with operations that draw outlines of shapes
 		/// </summary>
-		public static Color PenColor { get; set; }
+		public static Color PenColor
+		{
+			get
+			{
+				return penColor;
+			}
+			set
+			{
+				penColor = value;
+			}
+		}
 		/// <summary>
 		/// Fill color used with operations that draw solid shapes
 		/// </summary>
-		public static Color BrushColor { get; set; }
+		public static Color BrushColor
+		{
+			get
+			{
+				return brushColor;
+			}
+			set
+			{
+				brushColor = value;
+			}
+		}
 		#endregion
 		///
 		/// <summary>
@@ -65,7 +98,7 @@
 		/// <param name="y">Top offset</param>
 		public static void DrawText(string text, double x, double y)
 		{
-			_DrawText(text, (float)x, (float)y, PenColor);
+			_DrawText(text, (float)x, (float)y, penColor);
 		}
 		///
 		/// <summary>
@@ -104,7 +137,7 @@
 		/// <param name="height">Rectangle height</param>
 		public static void FillRect(double left, double top, double width, double height)
 		{
-			_FillRect((int)left, (int)top, (int)width, (int)height, BrushColor);
+			_FillRect((int)left, (int)top, (int)width, (int)height, brushColor);
 		}
 		///
 		/// <summary>
@@ -165,7 +198,7 @@
 		/// <param name="color">Outline color</param>
 		public static void StrokeRect(double left, double top, double width, double height, Color color)
 		{
-			_StrokeRect((int)left, (int)top, (int)width, (int)height, color, PenWidth);
+			_StrokeRect((int)left, (int)top, (int)width, (int)height, color, penWidth);
 		}
 		///
 		/// <summary>
@@ -178,7 +211,7 @@
 		/// <param name="stroke">Outline thickness</param>
 		public static void StrokeRect(double left, double top, double width, double height, int stroke)
 		{
-			_StrokeRect((int)left, (int)top, (int)width, (int)height, PenColor, stroke);
+			_StrokeRect((int)left, (int)top, (int)width, (int)height, penColor, stroke);
 		}
 		///
 		/// <summary>
@@ -190,7 +223,7 @@
 		/// <param name="height">Rectangle height</param>
 		public static void StrokeRect(double left, double top, double width, double height)
 		{
-			_StrokeRect((int)left, (int)top, (int)width, (int)height, PenColor, PenWidth);
+			_StrokeRect((int)left, (int)top, (int)width, (int)height, penColor, penWidth);
 		}
 		///
 		/// <summary>

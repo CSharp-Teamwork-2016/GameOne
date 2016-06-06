@@ -15,12 +15,12 @@ namespace GameOne.Tests
 		public static List<Action> OnDraw = new List<Action>();
 		public static List<Action> OnUpdate = new List<Action>();
 
-		public static void Init()
-		{
-			tests.Add("SAMPLE", Sample);
-			tests.Add("SHAPES", DrawShapes);
-			// Добавете нови тестове тук. Името на метода се пише без скоби, по този начин го изпращате по рефенция
-		}
+        public static void Init()
+        {
+            tests.Add("SAMPLE", Sample);
+            tests.Add("SHAPES", DrawShapes);
+            // Добавете нови тестове тук. Името на метода се пише без скоби, по този начин го изпращате по рефенция
+        }
 
 		static void Sample()
 		{
@@ -32,11 +32,10 @@ namespace GameOne.Tests
 			Source.Loop.ShowFPS = !Source.Loop.ShowFPS;
 		}
 
-		static void DrawShapes()
-		{
-			//Source.Renderer.Output.FillRect(60, 60, 100, 200);
-			//Source.Renderer.Output.StrokeRect(80, 90, 200, 100);
-			Source.Renderer.Output._FillEllipse(0, 0, 100, 200, Microsoft.Xna.Framework.Color.Black);
-		}
-	}
+        public static void DrawShapes()
+        {
+            Source.Renderer.Output.FillRect(60, 60, 100, 200);
+            Source.Renderer.Output.StrokeRect(80, 90, 200, 100);
+        }
+    }
 }

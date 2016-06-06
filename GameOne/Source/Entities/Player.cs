@@ -6,15 +6,15 @@
     public class Player : Character
     {
         private int xpLevel = 1;
-        private const int healthPotions = 0;
-        private const int ammo = 200;
+        private const int InitialHealthPotions = 0;
+        private const int InitialAmmo = 200;
 
         public Player(double x, double y, double direction)
             : base(x, y, direction, 0.25, new Spritesheet(), 100, 10, AttackType.Melee)
         {
             this.XpLevel = xpLevel;
-            this.HealthPotions = healthPotions;
-            this.Ammo = ammo;
+            this.HealthPotions = InitialHealthPotions;
+            this.Ammo = InitialAmmo;
         }
 
         public int Ammo { get; set; }

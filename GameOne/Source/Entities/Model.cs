@@ -6,31 +6,71 @@
 
     public abstract class Model : Entity, IRenderable
     {
-        protected System.Windows.Vector position;
-        protected double direction;
-        protected double radius;
-        protected Spritesheet sprite;
-        protected State state;
+        private System.Windows.Vector position;
+        private double direction;
+        private double radius;
+        private Spritesheet sprite;
+        private State state;
 
         protected Model(double x, double y, double direction, double radius, Spritesheet sprite)
         {
-            position = new System.Windows.Vector(x, y);
+            this.position = new System.Windows.Vector(x, y);
             this.direction = direction;
             this.radius = radius;
             this.sprite = sprite;
-            state = State.IDLE;
+            this.state = State.IDLE;
         }
 
 
-        public double X { get { return position.X; } }
+        public double X
+        {
+            get
+            {
+                return this.position.X;
+            }
+        }
 
-        public double Y { get { return position.Y; } }
+        public double Y
+        {
+            get
+            {
+                return this.position.Y;
+            }
+        }
 
-        public double Direction { get { return direction; } set { direction = value; } }
+        public double Direction
+        {
+            get
+            {
+                return this.direction;
+            }
 
-        public double Radius { get { return radius; } set { radius = value; } }
+            set
+            {
+                this.direction = value;
+            }
+        }
 
-        public State State { get { return state; } }
+        public double Radius
+        {
+            get
+            {
+                return this.radius;
+            }
+
+            set
+            {
+                this.radius = value;
+            }
+        }
+
+        public State State
+        {
+            get
+            {
+                return this.state;
+            }
+        }
 
         public abstract void Render();
     }
