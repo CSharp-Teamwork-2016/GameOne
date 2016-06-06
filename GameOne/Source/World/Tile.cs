@@ -15,7 +15,7 @@
 
         private int id;
 
-        private static int nextId;
+        private static int nextId = 0; // needs to be initialized to 0
 
         private double x, y;
 
@@ -25,13 +25,13 @@
 
         private string texture;
 
-        public Tile(double x, double y, TileType tileType, string textureName)
+        public Tile(double x, double y, TileType tileType)
         {
             this.x = x;
             this.y = y;
             this.id = nextId++;
             this.tileType = tileType;
-            this.texture = textureName;
+            //sthis.texture = textureName;
         }
 
         public void SetTileType(TileType tileType)

@@ -1,16 +1,18 @@
 ﻿namespace GameOne.Source.Renderer
 {
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
+	using Microsoft.Xna.Framework;
+	using Microsoft.Xna.Framework.Graphics;
+	using System;
 
-    public class Output
-    {
-        private static SpriteBatch batch;
-        private static GraphicsDevice GD;
-        private static SpriteFont font;
-        private static int penWidth;
-        private static Color penColor;
-        private static Color brushColor;
+	public class Output
+	{
+		private static SpriteBatch batch;
+		private static GraphicsDevice GD;
+		private static SpriteFont font;
+		private static int penWidth;
+		private static Color penColor;
+		private static Color brushColor;
+		private static Texture2D pixel;
 
 		#region Properties
 		/// <summary>
@@ -69,6 +71,8 @@
 			PenWidth = 1;
 			PenColor = Color.Black;
 			BrushColor = Color.White;
+			pixel = new Texture2D(GraphicsDevice, 1, 1);
+			pixel.SetData(new[] { Color.White });
 		}
 		///
 		/// <summary>
@@ -78,6 +82,18 @@
 		public static void SetFont(SpriteFont newFont)
 		{
 			font = newFont;
+		}
+		///
+		/// <summary>
+		/// Draw square point
+		/// </summary>
+		/// <param name="x">Center left offset</param>
+		/// <param name="y">Center top offset</param>
+		/// <param name="size">Diameter</param>
+		private static void _DrawPoint(int x, int y, int size, Color color)
+		{
+			Rectangle rec = new Rectangle(x - size / 2, y - size / 2, size, size);
+			batch.Draw(pixel, rec, color);
 		}
 		///
 		/// <summary>
@@ -116,16 +132,106 @@
 		}
 		///
 		/// <summary>
+		/// Draw line
+		/// </summary>
+		private static void _DrawLine(int x1, int y1, int x2, int y2, Color color, int width)
+		{
+			bool steep = Math.Abs(y2 - y1) > Math.Abs(x2 - x1);
+			if (steep)
+			{
+				int t;
+				t = x1; // swap x0 and y0
+				x1 = y1;
+				y1 = t;
+				t = x2; // swap x1 and y1
+				x2 = y2;
+				y2 = t;
+			}
+			if (x1 > x2)
+			{
+				int t;
+				t = x1; // swap x0 and x1
+				x1 = x2;
+				x2 = t;
+				t = y1; // swap y0 and y1
+				y1 = y2;
+				y2 = t;
+			}
+			int dx = x2 - x1;
+			int dy = Math.Abs(y2 - y1);
+			int error = dx / 2;
+			int ystep = (y1 < y2) ? 1 : -1;
+			int y = y1;
+			for (int x = x1; x <= x2; x++)
+			{
+				_DrawPoint((steep ? y : x), (steep ? x : y), width, color);
+				error = error - dy;
+				if (error < 0)
+				{
+					y += ystep;
+					error += dx;
+				}
+			}
+		}
+		///
+		/// <summary>
+		/// Draw line between two points, with the specified color and thickenss
+		/// </summary>
+		/// <param name="x1">Starting point left offset</param>
+		/// <param name="y1">Starting point top offset</param>
+		/// <param name="x2">Ending point left offset</param>
+		/// <param name="y2">Ending point top offset</param>
+		/// <param name="color">Line color</param>
+		/// <param name="width">Line thickness</param>
+		public static void DrawLine(int x1, int y1, int x2, int y2, Color color, int width)
+		{
+			_DrawLine(x1, y1, x2, y2, color, width);
+		}
+		///
+		/// <summary>
+		/// Draw line between two points, with the specified color and current PenWidth
+		/// </summary>
+		/// <param name="x1">Starting point left offset</param>
+		/// <param name="y1">Starting point top offset</param>
+		/// <param name="x2">Ending point left offset</param>
+		/// <param name="y2">Ending point top offset</param>
+		/// <param name="color">Line color</param>
+		public static void DrawLine(int x1, int y1, int x2, int y2, Color color)
+		{
+			_DrawLine(x1, y1, x2, y2, color, penWidth);
+		}
+		///
+		/// <summary>
+		/// Draw line between two points, with the specified thickenss nad current PenColor
+		/// </summary>
+		/// <param name="x1">Starting point left offset</param>
+		/// <param name="y1">Starting point top offset</param>
+		/// <param name="x2">Ending point left offset</param>
+		/// <param name="y2">Ending point top offset</param>
+		/// <param name="width">Line thickness</param>
+		public static void DrawLine(int x1, int y1, int x2, int y2, int width)
+		{
+			_DrawLine(x1, y1, x2, y2, penColor, width);
+		}
+		///
+		/// <summary>
+		/// Draw line between two points, with the current PenColor and PenWidth
+		/// </summary>
+		/// <param name="x1">Starting point left offset</param>
+		/// <param name="y1">Starting point top offset</param>
+		/// <param name="x2">Ending point left offset</param>
+		/// <param name="y2">Ending point top offset</param>
+		public static void DrawLine(int x1, int y1, int x2, int y2)
+		{
+			_DrawLine(x1, y1, x2, y2, penColor, penWidth);
+		}
+		///
+		/// <summary>
 		/// Draw solid rectangle
 		/// </summary>
 		private static void _FillRect(int left, int top, int width, int height, Color color)
 		{
-			Color[] data = new Color[width * height];
-			Texture2D rect = new Texture2D(GD, width, height);
-			for (int i = 0; i < data.Length; i++)
-				data[i] = color;
-			rect.SetData(data);
-			batch.Draw(rect, new Rectangle(left, top, width, height), Color.White);
+			batch.Draw(pixel, new Rectangle(left, top, width, height), color);
 		}
 		///
 		/// <summary>
@@ -158,20 +264,10 @@
 		/// </summary>
 		private static void _StrokeRect(int left, int top, int width, int height, Color color, int stroke)
 		{
-			Color[] data = new Color[width * height];
-			Texture2D rect = new Texture2D(GD, width, height);
-			for (int i = 0; i < data.Length; i++)
-			{
-				int x = i % width;
-				int y = i / width;
-				if (x > stroke - 1 && x < width - stroke &&
-					y > stroke - 1 && y < height - stroke)
-					data[i] = Color.Transparent;
-				else
-					data[i] = color;
-			}
-			rect.SetData(data);
-			batch.Draw(rect, new Rectangle(left, top, width, height), Color.White);
+			_DrawLine(left, top, left + width - 1, top, color, stroke);
+			_DrawLine(left, top + height - 1, left + width - 1, top + height - 1, color, stroke);
+			_DrawLine(left, top, left, top + height - 1, color, stroke);
+			_DrawLine(left + width - 1, top, left + width - 1, top + height - 1, color, stroke);
 		}
 		///
 		/// <summary>

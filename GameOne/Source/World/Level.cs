@@ -27,6 +27,14 @@
 
         private static int currentLevel = 1;
 
+		public List<Tile> Geometry
+		{
+			get
+			{
+				return geometry;
+			}
+		}
+
         public Level(int width, int height)
         {
             this.width = width;
@@ -41,13 +49,15 @@
 
         private void GenerateGeometry()
         {
+			geometry = LevelMaker.Generate();
+			/*
             foreach (Tile tile in this.geometry)
             {
                 long uniqueKey = this.GetUniqueKey(tile.GetX(), tile.GetY());
                 this.geometryMap.Add(uniqueKey, tile);
             }
+			*/
         }
-
        
         public void ProcessWalls()
         {

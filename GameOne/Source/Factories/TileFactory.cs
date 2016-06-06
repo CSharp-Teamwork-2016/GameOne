@@ -10,11 +10,11 @@
             switch (type)
             {
                 case TileType.Wall:
-                    return new Tile(x, y, TileType.Wall, "wall");
+                    return new Tile(x, y, TileType.Wall);
                 case TileType.Floor:
-                    return new Tile(x, y, TileType.Floor, "floor");
+                    return new Tile(x, y, TileType.Floor);
                 case TileType.Door:
-                    return new Tile(x, y, TileType.Door, "door");
+                    return new Tile(x, y, TileType.Door);
                 default:
                     return null;
             }

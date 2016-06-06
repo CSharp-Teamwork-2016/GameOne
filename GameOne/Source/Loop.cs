@@ -12,12 +12,18 @@
 	// Main loop
 	public class Loop
 	{
+		// Game objects
+		Level.Level level;
+
+		// Debug
 		static string debugInfo;
 		static string console;
 		private Input input;
 
 		public Loop(KeyboardState keyboardState, MouseState mouseState)
 		{
+			level = new Level.Level(0, 0);
+
 			debugInfo = "";
 			console = "";
 			this.input = new Input(keyboardState, mouseState);
@@ -72,6 +78,7 @@
 		{
 
 			// TODO render objects
+			level.Geometry.ForEach(tile => Primitive.DrawTile(tile));
 
 #if DEBUG
 			// Execute tests

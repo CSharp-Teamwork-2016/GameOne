@@ -11,31 +11,38 @@ namespace GameOne.Tests
 	// Source.Loop.DebugInfo, како е в примера
 	public class ListOf
 	{
-		public static Dictionary<string, Action> tests = new Dictionary<string, Action>();
-		public static List<Action> OnDraw = new List<Action>();
-		public static List<Action> OnUpdate = new List<Action>();
+		internal static Dictionary<string, Action> tests = new Dictionary<string, Action>();
+		internal static List<Action> OnDraw = new List<Action>();
+		internal static List<Action> OnUpdate = new List<Action>();
 
-        public static void Init()
+        internal static void Init()
         {
             tests.Add("SAMPLE", Sample);
             tests.Add("SHAPES", DrawShapes);
-            // Добавете нови тестове тук. Името на метода се пише без скоби, по този начин го изпращате по рефенция
+			tests.Add("LINES", DrawLines);
+			// Добавете нови тестове тук. Името на метода се пише без скоби, по този начин го изпращате по рефенция
         }
 
-		static void Sample()
+		internal static void Sample()
 		{
 			Source.Loop.DebugInfo += string.Format($"This is a test{Environment.NewLine}");
 		}
 
-		public static void ShowFPS()
+		internal static void ShowFPS()
 		{
 			Source.Loop.ShowFPS = !Source.Loop.ShowFPS;
 		}
 
-        public static void DrawShapes()
+		internal static void DrawShapes()
         {
-            Source.Renderer.Output.FillRect(60, 60, 100, 200);
-            Source.Renderer.Output.StrokeRect(80, 90, 200, 100);
-        }
+			Source.Renderer.Output.StrokeRect(1, 1, 11, 11);
+			Source.Renderer.Output.FillRect(1, 1, 11, 11);
+			Source.Renderer.Output.DrawLine(1, 1, 11, 11, Microsoft.Xna.Framework.Color.Black, 1);
+		}
+
+		internal static void DrawLines()
+		{
+			Source.Renderer.Output.DrawLine(10, 10, 100, 150, 2);
+		}
     }
 }

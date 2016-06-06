@@ -51,11 +51,13 @@
     <Compile Include="Source\Enumerations\ItemType.cs" />
     <Compile Include="Source\Enumerations\State.cs" />
     <Compile Include="Source\Enumerations\TileType.cs" />
+    <Compile Include="Source\Factories\TileFactory.cs" />
     <Compile Include="Source\Input.cs" />
     <Compile Include="Source\Interfaces\IMovable.cs" />
     <Compile Include="Source\Interfaces\IRenderable.cs" />
-    <Compile Include="Source\Level\Level.cs" />
-    <Compile Include="Source\Level\Tile.cs" />
+    <Compile Include="Source\World\Level.cs" />
+    <Compile Include="Source\World\LevelMaker.cs" />
+    <Compile Include="Source\World\Tile.cs" />
     <Compile Include="Source\Loop.cs" />
     <Compile Include="Source\MonoInit.cs" />
     <Compile Include="Source\Renderer\Primitive.cs" />

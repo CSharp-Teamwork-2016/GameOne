@@ -12,6 +12,7 @@ namespace GameOne.Tests
 		public static void Exec(string command)
 		{
 			string[] args = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			if (args.Length < 1) return;
 			switch (args[0])
 			{
 				case "FPS":
