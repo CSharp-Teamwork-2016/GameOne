@@ -1,10 +1,6 @@
 ﻿namespace GameOne.Source
 {
 	using Microsoft.Xna.Framework.Input;
-	using System.Collections.Generic;
-	using System;
-
-    using Microsoft.Xna.Framework.Input;
     
     public class Input
     {
@@ -33,7 +29,6 @@
                             {
                                 Loop.Console = Loop.Console.Substring(0, Loop.Console.Length - 1);
                             }
-
                             break;
                         case Keys.Space:
                             Loop.Console += " ";
@@ -68,7 +63,7 @@
 #if DEBUG
 						case Keys.Enter:
 							Tests.Developer.Exec(Loop.Console);
-							Loop.Console = "";
+							Loop.Console = string.Empty;
 							break;
 #endif
                         default:
