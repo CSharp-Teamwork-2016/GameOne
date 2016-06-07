@@ -1,6 +1,6 @@
 ﻿namespace GameOne.Source.Interfaces
 {
-	interface IMovable
+	public interface IMovable
 	{
 		void Forward(double time);
 		void Accelerate(double time);

@@ -2,29 +2,34 @@
 {
 	using System;
 	using System.Linq;
+
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Input;
+
 	using Renderer;
 	using Enumerations;
+    using World;
+    using Entities;
 
-	// Game contents
-	// Level
-	// Entities
-	// Parameters
-	// Main loop
-	public class Loop
+    // Game contents
+    // Level
+    // Entities
+    // Parameters
+    // Main loop
+    public class Loop
 	{
 		// Game objects
-		World.Level level;
+		Level level;
 
 		// Debug
-		static string debugInfo;
-		static string console;
+		public static string debugInfo;
+		public static string console;
+
 		private Input input;
 
 		public Loop(KeyboardState keyboardState, MouseState mouseState)
 		{
-			level = new World.Level(0, 0);
+			level = new Level(0, 0);
 
 			debugInfo = "";
 			console = "";
@@ -57,19 +62,28 @@
 
 		public static bool ShowFPS { get; set; }
 
-		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState)
+		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState) // ??
 		{
 			debugInfo = "";
 			level.Player.Input(this.input.Update(keyboardState, mouseState));
 
 			// TODO update objects
-			foreach (Entities.Entity entity in level.Entities)
+			foreach (Entity entity in level.Entities)
 			{
 				debugInfo += "Updating...\n";
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
 			}
-			World.Physics.CollisionResolution(level.Entities.Where(entity => entity is Entities.Model).Select(entity => (Entities.Model)entity).ToList());
-			World.Physics.BoundsCheck(level.Entities.Where(entity => entity is Entities.Model).Select(entity => (Entities.Model)entity).ToList(), level.Geometry.Where(tile => tile.GetTileType() == TileType.Wall).ToList());
+			Physics.CollisionResolution(level.Entities
+                    .Where(entity => entity is Model)
+                    .Select(entity => (Model)entity)
+                    .ToList());
+			Physics.BoundsCheck(level.Entities
+                    .Where(entity => entity is Model)
+                    .Select(entity => (Model)entity)
+                    .ToList(), 
+                    level.Geometry
+                    .Where(tile => tile.TileType == TileType.Wall)
+                    .ToList());
 
 #if DEBUG
 			// Execute tests

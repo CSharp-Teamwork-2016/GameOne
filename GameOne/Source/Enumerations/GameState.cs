@@ -5,6 +5,6 @@
         Menu,
         Live,
         LoadNext,
-        GameOver    
+        GameOver
     }
 }

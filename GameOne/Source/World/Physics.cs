@@ -1,11 +1,11 @@
 ﻿namespace GameOne.Source.World
 {
-	using Entities;
-	using World;
-	using System.Windows;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Windows;
+
+    using Entities;
 
 	public class Physics
 	{

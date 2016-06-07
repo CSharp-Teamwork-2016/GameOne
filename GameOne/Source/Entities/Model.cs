@@ -1,12 +1,14 @@
 ﻿namespace GameOne.Source.Entities
 {
+    using System.Windows;
+
     using GameOne.Source.Enumerations;
     using GameOne.Source.Interfaces;
     using GameOne.Source.Renderer;
 
     public abstract class Model : Entity, IRenderable
     {
-        protected System.Windows.Vector position;
+        protected Vector position;
         private double direction;
         private double radius;
         private Spritesheet sprite;
@@ -14,14 +16,14 @@
 
         protected Model(double x, double y, double direction, double radius, Spritesheet sprite)
         {
-            this.position = new System.Windows.Vector(x, y);
+            this.position = new Vector(x, y);
             this.direction = direction;
             this.radius = radius;
             this.sprite = sprite;
             this.state = State.IDLE;
         }
 
-		public System.Windows.Vector Position
+		public Vector Position
 		{
 			get
 			{

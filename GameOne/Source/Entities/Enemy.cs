@@ -8,22 +8,23 @@
         private EnemyType type;
         private int xpAward;
 
-        public Enemy(EnemyType type, double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, int xpAward, AttackType attackType)
+        public Enemy(double x, double y, double direction, double radius, Spritesheet sprite, 
+                int health, int damage, AttackType attackType, EnemyType type, int xpAward)
             : base(x, y, direction, radius, sprite, health, damage, attackType)
         {
             this.type = type;
             this.xpAward = xpAward;
-            this.AttackType = attackType;
+            // this.AttackType = attackType; // ??
         }
 
         public override void Update(double time)
         {
-
+            // TODO
         }
 
         public override void Render()
         {
-
+            // TODO
         }
     }
 }

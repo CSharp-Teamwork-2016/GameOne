@@ -1,7 +1,9 @@
 ﻿namespace GameOne.Source.UI
 {
-	class UserInterface
+	public class UserInterface
 	{
 		// UI elements and interactions
+
+        // TODO
 	}
 }

@@ -1,20 +1,24 @@
 ﻿namespace GameOne.Source.Entities
 {
 	using System;
-	using GameOne.Source.Enumerations;
+    using System.Windows;
+
+    using GameOne.Source.Enumerations;
 	using GameOne.Source.Renderer;
 
 	public abstract class Character : Model
-	{
-		private System.Windows.Vector velocity;
+	{		
 		private int health;
 		private int damage;
-		private AttackType attackType;
+        private Vector velocity;
+        private AttackType attackType;
 
-		protected Character(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType = AttackType.Melee)
+		protected Character(double x, double y, double direction, double radius, 
+                    Spritesheet sprite, int health, int damage, 
+                    AttackType attackType = AttackType.Melee)
 			: base(x, y, direction, radius, sprite)
 		{
-			velocity = new System.Windows.Vector(0, 0);
+			velocity = new Vector(0, 0);
 
 			this.health = health;
 			this.damage = damage;
@@ -118,12 +122,12 @@
 			{
 				position.X += velocity.X * time;
 				position.Y += velocity.Y * time;
-				// Friction
-				System.Windows.Vector friction = new System.Windows.Vector();
+                // Friction
+                Vector friction = new Vector();
 				friction.X = -velocity.X;
 				friction.Y = -velocity.Y;
 				friction.Normalize();
-				System.Windows.Vector.Multiply(friction, time);
+                Vector.Multiply(friction, time);
 				velocity += friction;
 				if (velocity.Length < 0.1)
 				{

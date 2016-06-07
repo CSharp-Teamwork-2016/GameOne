@@ -1,6 +1,7 @@
 ﻿namespace GameOne.Source.Renderer
 {
 	using Microsoft.Xna.Framework;
+
 	using World;
 	using Entities;
 
@@ -18,7 +19,7 @@
 			double top = (tile.Y - 0.5) * gridSize + 1;
 			double width = gridSize - 2;
 			double height = gridSize - 2;
-			Color color = tile.GetTileType() == Enumerations.TileType.Floor ? Color.Gray : Color.White;
+			Color color = tile.TileType == Enumerations.TileType.Floor ? Color.Gray : Color.White; // change
 
 			Output.FillRect(left, top, width, height, color);
 		}
@@ -35,7 +36,8 @@
 			Color color = model is Player ? Color.Green : Color.LightGray;
 			Output.FillOval(left, top, width, height, color);
 			Output.StrokeOval(left, top, width, height, Color.White, 2);
-			Output.DrawLine((int)(model.X * gridSize), (int)(model.Y * gridSize), (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
+			Output.DrawLine((int)(model.X * gridSize), (int)(model.Y * gridSize), 
+                    (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
 		}
 	}
 }

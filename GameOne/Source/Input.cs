@@ -1,6 +1,7 @@
 ﻿namespace GameOne.Source
 {
 	using Microsoft.Xna.Framework.Input;
+
 	using Enumerations;
     
     public class Input
@@ -37,6 +38,7 @@
 						result = UserInput.MoveRight;
 						break;
 				}
+
                 if (this.kbPrevious.IsKeyUp(key))
                 {
                     switch (key)
@@ -95,6 +97,7 @@
 
             this.kbPrevious = keyboardState;
             this.msPrevious = mouseState;
+
 			return result;
         }
     }
