@@ -118,7 +118,7 @@
 
             for (int i = 0; i < enemies; i++)
             {
-                Tile currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
+                Tile currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
                 int enumEnemyValue = rnd.Next(1, 5);
                 Enemy enemy = new Enemy(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(), 
                     50, 5, AttackType.Melee, (EnemyType)enumEnemyValue, 0); // hardcoded values for enemy
