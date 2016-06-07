@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GameOne.Source.Level;
 
 namespace GameOne.Source.World
 {
@@ -30,8 +27,9 @@ namespace GameOne.Source.World
             this.parent = parent;
         }
 
-        //=====================================================
-        //region Properties
+        //========================================
+
+        //region Properties ======================
 
         public int X
         {
@@ -77,7 +75,6 @@ namespace GameOne.Source.World
             }
         }
 
-        //not sure
         public bool IsHorizontal
         {
             get
@@ -87,7 +84,7 @@ namespace GameOne.Source.World
             set
             {
             }
-        }
+        } //not sure
 
         public Partition LeftLeaf
         {
@@ -133,7 +130,6 @@ namespace GameOne.Source.World
             }
         }
 
-        //not sure
         public bool HasLeaves
         {
             get
@@ -143,40 +139,95 @@ namespace GameOne.Source.World
             set
             {
             }
-        }
+        }  //not sure
 
-        //end region ============================
+        //endregion Properties ===================
 
-        //========================================================
+        //========================================
 
-        //region Generation
+        //region Generation ======================
 
-        public bool trySplit()
+        public bool TrySplit()
         {
-            //not sure
-            if (HasLeaves)
+            if (HasLeaves) //not sure
             {
-                return leftLeaf.trySplit() || rightLeaf.trySplit();
+                return leftLeaf.TrySplit() || rightLeaf.TrySplit();
             }
             else
             {
-                return split();
+                return Split();
             }
         }
 
-        //TODO
-        //private bool split()
-        //{
-        //    direction = false; // false = horizontal, true = vertical
-        //    if (width / height > LevelMaker.Max)
-        //    {
+        private bool Split()
+        {
+            direction = false; //false = horizontal, true = vertical
 
-        //    }
+            if (width / height > LevelMaker.MAXRATIO)
+            {
+                direction = true;
+            }
+            else if (height / width > LevelMaker.MAXRATIO)
+            {
+                direction = false;
+            }
+            else
+            {
+                direction = LevelMaker.rand(1) == 1; // 0 = horizontal, 1 = vertical
+            }
 
+            if (!direction)
+            { // top and bottom leaves
+                if (height <= 2 * LevelMaker.MINSIZE) return false;
+                var half = LevelMaker.MINSIZE + LevelMaker.rand(height - 2 * LevelMaker.MINSIZE);
+                half = (int)Math.Max(half, LevelMaker.MINRATIO * height);
+                half = (int)Math.Min(half, LevelMaker.MAXRATIO * height);
+                leftLeaf = new Partition(x, y, width, half, this);
+                rightLeaf = new Partition(x, y + half, width, height - half, this);
+            }
+            else
+            { // left and right leaves
+                if (width <= 2 * LevelMaker.MINSIZE) return false;
+                var half = LevelMaker.MINSIZE + LevelMaker.rand(width - 2 * LevelMaker.MINSIZE);
+                half = (int)Math.Max(half, LevelMaker.MINRATIO * width);
+                half = (int)Math.Min(half, LevelMaker.MAXRATIO * width);
+                leftLeaf = new Partition(x, y, half, height, this);
+                rightLeaf = new Partition(x + half, y, width - half, height, this);
+            }
 
-        //}
+            return true;
+        }
 
+        public void MakeRoom()
+        {
+            if (HasLeaves) //not sure
+            {
+                leftLeaf.MakeRoom();
+                rightLeaf.MakeRoom();
+            }
+            else
+            {
+                room = new Room(x, y, width, height);
+            }
+        }
 
+        public void MakeHallway()
+        {
+            if (!HasLeaves)
+            { // Connect room to parent partition origin
+                hallway = new Hallway(room, parent, parent.IsHorizontal);
+            }
+            else
+            { // Connect leaf partitions to each other
+                leftLeaf.MakeHallway();
+                rightLeaf.MakeHallway();
+                hallway = new Hallway(leftLeaf, rightLeaf, direction);
+            }
+        }
 
+        //endregion Generation ===================
+
+        //========================================
     }
 }
+
