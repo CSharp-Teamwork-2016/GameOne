@@ -8,7 +8,7 @@
         private const int InitialHealthPotions = 0;
         private const int InitialAmmo = 200;
 
-        private int xpLevel; // ??
+        private int xpLevel;
 
         public Player(double x, double y, double direction, int xpLevel = 1)
             : base(x, y, direction, 0.30, new Spritesheet(), 100, 10, AttackType.Melee)
@@ -22,7 +22,17 @@
 
         public int HealthPotions { get; set; }
 
-        public int XpLevel { get; set; }
+        public int XpLevel
+        {
+            get
+            {
+                return this.xpLevel;
+            }
+            set
+            {
+                this.xpLevel = value;
+            }
+        }
 
         public void ChangeXPLevel(int level)
         {

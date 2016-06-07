@@ -14,7 +14,6 @@
         {
             this.type = type;
             this.xpAward = xpAward;
-            // this.AttackType = attackType; // ??
         }
 
         public override void Update(double time)

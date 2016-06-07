@@ -15,7 +15,7 @@
         private double x, y;
         private TileType tileType;
         private bool transparent;
-        private string texture; // ?? TODO
+        private string texture; // TODO
 
         public Tile(double x, double y, TileType tileType, bool transparent = false)
         {
@@ -55,7 +55,7 @@
             }
         }
 
-        public void SetTransparency() // ?? ChangeTransparency
+        public void Overlay() // if overlay - change transparency
         {
             this.transparent = true;
         }
