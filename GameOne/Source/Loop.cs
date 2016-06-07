@@ -29,7 +29,7 @@
 
 		public Loop(KeyboardState keyboardState, MouseState mouseState)
 		{
-			level = new Level(0, 0);
+			level = new Level();
 
 			debugInfo = "";
 			console = "";

@@ -11,7 +11,7 @@
 	/// </summary>
 	public class Primitive
 	{
-		private const int gridSize = 30;
+		private const int gridSize = 20;
 
 		public static void DrawTile(Tile tile)
 		{

@@ -14,28 +14,22 @@
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
 
         private static int currentLevel = 1;
-
-        private int width;
-        private int height;
         
         private Player player;
         private List<Entity> entities;
-
         private List<Tile> geometry;
         private Dictionary<long, Tile> geometryMap;
+		LevelMaker generator;
 
-        public Level(int width, int height)
+        public Level()
         {
-            this.width = width;
-            this.height = height;
-            this.player = new Player(5, 5, 0.0);
-            this.entities = new List<Entity>();
-            this.geometry = new List<Tile>();
-            this.entities.Add(this.player);
-            this.entities.Add(new Enemy(8, 8, 0.0, 0.3, new Spritesheet(), 100, 10, AttackType.Melee, EnemyType.Zombie, 0));
-            this.entities.Add(new Enemy(15, 12, 0, 0.3, new Spritesheet(), 100, 10, AttackType.Melee, EnemyType.Zombie, 0));
             this.GenerateGeometry();
-            this.geometryMap = new Dictionary<long, Tile>();
+            this.player = new Player(5, 5, 0.0);
+			
+            this.entities = new List<Entity>();
+            this.entities.Add(this.player);
+			SpawnEnemies();
+			this.geometryMap = new Dictionary<long, Tile>();
         }
 
         public List<Tile> Geometry
@@ -64,7 +58,9 @@
 
         private void GenerateGeometry()
         {
-			geometry = LevelMaker.Generate();
+			LevelMaker.Init();
+			generator = new LevelMaker(4);
+			geometry = generator.Tiles.Values.ToList();
 			/*
             foreach (Tile tile in this.geometry)
             {
@@ -73,58 +69,12 @@
             }
 			*/
         }
-       
-        public void ProcessWalls()
-        {
-            for (int col = 0; col < this.width; col++)
-            {
-                for (int row = 0; row < this.height; row++)
-                {
-                    if (col == 0 || col == this.width - 1 || row == 0 || row == this.height - 1)
-                    {
-                        long uniqueKey = this.GetUniqueKey(col, row);
-                        if (!this.geometryMap.ContainsKey(uniqueKey))
-                        {
-                            this.geometryMap.Add(uniqueKey, TileFactory.getTile(col, row, TileType.Wall));
-                        }
-                    }
-                    else
-                    {
-                        long uniqueKey = this.GetUniqueKey(col, row);
-                        if (!this.geometryMap.ContainsKey(uniqueKey))
-                        {
-                            this.geometryMap.Add(uniqueKey, TileFactory.getTile(col, row, TileType.Floor));
-                        }
-                    }
-                }
-            }
-        }
-
-        private long GetUniqueKey(double col, double row)
-        {
-            return (long)((this.width * row + col));
-        }
 
         public void NextLevel()
         {
             currentLevel++;
 
             // TODO
-        }
-
-        public Player GetPlayer()
-        {
-            return this.player;
-        }
-
-        public List<Entity> GetEntities()
-        {
-            return this.entities;
-        }
-
-        public List<Tile> GetGeometry()
-        {
-            return this.geometry;
         }
 
         /// <summary>
@@ -168,10 +118,9 @@
 
             for (int i = 0; i < enemies; i++)
             {
-                // produce other items "no EndKey" randomly
                 Tile currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
                 int enumEnemyValue = rnd.Next(1, 5);
-                Enemy enemy = new Enemy(currentTile.X, currentTile.Y, 0, 2, new Spritesheet(), 
+                Enemy enemy = new Enemy(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(), 
                     50, 5, AttackType.Melee, (EnemyType)enumEnemyValue, 0); // hardcoded values for enemy
                 this.entities.Add(enemy);
             }
