@@ -288,7 +288,7 @@
 		}
 
 		/**
-         * Turn x,y coordinates in ID to be used in a linear structure. This means we can access a specific tile directly,
+         * Turn x,y coordinates in Id to be used in a linear structure. This means we can access a specific tile directly,
          * without scanning the entire level.
          *
          * @param x     Horizontal coordinate (zero-based)

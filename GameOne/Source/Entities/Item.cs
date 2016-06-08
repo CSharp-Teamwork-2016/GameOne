@@ -16,13 +16,7 @@
             this.type = type;
         }
 
-        public ItemType Type
-        {
-            get
-            {
-                return this.type;
-            }
-        }
+        public ItemType Type => this.type;
 
         public override void Update(double time)
         {

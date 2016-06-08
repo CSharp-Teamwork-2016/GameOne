@@ -13,10 +13,10 @@
         private Vector velocity;
         private AttackType attackType;
 
-		protected Character(double x, double y, double direction, double radius, 
-                    Spritesheet sprite, int health, int damage, 
-                    AttackType attackType = AttackType.Melee)
-			: base(x, y, direction, radius, sprite)
+		protected Character(
+            double x, double y, double direction, double radius,
+            Spritesheet sprite, int health, int damage,
+            AttackType attackType = AttackType.Melee) : base(x, y, direction, radius, sprite)
 		{
 			velocity = new Vector(0, 0);
 
@@ -118,21 +118,20 @@
 		public override void Update(double time)
 		{
 			// Motion
-			if (velocity.Length > 0)
+			if (this.velocity.Length > 0)
 			{
-				position.X += velocity.X * time;
-				position.Y += velocity.Y * time;
+			    this.Position = this.velocity * time;
                 // Friction
-                Vector friction = new Vector();
-				friction.X = -velocity.X;
-				friction.Y = -velocity.Y;
+			    Vector friction = this.velocity;
+
+                friction.Negate();
 				friction.Normalize();
-                Vector.Multiply(friction, time);
-				velocity += friction;
+
+                friction = Vector.Multiply(friction, time);
+				this.velocity += friction;
 				if (velocity.Length < 0.1)
 				{
-					velocity.X = 0;
-					velocity.Y = 0;
+					this.velocity = new Vector(0, 0);
 				}
 			}
 		}
