@@ -2,7 +2,7 @@
 
 namespace GameOne.Tests
 {
-	public class Developer
+    public class Developer
 	{
 		public static void Init()
 		{
@@ -36,6 +36,9 @@ namespace GameOne.Tests
 						ListOf.tests[args[1]]();
 					}
 					break;
+                case "EXIT":
+                    Environment.Exit(0);
+			        break;
 			}
 		}
 	}
