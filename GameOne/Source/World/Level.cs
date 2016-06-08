@@ -83,16 +83,7 @@
             var onlyValidTiles =
                 this.geometry.Where(tile => tile.TileType == TileType.Floor).ToArray();
 
-            int currentIndex = rnd.Next(0, this.geometry.Count - 1);
-            if (currentIndex >= onlyValidTiles.Length)
-            {
-                while (currentIndex >= onlyValidTiles.Length)
-                {
-                    currentIndex = rnd.Next(0, this.geometry.Count - 1);
-                }
-            }
-
-            Tile currentTile = onlyValidTiles[currentIndex];
+            Tile currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
 
             // produce EndKey
             Item itemEndKey =
@@ -103,16 +94,7 @@
             for (int i = 0; i < items; i++)
             {
                 // produce other items "no EndKey"
-                int index = rnd.Next(0, this.geometry.Count - 1);
-                if (currentIndex >= onlyValidTiles.Length)
-                {
-                    while (currentIndex >= onlyValidTiles.Length)
-                    {
-                        index = rnd.Next(0, this.geometry.Count - 1);
-                    }
-                }
-
-                currentTile = onlyValidTiles[index];
+                currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
                 int enumItemValue = rnd.Next(1, 3);
                 Item item = new Item(currentTile.X, currentTile.Y, 0, 1, new Spritesheet(), (ItemType)enumItemValue);
                 this.entities.Add(item);
@@ -133,16 +115,7 @@
 
             for (int i = 0; i < enemies; i++)
             {
-                int currentIndex = rnd.Next(0, onlyValidTiles.Length - 1);
-                if (currentIndex >= onlyValidTiles.Length)
-                {
-                    while (currentIndex >= onlyValidTiles.Length)
-                    {
-                        currentIndex = rnd.Next(0, onlyValidTiles.Length - 1);
-                    }
-                }
-
-                Tile currentTile = onlyValidTiles[currentIndex];
+                Tile currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
                 int enumEnemyValue = rnd.Next(1, 5);
                 Enemy enemy = new Enemy(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(),
                     50, 5, AttackType.Melee, (EnemyType)enumEnemyValue, 0); // hardcoded values for enemy
