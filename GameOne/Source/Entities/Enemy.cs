@@ -5,6 +5,8 @@
 
     public class Enemy : Character
     {
+        private double elapsedTime;
+        private double nextTime;
         private EnemyType type;
         private int xpAward;
 
@@ -14,11 +16,29 @@
         {
             this.type = type;
             this.xpAward = xpAward;
+
+            // Behaviour
+            PrepareNext();
+        }
+
+        private void PrepareNext()
+        {
+            elapsedTime = 0;
+            nextTime = (new System.Random((int)Id)).NextDouble() * 3;
         }
 
         public override void Update(double time)
         {
-            // TODO
+            elapsedTime += time;
+            if (elapsedTime >= nextTime)
+            {
+                System.Random rnd = new System.Random();
+                PrepareNext();
+                Direction = System.Math.PI / 2 * rnd.Next(4);
+                MoveForward();
+                
+            }
+            base.Update(time);
         }
 
         public override void Render()

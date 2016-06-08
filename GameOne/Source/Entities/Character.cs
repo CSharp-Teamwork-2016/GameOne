@@ -90,6 +90,13 @@
             Direction = 0;
             velocity.X = 3;
         }
+        public void MoveForward()
+        {
+            double x = 3 * Math.Cos(Direction);
+            double y = 3 * Math.Sin(Direction);
+            velocity.X = x;
+            velocity.Y = y;
+        }
 
         #endregion
 

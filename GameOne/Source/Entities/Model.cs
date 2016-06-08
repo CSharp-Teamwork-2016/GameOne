@@ -43,7 +43,7 @@
                 return this.direction;
             }
 
-            set
+            protected set
             {
                 this.direction = value;
             }

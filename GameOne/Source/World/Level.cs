@@ -13,7 +13,7 @@
     {
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
 
-        private static int currentLevel = 1;
+        private static int currentLevel = 4;
 
         private Player player;
         private List<Entity> entities;
@@ -53,7 +53,7 @@
         private void GenerateGeometry()
         {
             LevelMaker.Init();
-            generator = new LevelMaker(4);
+            generator = new LevelMaker(currentLevel);
             geometry = generator.Tiles.Values.ToList();
             /*
             foreach (Tile tile in this.geometry)
