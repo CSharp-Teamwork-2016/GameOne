@@ -74,12 +74,10 @@
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
 			}
 			Physics.CollisionResolution(level.Entities
-                    .Where(entity => entity is Model)
-                    .Select(entity => (Model)entity)
+                    .OfType<Model>()
                     .ToList());
 			Physics.BoundsCheck(level.Entities
-                    .Where(entity => entity is Model)
-                    .Select(entity => (Model)entity)
+                    .OfType<Model>()
                     .ToList(), 
                     level.Geometry
                     .Where(tile => tile.TileType == TileType.Wall)
