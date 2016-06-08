@@ -26,17 +26,17 @@
 
 		public static void DrawModel(Model model)
 		{
-			double left = (model.X - model.Radius) * gridSize;
-			double top = (model.Y - model.Radius) * gridSize;
+			double left = (model.Position.X - model.Radius) * gridSize;
+			double top = (model.Position.Y - model.Radius) * gridSize;
 			double width = model.Radius * 2 * gridSize;
 			double height = model.Radius * 2 * gridSize;
-			double dirX = model.X + model.Radius * 1.3 * System.Math.Cos(model.Direction);
-			double dirY = model.Y + model.Radius * 1.3 * System.Math.Sin(model.Direction);
+			double dirX = model.Position.X + model.Radius * 1.3 * System.Math.Cos(model.Direction);
+			double dirY = model.Position.Y + model.Radius * 1.3 * System.Math.Sin(model.Direction);
 
 			Color color = model is Player ? Color.Green : Color.LightGray;
 			Output.FillOval(left, top, width, height, color);
 			Output.StrokeOval(left, top, width, height, Color.White, 2);
-			Output.DrawLine((int)(model.X * gridSize), (int)(model.Y * gridSize), 
+			Output.DrawLine((int)(model.Position.X * gridSize), (int)(model.Position.Y * gridSize), 
                     (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
 		}
 	}

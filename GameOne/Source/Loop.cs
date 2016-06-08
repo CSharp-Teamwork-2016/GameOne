@@ -101,10 +101,11 @@
 		{
 
 			// TODO render objects
-			level.Geometry.ForEach(tile => Primitive.DrawTile(tile));
-			foreach (Entities.Model model in level.Entities.Where(e => e is Entities.Model))
+			level.Geometry.ForEach(Primitive.DrawTile);
+			foreach (var entity in level.Entities.Where(e => e is Entities.Model))
 			{
-				debugInfo += "Rendering...\n";
+			    var model = (Model)entity;
+			    debugInfo += "Rendering...\n";
 				Primitive.DrawModel(model);
 			}
 

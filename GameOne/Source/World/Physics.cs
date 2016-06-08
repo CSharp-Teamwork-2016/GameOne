@@ -59,13 +59,13 @@
 		private static void VrfyBounds(Model model, Tile tile)
 		{
 			double tileHalf = 0.5; // this may have to change, if we start checking irregular boundaries
-			double distX = Math.Abs(tile.X - model.X);
-			double distY = Math.Abs(tile.Y - model.Y);
+			double distX = Math.Abs(tile.X - model.Position.X);
+			double distY = Math.Abs(tile.Y - model.Position.Y);
 			if (distX > tileHalf + model.Radius || distY > tileHalf + model.Radius) return;
 			if (distX <= tileHalf + model.Radius && distY <= tileHalf)
 			{
 				double penetration = 0;
-				if (tile.X - model.X < 0)
+				if (tile.X - model.Position.X < 0)
 				{ // right side
 					penetration = distX - (tileHalf + model.Radius);
 				}
@@ -73,13 +73,15 @@
 				{ // left side
 					penetration = (tileHalf + model.Radius) - distX;
 				}
-				model.X -= penetration; // resolve
-				return;
+
+                model.Position =
+                    new Vector(model.Position.X - penetration, model.Position.Y); // resolve
+				return; ////////////// ???
 			}
 			if (distX <= tileHalf && distY <= tileHalf + model.Radius)
 			{
 				double penetration = 0;
-				if (tile.Y - model.Y < 0)
+				if (tile.Y - model.Position.Y < 0)
 				{ // bottom side
 					penetration = distY - (tileHalf + model.Radius);
 				}
@@ -87,8 +89,9 @@
 				{ // top side
 					penetration = (tileHalf + model.Radius) - distY;
 				}
-				model.Y -= penetration; // resolve
-			}
+				model.Position =
+                    new Vector(model.Position.X, model.Position.Y - penetration); // resolve
+            }
 		}
 	}
 }

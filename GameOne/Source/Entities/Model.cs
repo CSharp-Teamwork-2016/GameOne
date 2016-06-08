@@ -8,7 +8,7 @@
 
     public abstract class Model : Entity, IRenderable
     {
-        protected Vector position;
+        private Vector position;
         private double direction;
         private double radius;
         private Spritesheet sprite;
@@ -27,35 +27,12 @@
 		{
 			get
 			{
-				return position;
+				return this.position;
 			}
-			set
-			{
-				position = value;
-			}
-		}
 
-		public double X
-        {
-            get
-            {
-                return this.position.X;
-            }
 			set
 			{
-				position.X = value;
-			}
-        }
-
-        public double Y
-        {
-            get
-            {
-                return this.position.Y;
-            }
-			set
-			{
-				position.Y = value;
+				this.position = value;
 			}
 		}
 
@@ -85,13 +62,7 @@
             }
         }
 
-        public State State
-        {
-            get
-            {
-                return this.state;
-            }
-        }
+        public State State => this.state;
 
         public abstract void Render();
     }
