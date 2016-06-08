@@ -32,7 +32,7 @@
 
 			set
 			{
-				this.position += value;
+				this.position = value;
 			}
 		}
 

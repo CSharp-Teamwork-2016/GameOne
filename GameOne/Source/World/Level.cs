@@ -83,7 +83,7 @@
             var onlyValidTiles =
                 this.geometry.Where(tile => tile.TileType == TileType.Floor).ToArray();
 
-            Tile currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
+            Tile currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
 
             // produce EndKey
             Item itemEndKey =
@@ -94,7 +94,7 @@
             for (int i = 0; i < items; i++)
             {
                 // produce other items "no EndKey"
-                currentTile = onlyValidTiles[rnd.Next(0, this.geometry.Count)];
+                currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
                 int enumItemValue = rnd.Next(1, 3);
                 Item item = new Item(currentTile.X, currentTile.Y, 0, 1, new Spritesheet(), (ItemType)enumItemValue);
                 this.entities.Add(item);
