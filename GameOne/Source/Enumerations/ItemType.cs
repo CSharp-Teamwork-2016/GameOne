@@ -1,7 +1,7 @@
 ﻿namespace GameOne.Source.Enumerations
 {
-	public enum ItemType
-	{
+    public enum ItemType
+    {
         PotionHealth,
         BadItem,
         EndKey
