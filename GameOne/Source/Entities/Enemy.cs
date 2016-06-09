@@ -10,34 +10,33 @@
         private EnemyType type;
         private int xpAward;
 
-        public Enemy(double x, double y, double direction, double radius, Spritesheet sprite, 
-                int health, int damage, AttackType attackType, EnemyType type, int xpAward)
+        public Enemy(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType, EnemyType type, int xpAward)
             : base(x, y, direction, radius, sprite, health, damage, attackType)
         {
             this.type = type;
             this.xpAward = xpAward;
 
             // Behaviour
-            PrepareNext();
+            this.PrepareNext();
         }
 
         private void PrepareNext()
         {
-            elapsedTime = 0;
-            nextTime = (new System.Random((int)Id)).NextDouble() * 3;
+            this.elapsedTime = 0;
+            this.nextTime = (new System.Random((int)Id)).NextDouble() * 3;
         }
 
         public override void Update(double time)
         {
-            elapsedTime += time;
-            if (elapsedTime >= nextTime)
+            this.elapsedTime += time;
+            if (this.elapsedTime >= this.nextTime)
             {
                 System.Random rnd = new System.Random();
-                PrepareNext();
-                Direction = System.Math.PI / 2 * rnd.Next(4);
-                MoveForward();
-                
+                this.PrepareNext();
+                this.Direction = System.Math.PI / 2 * rnd.Next(4);
+                this.MoveForward();
             }
+
             base.Update(time);
         }
 

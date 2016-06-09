@@ -28,33 +28,21 @@
 
             this.entities = new List<Entity>();
             this.entities.Add(this.player);
-            SpawnEnemies();
+            this.SpawnEnemies();
             this.geometryMap = new Dictionary<long, Tile>();
         }
 
         public List<Tile> Geometry => this.geometry;
 
-        public List<Entity> Entities
-        {
-            get
-            {
-                return entities;
-            }
-        }
+        public List<Entity> Entities => this.entities;
 
-        public Player Player
-        {
-            get
-            {
-                return player;
-            }
-        }
+        public Player Player => this.player;
 
         private void GenerateGeometry()
         {
             LevelMaker.Init();
-            generator = new LevelMaker(currentLevel);
-            geometry = generator.Tiles.Values.ToList();
+            this.generator = new LevelMaker(currentLevel);
+            this.geometry = this.generator.Tiles.Values.ToList();
             /*
             foreach (Tile tile in this.geometry)
             {
