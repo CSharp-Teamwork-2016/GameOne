@@ -1,9 +1,9 @@
 ﻿namespace GameOne.Source.Entities
 {
-	using GameOne.Source.Enumerations;
-	using GameOne.Source.Renderer;
+    using GameOne.Source.Enumerations;
+    using GameOne.Source.Renderer;
 
-	public class Player : Character
+    public class Player : Character
     {
         private const int InitialHealthPotions = 0;
         private const int InitialAmmo = 200;
@@ -11,7 +11,7 @@
         private int xpLevel;
 
         public Player(double x, double y, double direction, int xpLevel = 1)
-            : base(x, y, direction, 0.30, new Spritesheet(), 100, 10, AttackType.Melee)
+            : base(x, y, direction, 0.30, new Spritesheet(), 100, 10)
         {
             this.XpLevel = xpLevel;
             this.HealthPotions = InitialHealthPotions;
@@ -28,6 +28,7 @@
             {
                 return this.xpLevel;
             }
+
             set
             {
                 this.xpLevel = value;
@@ -75,7 +76,7 @@
 			}
 		}
 
-		public void ApplyItemEffectsToHealth(int health)
+        public void ApplyItemEffectsToHealth(int health)
         {
             this.health += health;
         }

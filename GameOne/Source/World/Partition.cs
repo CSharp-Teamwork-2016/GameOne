@@ -30,115 +30,29 @@
 
         //region Properties ======================
 
-        public int X
-        {
-            get
-            {
-                return x;
-            }
-            set
-            {
-            }
-        }
+        public int X => this.x;
 
-        public int Y
-        {
-            get
-            {
-                return y;
-            }
-            set
-            {
-            }
-        }
+        public int Y => this.y;
 
-        public int Width
-        {
-            get
-            {
-                return width;
-            }
-            set
-            {
-            }
-        }
+        public int Width => this.width;
 
-        public int Height
-        {
-            get
-            {
-                return height;
-            }
-            set
-            {
-            }
-        }
+        public int Height => this.height;
 
-        public bool IsHorizontal
-        {
-            get
-            {
-                return direction;
-            }
-            set
-            {
-            }
-        } //not sure
+        public bool IsHorizontal => this.direction;
 
-        public Partition LeftLeaf
-        {
-            get
-            {
-                return leftLeaf;
-            }
-            set
-            {
-            }
-        }
+        //not sure
 
-        public Partition RightLeaf
-        {
-            get
-            {
-                return rightLeaf;
-            }
-            set
-            {
-            }
-        }
+        public Partition LeftLeaf => this.leftLeaf;
 
-        public Room Room
-        {
-            get
-            {
-                return room;
-            }
-            set
-            {
-            }
-        }
+        public Partition RightLeaf => this.rightLeaf;
 
-        public Hallway Hallway
-        {
-            get
-            {
-                return hallway;
-            }
-            set
-            {
-            }
-        }
+        public Room Room => this.room;
 
-        public bool HasLeaves
-        {
-            get
-            {
-                return leftLeaf != null;
-            }
-            set
-            {
-            }
-        }  //not sure
+        public Hallway Hallway => this.hallway;
+
+        public bool HasLeaves => this.leftLeaf != null;
+
+        //not sure
 
         //endregion Properties ===================
 
@@ -148,50 +62,50 @@
 
         public bool TrySplit()
         {
-            if (HasLeaves) //not sure
+            if (this.HasLeaves) //not sure
             {
-                return leftLeaf.TrySplit() || rightLeaf.TrySplit();
+                return this.leftLeaf.TrySplit() || this.rightLeaf.TrySplit();
             }
             else
             {
-                return Split();
+                return this.Split();
             }
         }
 
         private bool Split()
         {
-            direction = false; //false = horizontal, true = vertical
+            this.direction = false; //false = horizontal, true = vertical
 
-            if ((double)width / height > LevelMaker.MAXRATIO)
+            if ((double)this.width / this.height > LevelMaker.MAXRATIO)
             {
-                direction = true;
+                this.direction = true;
             }
-            else if ((double)height / width > LevelMaker.MAXRATIO)
+            else if ((double)this.height / this.width > LevelMaker.MAXRATIO)
             {
-                direction = false;
+                this.direction = false;
             }
             else
             {
-                direction = LevelMaker.rand(1) == 1; // 0 = horizontal, 1 = vertical
+                this.direction = LevelMaker.rand(1) == 1; // 0 = horizontal, 1 = vertical
             }
 
-            if (!direction)
+            if (!this.direction)
             { // top and bottom leaves
-                if (height <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.rand(height - 2 * LevelMaker.MINSIZE);
-                half = (int)Math.Max(half, LevelMaker.MINRATIO * height);
-                half = (int)Math.Min(half, LevelMaker.MAXRATIO * height);
-                leftLeaf = new Partition(x, y, width, half, this);
-                rightLeaf = new Partition(x, y + half, width, height - half, this);
+                if (this.height <= 2 * LevelMaker.MINSIZE) return false;
+                var half = LevelMaker.MINSIZE + LevelMaker.rand(this.height - 2 * LevelMaker.MINSIZE);
+                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.height);
+                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.height);
+                this.leftLeaf = new Partition(this.x, this.y, this.width, half, this);
+                this.rightLeaf = new Partition(this.x, this.y + half, this.width, this.height - half, this);
             }
             else
             { // left and right leaves
-                if (width <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.rand(width - 2 * LevelMaker.MINSIZE);
-                half = (int)Math.Max(half, LevelMaker.MINRATIO * width);
-                half = (int)Math.Min(half, LevelMaker.MAXRATIO * width);
-                leftLeaf = new Partition(x, y, half, height, this);
-                rightLeaf = new Partition(x + half, y, width - half, height, this);
+                if (this.width <= 2 * LevelMaker.MINSIZE) return false;
+                var half = LevelMaker.MINSIZE + LevelMaker.rand(this.width - 2 * LevelMaker.MINSIZE);
+                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.width);
+                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.width);
+                this.leftLeaf = new Partition(this.x, this.y, half, this.height, this);
+                this.rightLeaf = new Partition(this.x + half, this.y, this.width - half, this.height, this);
             }
 
             return true;
@@ -199,28 +113,28 @@
 
         public void MakeRoom()
         {
-            if (HasLeaves) //not sure
+            if (this.HasLeaves) //not sure
             {
-                leftLeaf.MakeRoom();
-                rightLeaf.MakeRoom();
+                this.leftLeaf.MakeRoom();
+                this.rightLeaf.MakeRoom();
             }
             else
             {
-                room = new Room(x, y, width, height);
+                this.room = new Room(this.x, this.y, this.width, this.height);
             }
         }
 
         public void MakeHallway()
         {
-            if (!HasLeaves)
+            if (!this.HasLeaves)
             { // Connect room to parent partition origin
-                hallway = new Hallway(room, parent, parent.IsHorizontal);
+                this.hallway = new Hallway(this.room, this.parent, this.parent.IsHorizontal);
             }
             else
             { // Connect leaf partitions to each other
-                leftLeaf.MakeHallway();
-                rightLeaf.MakeHallway();
-                hallway = new Hallway(leftLeaf, rightLeaf, direction);
+                this.leftLeaf.MakeHallway();
+                this.rightLeaf.MakeHallway();
+                this.hallway = new Hallway(this.leftLeaf, this.rightLeaf, this.direction);
             }
         }
 

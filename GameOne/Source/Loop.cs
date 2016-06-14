@@ -65,20 +65,20 @@
 		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState) // ??
 		{
 			debugInfo = "";
-			level.Player.Input(this.input.Update(keyboardState, mouseState));
+			this.level.Player.Input(this.input.Update(keyboardState, mouseState));
 
 			// TODO update objects
-			foreach (Entity entity in level.Entities)
+			foreach (Entity entity in this.level.Entities)
 			{
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
 			}
-			Physics.CollisionResolution(level.Entities
+			Physics.CollisionResolution(this.level.Entities
                     .OfType<Model>()
                     .ToList());
-			Physics.BoundsCheck(level.Entities
+			Physics.BoundsCheck(this.level.Entities
                     .OfType<Model>()
                     .ToList(), 
-                    level.Geometry
+                    this.level.Geometry
                     .Where(tile => tile.TileType == TileType.Wall)
                     .ToList());
 
@@ -98,8 +98,8 @@
 		{
 
 			// TODO render objects
-			level.Geometry.ForEach(Primitive.DrawTile);
-			foreach (var entity in level.Entities.Where(e => e is Entities.Model))
+			this.level.Geometry.ForEach(Primitive.DrawTile);
+			foreach (var entity in this.level.Entities.Where(e => e is Entities.Model))
 			{
 			    var model = (Model)entity;
 				Primitive.DrawModel(model);

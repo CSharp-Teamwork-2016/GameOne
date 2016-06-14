@@ -16,12 +16,10 @@
         private double attackTime;
         private double damageTime;
 
-        protected Character(
-            double x, double y, double direction, double radius,
-            Spritesheet sprite, int health, int damage,
-            AttackType attackType = AttackType.Melee) : base(x, y, direction, radius, sprite)
+        protected Character(double x, double y, double direction, double radius,Spritesheet sprite, int health, int damage, AttackType attackType = AttackType.Melee)
+            : base(x, y, direction, radius, sprite)
         {
-            velocity = new Vector(0, 0);
+            this.velocity = new Vector(0, 0);
 
             this.health = health;
             this.damage = damage;
@@ -60,30 +58,34 @@
 
         public void MoveUp()
         {
-            Direction = 1.5 * Math.PI;
-            velocity.Y = -3;
+            this.Direction = 1.5 * Math.PI;
+            this.velocity.Y = -3;
         }
+
         public void MoveDown()
         {
-            Direction = 0.5 * Math.PI;
-            velocity.Y = 3;
+            this.Direction = 0.5 * Math.PI;
+            this.velocity.Y = 3;
         }
+
         public void MoveLeft()
         {
-            Direction = Math.PI;
-            velocity.X = -3;
+            this.Direction = Math.PI;
+            this.velocity.X = -3;
         }
+
         public void MoveRight()
         {
-            Direction = 0;
-            velocity.X = 3;
+            this.Direction = 0;
+            this.velocity.X = 3;
         }
+
         public void MoveForward()
         {
-            double x = 3 * Math.Cos(Direction);
-            double y = 3 * Math.Sin(Direction);
-            velocity.X = x;
-            velocity.Y = y;
+            double x = 3 * Math.Cos(this.Direction);
+            double y = 3 * Math.Sin(this.Direction);
+            this.velocity.X = x;
+            this.velocity.Y = y;
         }
 
         #endregion
@@ -109,13 +111,6 @@
         public bool IsDead()
         {
             return this.Health <= 0;
-
-            //if (this.Health <= 0)
-            //{
-            //    return false;
-            //}
-
-            //return true;
         }
 
         public override void Update(double time)
@@ -163,15 +158,15 @@
 
                 friction *= 15 * time;
                 this.velocity += friction;
-                if (velocity.Length <= friction.Length)
+                if (this.velocity.Length <= friction.Length)
                 {
-                    velocity.X = 0;
-                    velocity.Y = 0;
+                    this.velocity.X = 0;
+                    this.velocity.Y = 0;
                 }
-                else if (velocity.Length < 0.1)
+                else if (this.velocity.Length < 0.1)
                 {
-                    velocity.X = 0;
-                    velocity.Y = 0;
+                    this.velocity.X = 0;
+                    this.velocity.Y = 0;
                 }
             }
         }

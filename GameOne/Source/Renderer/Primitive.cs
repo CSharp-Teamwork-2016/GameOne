@@ -17,16 +17,16 @@
         /// </summary>
 		private const int gridSize = 20;
 
-		public static void DrawTile(Tile tile)
-		{
-			double left = (tile.X - 0.5) * gridSize + 1;
-			double top = (tile.Y - 0.5) * gridSize + 1;
-			double width = gridSize - 2;
-			double height = gridSize - 2;
-			Color color = tile.TileType == TileType.Floor ? Color.Gray : Color.White; // change
+        public static void DrawTile(Tile tile)
+        {
+            double left = (tile.X - 0.5) * GridSize + 1;
+            double top = (tile.Y - 0.5) * GridSize + 1;
+            double width = GridSize - 2;
+            double height = GridSize - 2;
+            Color color = tile.TileType == Enumerations.TileType.Floor ? Color.Gray : Color.White; // change
 
-			Output.FillRect(left, top, width, height, color);
-		}
+            Output.FillRect(left, top, width, height, color);
+        }
 
 		public static void DrawModel(Model model)
 		{
