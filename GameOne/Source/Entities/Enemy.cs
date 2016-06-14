@@ -36,7 +36,6 @@
                 PrepareNext();
                 Direction = System.Math.PI / 2 * rnd.Next(4);
                 MoveForward();
-                
             }
             base.Update(time);
         }

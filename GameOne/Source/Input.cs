@@ -37,6 +37,9 @@
 					case Keys.Right:
 						result = UserInput.MoveRight;
 						break;
+                    case Keys.LeftControl:
+                        result = UserInput.Attack;
+                        break;
 				}
 
                 if (this.kbPrevious.IsKeyUp(key))

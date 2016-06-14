@@ -49,7 +49,7 @@
             if (this.HealthPotions > 0)
             {
                 this.HealthPotions--;
-                this.Health += 20;
+                this.health += 20;
             }
         }
 
@@ -69,12 +69,15 @@
 				case UserInput.MoveRight:
 					MoveRight();
 					break;
+                case UserInput.Attack:
+                    Attack();
+                    break;
 			}
 		}
 
 		public void ApplyItemEffectsToHealth(int health)
         {
-            this.Health += health;
+            this.health += health;
         }
 
         public void ApplyItemEffectsToAmmo(int ammo)
@@ -85,6 +88,14 @@
         public override void Render()
         {
             // TODO
+        }
+
+        public override void Update(double time)
+        {
+            base.Update(time);
+
+            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\n");
+            //Loop.debugInfo += string.Format($"State: {state}\n");
         }
     }
 }

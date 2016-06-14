@@ -2,16 +2,19 @@
 {
     using System;
     using System.Windows;
+    using System.Linq;
 
     using GameOne.Source.Enumerations;
     using GameOne.Source.Renderer;
 
     public abstract class Character : Model
     {
-        private int health;
-        private int damage;
+        protected int health;
+        protected int damage;
         private Vector velocity;
         private AttackType attackType;
+        private double attackTime;
+        private double damageTime;
 
         protected Character(
             double x, double y, double direction, double radius,
@@ -33,11 +36,6 @@
             {
                 return this.health;
             }
-
-            set
-            {
-                this.health = value;
-            }
         }
 
         public int Damage
@@ -46,11 +44,6 @@
             {
                 return this.damage;
             }
-
-            set
-            {
-                this.damage = value;
-            }
         }
 
         public AttackType AttackType
@@ -58,11 +51,6 @@
             get
             {
                 return this.attackType;
-            }
-
-            protected set
-            {
-                this.attackType = value;
             }
         }
 
@@ -102,12 +90,20 @@
 
         public void TakeDamage(int damage)
         {
+            if (state == State.HURT) return;
+            state = State.HURT;
+            damageTime = 0;
             this.health -= damage;
+            if (health <= 0) Die();
         }
 
-        public void ProduceAttack(Enemy enemy)
+        public void Attack()
         {
-            enemy.health -= this.damage;
+            if (state != State.ATTACK)
+            {
+                state = State.ATTACK;
+                attackTime = 0;
+            }
         }
 
         public bool IsDead()
@@ -124,6 +120,37 @@
 
         public override void Update(double time)
         {
+            if (state == State.DEAD) return;
+            if (state == State.ATTACK)
+            {
+                attackTime += time;
+                if (attackTime >= 0.3)
+                {
+                    state = State.IDLE;
+                    attackTime = 0;
+                    return;
+                }
+                foreach (Character entity in Loop.level.Entities.OfType<Character>().Where(e => e != this && (Position - e.Position).Length < 1.5))
+                {
+                    /*
+                    if (Direction == 0)
+                    {
+
+                    }
+                    else if (Direction == Math.PI)
+                    */
+                    entity.TakeDamage(damage);
+                }
+            }
+            if (state == State.HURT)
+            {
+                damageTime += time;
+                if (damageTime >= 0.4)
+                {
+                    damageTime = 0;
+                    state = State.IDLE;
+                }
+            }
             // Motion
             if (this.velocity.Length > 0)
             {
@@ -147,6 +174,11 @@
                     velocity.Y = 0;
                 }
             }
+        }
+
+        protected void Die()
+        {
+            state = State.DEAD;
         }
     }
 }

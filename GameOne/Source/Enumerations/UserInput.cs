@@ -6,6 +6,7 @@
 		MoveUp,
 		MoveDown,
 		MoveLeft,
-		MoveRight
-	}
+		MoveRight,
+        Attack
+    }
 }

@@ -12,7 +12,7 @@
         private double direction;
         private double radius;
         private Spritesheet sprite;
-        private State state;
+        protected State state;
 
         protected Model(double x, double y, double direction, double radius, Spritesheet sprite)
         {

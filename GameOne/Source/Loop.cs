@@ -19,7 +19,7 @@
     public class Loop
 	{
 		// Game objects
-		Level level;
+		public static Level level;
 
 		// Debug
 		public static string debugInfo;
@@ -70,7 +70,6 @@
 			// TODO update objects
 			foreach (Entity entity in level.Entities)
 			{
-				debugInfo += "Updating...\n";
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
 			}
 			Physics.CollisionResolution(level.Entities
@@ -103,7 +102,6 @@
 			foreach (var entity in level.Entities.Where(e => e is Entities.Model))
 			{
 			    var model = (Model)entity;
-			    debugInfo += "Rendering...\n";
 				Primitive.DrawModel(model);
 			}
 

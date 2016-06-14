@@ -2,6 +2,9 @@
 {
     public enum State
     {
-        IDLE
+        IDLE,
+        ATTACK,
+        HURT,
+        DEAD
     }
 }
