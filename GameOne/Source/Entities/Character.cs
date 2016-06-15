@@ -90,10 +90,10 @@
 
         #endregion
 
-        public void TakeDamage(int damage)
+        public virtual void TakeDamage(int damage)
         {
-            if (state == State.HURT) return;
-            state = State.HURT;
+            if ((state & State.HURT) == State.HURT) return;
+            state |= State.HURT;
             damageTime = 0;
             this.health -= damage;
             if (health <= 0) Die();
@@ -101,9 +101,9 @@
 
         public void Attack()
         {
-            if (state != State.ATTACK)
+            if ((state & State.ATTACK) != State.ATTACK)
             {
-                state = State.ATTACK;
+                state |= State.ATTACK;
                 attackTime = 0;
             }
         }
@@ -116,12 +116,12 @@
         public override void Update(double time)
         {
             if (state == State.DEAD) return;
-            if (state == State.ATTACK)
+            if ((state & State.ATTACK) == State.ATTACK)
             {
                 attackTime += time;
                 if (attackTime >= 0.3)
                 {
-                    state = State.IDLE;
+                    state ^= State.ATTACK;
                     attackTime = 0;
                     return;
                 }
@@ -137,13 +137,13 @@
                     entity.TakeDamage(damage);
                 }
             }
-            if (state == State.HURT)
+            if ((state & State.HURT) == State.HURT)
             {
                 damageTime += time;
                 if (damageTime >= 0.4)
                 {
                     damageTime = 0;
-                    state = State.IDLE;
+                    state ^= State.HURT;
                 }
             }
             // Motion
@@ -169,6 +169,14 @@
                     this.velocity.Y = 0;
                 }
             }
+        }
+
+        public void Knockback()
+        {
+            double x = -5 * Math.Cos(this.Direction);
+            double y = -5 * Math.Sin(this.Direction);
+            this.velocity.X = x;
+            this.velocity.Y = y;
         }
 
         protected void Die()

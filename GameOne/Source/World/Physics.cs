@@ -49,6 +49,14 @@
                 e1.Position -= separation;
                 e2.Position += separation;
                 //Loop.DebugInfo += "Collision\n";
+                if (e1 is Player && e2 is Enemy)
+                {
+                    ((Character)e1).TakeDamage(((Character)e2).Damage);
+                }
+                else if (e2 is Player && e1 is Enemy)
+                {
+                    ((Character)e2).TakeDamage(((Character)e1).Damage);
+                }
             }
         }
 

@@ -56,6 +56,7 @@
 
 		internal void Input(UserInput input)
 		{
+            if ((state & State.HURT) == State.HURT) return; // don't let the player move if he's hit
 			switch (input)
 			{
 				case UserInput.MoveUp:
@@ -97,6 +98,12 @@
 
             Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\n");
             //Loop.debugInfo += string.Format($"State: {state}\n");
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            base.TakeDamage(damage);
+            Knockback();
         }
     }
 }
