@@ -1,5 +1,8 @@
 ﻿namespace GameOne.Source.Entities
 {
+    using System.Collections.Generic;
+    using System;
+
     using GameOne.Source.Enumerations;
     using GameOne.Source.Renderer;
 
@@ -7,6 +10,7 @@
     {
         private double elapsedTime;
         private double nextTime;
+        private Queue<Action> pattern;
         private EnemyType type;
         private int xpAward;
 
@@ -17,24 +21,63 @@
             this.xpAward = xpAward;
 
             // Behaviour
-            this.PrepareNext();
+            PreparePattern();
         }
 
-        private void PrepareNext()
+
+        #region Behaviour
+
+        private void WaitFor()
+        {
+
+        }
+
+        private void TurnRight()
+        {
+            Direction += Math.PI / 2;
+            PrepareNext(0, -0.5);
+        }
+
+        private void PrepareNext(double delay = 0, double extend = 0)
+        {
+            elapsedTime = 0;
+            nextTime = World.LevelMaker.RandDouble(0 + delay, 1 + delay + extend);
+            pattern.Enqueue(pattern.Dequeue());
+        }
+
+        private void ProcessPattern(double time)
+        {
+            elapsedTime += time;
+            if (elapsedTime >= nextTime)
+            {
+                PrepareNext(0.5);
+            }
+            pattern.Peek()();
+        }
+
+        private void PreparePattern()
         {
             this.elapsedTime = 0;
-            this.nextTime = World.LevelMaker.RandDouble(1,3);
+            this.nextTime = World.LevelMaker.RandDouble(1, 4);
+
+            pattern = new Queue<Action>();
+            pattern.Enqueue(MoveForward);
+            pattern.Enqueue(WaitFor);
+            pattern.Enqueue(TurnRight);
+            pattern.Enqueue(WaitFor);
+            pattern.Enqueue(MoveForward);
+            pattern.Enqueue(WaitFor);
+            pattern.Enqueue(TurnRight);
+            pattern.Enqueue(TurnRight);
+            pattern.Enqueue(WaitFor);
         }
+
+        #endregion
 
         public override void Update(double time)
         {
-            this.elapsedTime += time;
-            if (this.elapsedTime >= this.nextTime)
-            {
-                PrepareNext();
-                Direction = System.Math.PI / 2 * World.LevelMaker.Rand(4);
-                MoveForward();
-            }
+            // Behaviour
+            ProcessPattern(time);
             base.Update(time);
         }
 

@@ -33,17 +33,21 @@
             double penetration = dist - (e1.Radius + e2.Radius);
             if (penetration < 0)
             {
-                if (e2 is Player && e1 is Item)
+                if (e1 is Item)
                 {
                     Model t = e2;
                     e2 = e1;
                     e1 = t;
                 }
-                if (e1 is Player && e2 is Item)
+                if (e2 is Item)
                 {
-                    ((Item)e2).Collect();
-                    ((Player)e1).PickUpItem(((Item)e2).Type);
-                    return;
+                    if (e1 is Player)
+                    {
+                        ((Item)e2).Collect();
+                        ((Player)e1).PickUpItem(((Item)e2).Type);
+                        return;
+                    }
+                    else return;
                 }
                 separation.Normalize();
                 separation = Vector.Multiply(separation, penetration / 2);

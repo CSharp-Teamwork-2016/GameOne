@@ -108,7 +108,8 @@
             for (int i = 0; i < enemies; i++)
             {
                 Tile currentTile = GetRandomTile(validTiles);
-                Enemy enemy = new Enemy(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(),
+                double direction = Math.PI / 2 * LevelMaker.Rand(4);
+                Enemy enemy = new Enemy(currentTile.X, currentTile.Y, direction, 0.3, new Spritesheet(),
                     50, 5, AttackType.Melee, EnemyType.Zombie, 50); // hardcoded values for enemy
                 this.entities.Add(enemy);
                 enemyCount++;
