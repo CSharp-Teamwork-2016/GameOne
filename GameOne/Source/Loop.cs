@@ -125,11 +125,30 @@
         internal void RenderUI()
         {
             Output.FillRect(600, 0, 200, 480, Color.White);
-
+            // Healthbar
+            double hpx = 610;
+            double hpy = 10;
+            double hpw = 180;
+            double hph = 10;
+            double hpc = ((double)level.Player.Health / level.Player.MaxHealth) * hpw;
+            Output.StrokeRect(hpx, hpy, hpw, hph, Color.Red);
+            Output.FillRect(hpx, hpy, hpc, hph, Color.Red);
+            // Flasks
+            for (int i = 0; i < level.Player.HealthPotions; i++)
+            {
+                double left = 610 + i * 20;
+                double top = 30;
+                double width = 16;
+                double height = 16;
+                Output.FillRect(left, top, width, height, Color.Purple);
+                Output.FillRect(left + 4, top - 4, width - 8, 4, Color.Gray);
+                Output.StrokeRect(left, top, width, height, Color.Gray, 1);
+            }
             level.Geometry.ForEach(Primitive.DrawTileMini);
             Primitive.DrawModelMini(level.Player);
+            Output.DrawText(string.Format($"Depth: {Level.currentLevel}"), 610, 270, Color.Black);
             // Output debug info
-            Output.DrawText(debugInfo, 610, 10, Color.Black);
+            Output.DrawText(debugInfo, 610, 50, Color.Black);
 			Output.DrawText(string.Format($"~/> {console}_"), 10, 450, Color.Black);
         }
 	}

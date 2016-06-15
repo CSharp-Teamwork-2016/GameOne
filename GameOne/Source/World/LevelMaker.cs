@@ -42,11 +42,12 @@
             this.MakeLevel();
         }
 
-        public void NextLevel()
+        public int NextLevel()
         {
             this.depth += (int)Math.Max(2, this.depth * 0.2);
             this.CalcSize();
             this.MakeLevel();
+            return depth;
         }
 
         public void MakeLevel()

@@ -24,6 +24,14 @@
 
         public int HealthPotions { get; set; }
 
+        public int MaxHealth
+        {
+            get
+            {
+                return maxHealth;
+            }
+        }
+
         public int XpLevel
         {
             get
@@ -109,6 +117,12 @@
         {
             base.TakeDamage(damage);
             Knockback();
+        }
+
+        public void Respawn()
+        {
+            state = State.IDLE;
+            health = 100;
         }
     }
 }

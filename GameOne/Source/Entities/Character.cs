@@ -40,6 +40,14 @@
             }
         }
 
+        public int MaxHealth
+        {
+            get
+            {
+                return maxHealth;
+            }
+        }
+
         public int Damage
         {
             get

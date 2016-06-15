@@ -43,6 +43,12 @@ namespace GameOne.Tests
                 case "EXIT":
                     Environment.Exit(0);
                     break;
+                case "RESPAWN":
+                    Source.Loop.level.Player.Respawn();
+                    break;
+                case "WARP":
+                    Source.Loop.level.exitTriggered = true;
+                    break;
             }
         }
     }

@@ -13,7 +13,7 @@
     {
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
 
-        private static int currentLevel = 4;
+        public static int currentLevel = 4;
 
         private Player player;
         private Item exitPortal;
@@ -61,7 +61,7 @@
             exitOpen = false;
             exitTriggered = false;
             enemyCount = 0;
-            generator.NextLevel();
+            currentLevel = generator.NextLevel();
             GenerateGeometry();
             this.entities = new List<Entity>();
             this.entities.Add(this.player);
