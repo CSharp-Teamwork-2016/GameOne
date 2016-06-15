@@ -42,5 +42,12 @@
         {
             // TODO
         }
+
+        protected override void Die()
+        {
+            base.Die();
+            Loop.level.Player.GainXP(xpAward);
+            Loop.level.EnemySlain();
+        }
     }
 }

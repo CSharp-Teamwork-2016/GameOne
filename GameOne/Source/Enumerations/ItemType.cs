@@ -2,8 +2,9 @@
 {
     public enum ItemType
     {
-        PotionHealth,
         BadItem,
-        EndKey
+        EndKey,
+        PotionHealth,
+        QuartzFlask
     }
 }

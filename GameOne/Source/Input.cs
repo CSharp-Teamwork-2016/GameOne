@@ -40,7 +40,13 @@
                     case Keys.LeftControl:
                         result = UserInput.Attack;
                         break;
-				}
+                    case Keys.D1:
+                        if (this.kbPrevious.IsKeyUp(key))
+                        {
+                            result = UserInput.DrinkPotion;
+                        }
+                        break;
+                }
 
                 if (this.kbPrevious.IsKeyUp(key))
                 {

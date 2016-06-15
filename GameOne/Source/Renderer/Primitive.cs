@@ -54,22 +54,52 @@
             Output.FillRect(left, top, width, height, color);
         }
 
-        // Minimap projection
-        public static void DrawTileMini(Tile tile)
-        {
-            if (tile.TileType == TileType.Wall)
-            {
-                double left = (tile.X - 0.5) * miniMapSize + 610;
-                double top = (tile.Y - 0.5) * miniMapSize + 300;
-                double width = miniMapSize;
-                double height = miniMapSize;
-                Output.FillRect(left, top, width, height, Color.Black);
-            }
-        }
-
         public static void DrawModel(Model model)
         {
             if (model.State == State.DEAD) return;
+            if (model is Character) DrawCharacter((Character)model);
+            else if (model is Item) DrawItem((Item)model);
+        }
+
+        private static void DrawItem(Item model)
+        {
+            double left = (model.Position.X - model.Radius) * gridSize;
+            double top = (model.Position.Y - model.Radius) * gridSize;
+            double width = model.Radius * 2 * gridSize;
+            double height = model.Radius * 2 * gridSize;
+
+            Color color = Color.Purple;
+            if (model.Type == ItemType.EndKey)
+            {
+                Output.StrokeOval(left + 2, top + 2, width - 4, height - 4, Color.Black, 2);
+                Output.FillRect(left, top, width / 3, height / 3, Color.Gold);
+                Output.FillRect(left + width / 3 * 2, top, width / 3, height / 3, Color.Gold);
+                Output.FillRect(left, top + height / 3 * 2, width / 3, height / 3, Color.Gold);
+                Output.FillRect(left + width / 3 * 2, top + height / 3 * 2, width / 3, height / 3, Color.Gold);
+            }
+            else if (model.Type == ItemType.PotionHealth)
+            {
+                width /= 2;
+                left += width / 2;
+                Output.FillRect(left, top, width, height, Color.Red);
+                Output.FillRect(left + 2, top - 4, width -4, 4, Color.White);
+                Output.StrokeRect(left, top, width, height, Color.White, 1);
+            }
+            else if (model.Type == ItemType.QuartzFlask)
+            {
+                Output.FillRect(left, top, width, height, Color.Purple);
+                Output.FillRect(left + 4, top - 4, width - 8, 4, Color.White);
+                Output.StrokeRect(left, top, width, height, Color.White, 1);
+            }
+            else
+            {
+                Output.FillOval(left, top, width, height, color);
+                Output.StrokeOval(left, top, width, height, Color.White, 2);
+            }
+        }
+
+        private static void DrawCharacter(Character model)
+        {
             double left = (model.Position.X - model.Radius) * gridSize;
             double top = (model.Position.Y - model.Radius) * gridSize;
             double width = model.Radius * 2 * gridSize;
@@ -82,18 +112,11 @@
             {
                 color = Color.Green;
             }
-            if (model is Item)
-            {
-                color = Color.Purple;
-            }
             if (model.State == State.HURT) color = Color.Red;
             Output.FillOval(left, top, width, height, color);
             Output.StrokeOval(left, top, width, height, Color.White, 2);
-            if (model is Character)
-            {
-                Output.DrawLine((int)(model.Position.X * gridSize), (int)(model.Position.Y * gridSize),
-                        (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
-            }
+            Output.DrawLine((int)(model.Position.X * gridSize), (int)(model.Position.Y * gridSize),
+                    (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
 
             if (model.State == State.ATTACK)
             {
@@ -107,6 +130,17 @@
         }
 
         // Minimap projection
+        public static void DrawTileMini(Tile tile)
+        {
+            if (tile.TileType == TileType.Wall)
+            {
+                double left = (tile.X - 0.5) * miniMapSize + 610;
+                double top = (tile.Y - 0.5) * miniMapSize + 300;
+                double width = miniMapSize;
+                double height = miniMapSize;
+                Output.FillRect(left, top, width, height, Color.Black);
+            }
+        }
         public static void DrawModelMini(Model model)
         {
             double left = (model.Position.X - model.Radius) * miniMapSize + 610;

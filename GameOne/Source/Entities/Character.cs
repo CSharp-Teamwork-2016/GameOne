@@ -94,6 +94,7 @@
 
         public virtual void TakeDamage(int damage)
         {
+            if (state == State.DEAD) return;
             if ((state & State.HURT) == State.HURT) return;
             state |= State.HURT;
             damageTime = 0;
@@ -108,11 +109,6 @@
                 state |= State.ATTACK;
                 attackTime = 0;
             }
-        }
-
-        public bool IsDead()
-        {
-            return this.Health <= 0;
         }
 
         public override void Update(double time)
@@ -187,7 +183,7 @@
             this.velocity.Y = y;
         }
 
-        protected void Die()
+        protected virtual void Die()
         {
             state = State.DEAD;
         }

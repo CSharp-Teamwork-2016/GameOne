@@ -9,11 +9,13 @@
         private const int InitialAmmo = 200;
 
         private int xpLevel;
+        private int experience;
 
         public Player(double x, double y, double direction, int xpLevel = 1)
             : base(x, y, direction, 0.30, new Spritesheet(), 100, 10)
         {
-            this.XpLevel = xpLevel;
+            this.xpLevel = xpLevel;
+            experience = 0;
             this.HealthPotions = InitialHealthPotions;
             this.Ammo = InitialAmmo;
         }
@@ -28,29 +30,19 @@
             {
                 return this.xpLevel;
             }
-
-            set
-            {
-                this.xpLevel = value;
-            }
         }
 
-        public void ChangeXPLevel(int level)
+        public void GainXP(int level)
         {
-            this.XpLevel += level;
+            this.experience += level;
         }
 
-        public void AddHealthPotion(int health)
+        public void DrinkPotion()
         {
-            this.HealthPotions++;
-        }
-
-        public void DrinkPotion(int health)
-        {
-            if (this.HealthPotions > 0)
+            if (this.HealthPotions > 0 && health < maxHealth)
             {
                 this.HealthPotions--;
-                this.health += 20;
+                Heal(30);
             }
         }
 
@@ -74,6 +66,9 @@
                 case UserInput.Attack:
                     Attack();
                     break;
+                case UserInput.DrinkPotion:
+                    DrinkPotion();
+                    break;
 			}
 		}
 
@@ -83,6 +78,9 @@
             {
                 case ItemType.PotionHealth:
                     Heal(15);
+                    break;
+                case ItemType.QuartzFlask:
+                    HealthPotions++;
                     break;
                 case ItemType.EndKey:
                     break;
@@ -101,7 +99,7 @@
             Primitive.CameraX = Position.X;
             Primitive.CameraY = Position.Y;
 
-            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\n");
+            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\nPotions: {HealthPotions}\n\nLevel {xpLevel}\nXP: {experience}");
             //Loop.debugInfo += string.Format($"State: {state}\n");
         }
 

@@ -16,6 +16,9 @@
         private static int currentLevel = 4;
 
         private Player player;
+        private Item exitPortal;
+        public bool exitOpen = false;
+        private int enemyCount = 0;
         private List<Entity> entities;
         private List<Tile> geometry;
         private List<Tile> validFloor;
@@ -26,10 +29,9 @@
         {
             this.GenerateGeometry();
             this.player = new Player(5, 5, 0.0);
-            SetStart();
             this.entities = new List<Entity>();
             this.entities.Add(this.player);
-            this.SpawnEnemies();
+            SetStart();
             SpawnItems();
             this.geometryMap = new Dictionary<long, Tile>();
         }
@@ -45,6 +47,7 @@
             LevelMaker.Init();
             this.generator = new LevelMaker(currentLevel);
             this.geometry = this.generator.Tiles.Values.ToList();
+            this.geometryMap = this.generator.Tiles;
 
             validFloor = new List<Tile>();
             foreach (Tile tile in this.geometry.Where(t => t.TileType == TileType.Floor))
@@ -68,17 +71,11 @@
         {
             int items = 1 + (int)Math.Sqrt(currentLevel);
 
-            Tile currentTile = GetRandomTile();
-            // produce EndKey
-            Item itemEndKey =
-                new Item(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(), ItemType.EndKey);
-            this.entities.Add(itemEndKey);
-
             for (int i = 0; i < items; i++)
             {
-                // produce other items "no EndKey"
-                currentTile = GetRandomTile();
-                ItemType type = ItemType.PotionHealth;
+                Tile currentTile = GetRandomTile();
+                // 30% chance for Quartz Flask (inventory potion)
+                ItemType type = LevelMaker.RandDouble() > 0.7 ? ItemType.QuartzFlask : ItemType.PotionHealth;
                 Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), type);
                 this.entities.Add(item);
             }
@@ -89,16 +86,26 @@
         /// EnemyType has 4 enum values, so rnd is in range 1-5
         /// Value properties for enemies are hardcoded
         /// </summary>
-        private void SpawnEnemies()
+        private void SpawnEnemies(Room room)
         {
+            List<Tile> validTiles = new List<Tile>();
+            for (int x = room.X; x < room.X + room.Width; x++)
+            {
+                for (int y = room.Y; y < room.Y + room.Height; y++)
+                {
+                    validTiles.Add(geometryMap[generator.GetIndex(x, y)]);
+                }
+            }
+            validTiles = validTiles.Where(tile => tile.TileType == TileType.Floor).ToList();
             int enemies = 1 + (int)Math.Sqrt(currentLevel);
 
             for (int i = 0; i < enemies; i++)
             {
-                Tile currentTile = GetRandomTile();
+                Tile currentTile = GetRandomTile(validTiles);
                 Enemy enemy = new Enemy(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(),
-                    50, 5, AttackType.Melee, EnemyType.Zombie, 0); // hardcoded values for enemy
+                    50, 5, AttackType.Melee, EnemyType.Zombie, 50); // hardcoded values for enemy
                 this.entities.Add(enemy);
+                enemyCount++;
             }
         }
 
@@ -107,6 +114,14 @@
             int next = LevelMaker.Rand(validFloor.Count);
             Tile result = validFloor[next];
             validFloor.Remove(result);
+            return result;
+        }
+
+        private Tile GetRandomTile(List<Tile> tiles)
+        {
+            int next = LevelMaker.Rand(tiles.Count);
+            Tile result = tiles[next];
+            tiles.Remove(result);
             return result;
         }
 
@@ -149,6 +164,27 @@
                     rooms.Add(end.Room);
                 }
             }
+            // produce EndKey
+            exitPortal = new Item(end.Room.OriginX, end.Room.OriginY, 0, 0.3, new Spritesheet(), ItemType.EndKey);
+
+            foreach (Room room in rooms)
+            {
+                SpawnEnemies(room);
+            }
+        }
+
+        public void EnemySlain()
+        {
+            enemyCount--;
+            if (enemyCount == 0 && !exitOpen)
+            {
+                exitOpen = true;
+            }
+        }
+
+        public void SetExit()
+        {
+            this.entities.Add(exitPortal);
         }
     }
 }

@@ -67,7 +67,11 @@
 			debugInfo = "";
 			level.Player.Input(this.input.Update(keyboardState, mouseState));
 
-			// TODO update objects
+            if (level.exitOpen)
+            {
+                level.exitOpen = false;
+                level.SetExit();
+            }
 			foreach (Entity entity in level.Entities)
 			{
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);

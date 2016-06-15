@@ -168,7 +168,7 @@
                 {
                     for (int row = startY; row < endY; row++)
                     {
-                        long currentIndex = getIndex(col, row, this.width);
+                        long currentIndex = GetIndex(col, row, this.width);
                         if (row == startY || row == endY - 1 || col == startX || col == endX - 1)
                         {
                             if (!this.levelMatrix.ContainsKey(currentIndex))
@@ -195,7 +195,7 @@
                 {
                     for (int row = startY; row < endY; row++)
                     {
-                        long currentIndex = getIndex(col, row, this.width);
+                        long currentIndex = GetIndex(col, row, this.width);
                         if (row == startY || row == endY - 1 || col == startX || col == endX - 1)
                         {
                             if (!this.levelMatrix.ContainsKey(currentIndex))
@@ -227,7 +227,7 @@
 
             foreach (var tile in walls)
             {
-                long currentIndex = getIndex((int)tile.X, (int)tile.Y, this.width);
+                long currentIndex = GetIndex((int)tile.X, (int)tile.Y, this.width);
                 if (this.levelMatrix.ContainsKey(currentIndex - this.width) &&
                         this.levelMatrix[currentIndex - this.width].TileType == TileType.Floor)
                 {
@@ -239,6 +239,11 @@
                     tile.Overlay();
                 }
             }
+        }
+
+        public long GetIndex(int x, int y)
+        {
+            return (long)y * width + x;
         }
 
         #endregion Extract geometry =============
@@ -293,7 +298,7 @@
          * @param width Width of the simulated matrix
          * @return Unique zero-based index of the tile at the given coordinate x,y.
          */
-        public static long getIndex(int x, int y, int width)
+        public static long GetIndex(int x, int y, int width)
         {
             return (long)y * width + x;
         }
