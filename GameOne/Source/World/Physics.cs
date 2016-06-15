@@ -32,11 +32,23 @@
             double penetration = dist - (e1.Radius + e2.Radius);
             if (penetration < 0)
             {
+                if (e2 is Player && e1 is Item)
+                {
+                    Model t = e2;
+                    e2 = e1;
+                    e1 = t;
+                }
+                if (e1 is Player && e2 is Item)
+                {
+                    ((Item)e2).Collect();
+                    // TODO Player effects
+                    return;
+                }
                 separation.Normalize();
                 separation = Vector.Multiply(separation, penetration / 2);
                 e1.Position -= separation;
                 e2.Position += separation;
-                Loop.DebugInfo += "Collision\n";
+                //Loop.DebugInfo += "Collision\n";
             }
         }
 
@@ -76,7 +88,7 @@
 
                 model.Position =
                     new Vector(model.Position.X - penetration, model.Position.Y); // resolve
-                return; ////////////// ???
+                return;
             }
 
             if (distX <= tileHalf && distY <= tileHalf + model.Radius)

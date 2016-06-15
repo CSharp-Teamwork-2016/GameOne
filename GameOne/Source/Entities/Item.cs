@@ -19,13 +19,16 @@
         public override void Update(double time)
         {
             // TODO
-            throw new NotImplementedException();
         }
 
         public override void Render()
         {
             // TODO
-            throw new NotImplementedException();
+        }
+
+        public void Collect()
+        {
+            state = State.DEAD;
         }
     }
 }

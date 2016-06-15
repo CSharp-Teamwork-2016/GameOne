@@ -29,6 +29,7 @@
             this.entities = new List<Entity>();
             this.entities.Add(this.player);
             this.SpawnEnemies();
+            SpawnItems();
             this.geometryMap = new Dictionary<long, Tile>();
         }
 
@@ -84,7 +85,7 @@
                 // produce other items "no EndKey"
                 currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
                 int enumItemValue = rnd.Next(1, 3);
-                Item item = new Item(currentTile.X, currentTile.Y, 0, 1, new Spritesheet(), (ItemType)enumItemValue);
+                Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), (ItemType)enumItemValue);
                 this.entities.Add(item);
             }
         }

@@ -74,6 +74,7 @@
 			}
 			Physics.CollisionResolution(level.Entities
                     .OfType<Model>()
+                    .Where(e => e.Alive)
                     .ToList());
 			Physics.BoundsCheck(level.Entities
                     .OfType<Model>()
@@ -97,6 +98,7 @@
 		internal void Render()
 		{
 
+            Output.FillRect(600, 0, 200, 480, Color.White);
 			// TODO render objects
 			level.Geometry.ForEach(Primitive.DrawTile);
 			foreach (var entity in level.Entities.Where(e => e is Entities.Model))
@@ -111,8 +113,8 @@
 			{
 				test();
 			}
-			// Output debug info
-			Output.DrawText(debugInfo, 660, 10, Color.Black);
+            // Output debug info
+			Output.DrawText(debugInfo, 610, 10, Color.Black);
 			Output.DrawText(string.Format($"~/> {console}_"), 10, 450, Color.Black);
 #endif
 		}

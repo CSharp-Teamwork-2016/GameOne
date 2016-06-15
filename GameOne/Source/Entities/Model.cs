@@ -23,6 +23,11 @@
             this.state = State.IDLE;
         }
 
+        public bool Alive
+        {
+            get { return state != State.DEAD; }
+        }
+
 		public Vector Position
 		{
 			get

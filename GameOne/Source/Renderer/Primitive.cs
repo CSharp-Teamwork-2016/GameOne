@@ -1,21 +1,22 @@
 ﻿namespace GameOne.Source.Renderer
 {
-	using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework;
 
-	using World;
-	using Entities;
+    using World;
+    using Entities;
     using Enumerations;
 
-	/// <summary>
-	/// Temporary class for outputting game objects without assets
-	/// <para>/!\ DO NOT MODIFY /!\</para>
-	/// </summary>
-	public class Primitive
-	{
+    /// <summary>
+    /// Temporary class for outputting game objects without assets
+    /// <para>/!\ DO NOT MODIFY /!\</para>
+    /// </summary>
+    public class Primitive
+    {
         /// <summary>
         /// Width and height of one world tile
         /// </summary>
 		private const int gridSize = 20;
+        private const int miniMapSize = 3;
 
         public static void DrawTile(Tile tile)
         {
@@ -26,24 +27,46 @@
             Color color = tile.TileType == Enumerations.TileType.Floor ? Color.Gray : Color.White; // change
 
             Output.FillRect(left, top, width, height, color);
+
+            // Minimap projection
+            if (tile.TileType == TileType.Wall)
+            {
+                left = (tile.X - 0.5) * miniMapSize + 610;
+                top = (tile.Y - 0.5) * miniMapSize + 300;
+                width = miniMapSize;
+                height = miniMapSize;
+                color = Color.Black;
+                Output.FillRect(left, top, width, height, color);
+            }
         }
 
-		public static void DrawModel(Model model)
-		{
+        public static void DrawModel(Model model)
+        {
             if (model.State == State.DEAD) return;
-			double left = (model.Position.X - model.Radius) * gridSize;
-			double top = (model.Position.Y - model.Radius) * gridSize;
-			double width = model.Radius * 2 * gridSize;
-			double height = model.Radius * 2 * gridSize;
-			double dirX = model.Position.X + model.Radius * 1.3 * System.Math.Cos(model.Direction);
-			double dirY = model.Position.Y + model.Radius * 1.3 * System.Math.Sin(model.Direction);
+            double left = (model.Position.X - model.Radius) * gridSize;
+            double top = (model.Position.Y - model.Radius) * gridSize;
+            double width = model.Radius * 2 * gridSize;
+            double height = model.Radius * 2 * gridSize;
+            double dirX = model.Position.X + model.Radius * 1.3 * System.Math.Cos(model.Direction);
+            double dirY = model.Position.Y + model.Radius * 1.3 * System.Math.Sin(model.Direction);
 
-			Color color = model is Player ? Color.Green : Color.LightGray;
+            Color color = Color.LightGray;
+            if (model is Player)
+            {
+                color = Color.Green;
+            }
+            if (model is Item)
+            {
+                color = Color.Purple;
+            }
             if (model.State == State.HURT) color = Color.Red;
-			Output.FillOval(left, top, width, height, color);
-			Output.StrokeOval(left, top, width, height, Color.White, 2);
-			Output.DrawLine((int)(model.Position.X * gridSize), (int)(model.Position.Y * gridSize), 
-                    (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
+            Output.FillOval(left, top, width, height, color);
+            Output.StrokeOval(left, top, width, height, Color.White, 2);
+            if (model is Character)
+            {
+                Output.DrawLine((int)(model.Position.X * gridSize), (int)(model.Position.Y * gridSize),
+                        (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
+            }
 
             if (model.State == State.ATTACK)
             {
@@ -52,8 +75,19 @@
                 double tipX = model.Position.X + model.Radius * 3 * System.Math.Cos(model.Direction);
                 double tipY = model.Position.Y + model.Radius * 3 * System.Math.Sin(model.Direction);
 
-                Output.DrawLine((int) (swordX * gridSize), (int)(swordY * gridSize), (int)(tipX * gridSize), (int)(tipY * gridSize), Color.Red, 3);
+                Output.DrawLine((int)(swordX * gridSize), (int)(swordY * gridSize), (int)(tipX * gridSize), (int)(tipY * gridSize), Color.Red, 3);
             }
-		}
-	}
+
+            // Minimap projection
+            if (model is Player)
+            {
+                left = (model.Position.X - model.Radius) * miniMapSize + 610;
+                top = (model.Position.Y - model.Radius) * miniMapSize + 300;
+                width = 2 * miniMapSize;
+                height = 2 * miniMapSize;
+                Output.FillOval(left, top, width, height, Color.Red);
+
+            }
+        }
+    }
 }
