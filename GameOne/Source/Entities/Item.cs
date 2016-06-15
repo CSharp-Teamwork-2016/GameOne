@@ -18,7 +18,7 @@
 
         public override void Update(double time)
         {
-            // TODO
+            Loop.debugInfo += string.Format($"{Position.X}, {Position.Y}\n");
         }
 
         public override void Render()

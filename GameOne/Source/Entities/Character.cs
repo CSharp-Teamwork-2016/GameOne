@@ -10,6 +10,7 @@
     public abstract class Character : Model
     {
         protected int health;
+        protected int maxHealth;
         protected int damage;
         private Vector velocity;
         private AttackType attackType;
@@ -22,6 +23,7 @@
             this.velocity = new Vector(0, 0);
 
             this.health = health;
+            this.maxHealth = health;
             this.damage = damage;
             this.attackType = attackType;
         }
@@ -169,6 +171,12 @@
                     this.velocity.Y = 0;
                 }
             }
+        }
+
+        public void Heal(int amount)
+        {
+            health += amount;
+            if (health > maxHealth) health = maxHealth;
         }
 
         public void Knockback()

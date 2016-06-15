@@ -27,6 +27,7 @@
 
         private static void Resolve(Model e1, Model e2)
         {
+            if (!e1.Alive || !e2.Alive) return;
             Vector separation = Vector.Subtract(e1.Position, e2.Position);
             double dist = separation.Length;
             double penetration = dist - (e1.Radius + e2.Radius);
@@ -41,7 +42,7 @@
                 if (e1 is Player && e2 is Item)
                 {
                     ((Item)e2).Collect();
-                    // TODO Player effects
+                    ((Player)e1).PickUpItem(((Item)e2).Type);
                     return;
                 }
                 separation.Normalize();

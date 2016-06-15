@@ -23,7 +23,7 @@
         private void PrepareNext()
         {
             this.elapsedTime = 0;
-            this.nextTime = (new System.Random((int)Id)).NextDouble() * 3;
+            this.nextTime = World.LevelMaker.RandDouble(1,3);
         }
 
         public override void Update(double time)
@@ -31,9 +31,8 @@
             this.elapsedTime += time;
             if (this.elapsedTime >= this.nextTime)
             {
-                System.Random rnd = new System.Random();
                 PrepareNext();
-                Direction = System.Math.PI / 2 * rnd.Next(4);
+                Direction = System.Math.PI / 2 * World.LevelMaker.Rand(4);
                 MoveForward();
             }
             base.Update(time);

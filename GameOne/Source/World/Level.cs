@@ -18,6 +18,7 @@
         private Player player;
         private List<Entity> entities;
         private List<Tile> geometry;
+        private List<Tile> validFloor;
         private Dictionary<long, Tile> geometryMap;
         LevelMaker generator;
 
@@ -44,13 +45,12 @@
             LevelMaker.Init();
             this.generator = new LevelMaker(currentLevel);
             this.geometry = this.generator.Tiles.Values.ToList();
-            /*
-            foreach (Tile tile in this.geometry)
+
+            validFloor = new List<Tile>();
+            foreach (Tile tile in this.geometry.Where(t => t.TileType == TileType.Floor))
             {
-                long uniqueKey = this.GetUniqueKey(tile.GetX(), tile.GetY());
-                this.geometryMap.Add(uniqueKey, tile);
+                validFloor.Add(tile);
             }
-			*/
         }
 
         public void NextLevel()
@@ -67,25 +67,19 @@
         private void SpawnItems()
         {
             int items = 1 + (int)Math.Sqrt(currentLevel);
-            Random rnd = new Random();
 
-            var onlyValidTiles =
-                this.geometry.Where(tile => tile.TileType == TileType.Floor).ToArray();
-
-            Tile currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
-
+            Tile currentTile = GetRandomTile();
             // produce EndKey
             Item itemEndKey =
-                new Item(
-                    currentTile.X, currentTile.Y, 0, 1, new Spritesheet(), ItemType.EndKey);
+                new Item(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(), ItemType.EndKey);
             this.entities.Add(itemEndKey);
 
             for (int i = 0; i < items; i++)
             {
                 // produce other items "no EndKey"
-                currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
-                int enumItemValue = rnd.Next(1, 3);
-                Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), (ItemType)enumItemValue);
+                currentTile = GetRandomTile();
+                ItemType type = ItemType.PotionHealth;
+                Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), type);
                 this.entities.Add(item);
             }
         }
@@ -98,18 +92,22 @@
         private void SpawnEnemies()
         {
             int enemies = 1 + (int)Math.Sqrt(currentLevel);
-            Random rnd = new Random();
-
-            var onlyValidTiles = this.geometry.Where(tile => tile.TileType == TileType.Floor).ToArray();
 
             for (int i = 0; i < enemies; i++)
             {
-                Tile currentTile = onlyValidTiles[rnd.Next(0, onlyValidTiles.Length)];
-                int enumEnemyValue = rnd.Next(1, 5);
+                Tile currentTile = GetRandomTile();
                 Enemy enemy = new Enemy(currentTile.X, currentTile.Y, 0, 0.3, new Spritesheet(),
-                    50, 5, AttackType.Melee, (EnemyType)enumEnemyValue, 0); // hardcoded values for enemy
+                    50, 5, AttackType.Melee, EnemyType.Zombie, 0); // hardcoded values for enemy
                 this.entities.Add(enemy);
             }
+        }
+
+        private Tile GetRandomTile()
+        {
+            int next = LevelMaker.Rand(validFloor.Count);
+            Tile result = validFloor[next];
+            validFloor.Remove(result);
+            return result;
         }
     }
 }

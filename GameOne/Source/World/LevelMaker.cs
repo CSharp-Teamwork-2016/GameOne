@@ -33,7 +33,7 @@
 
         //========================================
 
-        //region Initialization ==================
+        #region Initialization ==================
 
         public LevelMaker(int depth)
         {
@@ -76,11 +76,11 @@
             this.height = (int)(this.width * 0.67);
         }
 
-        //endregion Initialization ===============
+        #endregion Initialization ===============
 
         //========================================
 
-        //region Extract geometry ================
+        #region Extract geometry ================
 
         public List<Partition> GetBsp()
         {
@@ -241,11 +241,11 @@
             }
         }
 
-        //endregion Extract geometry =============
+        #endregion Extract geometry =============
 
         //========================================
 
-        //region Static parameters ===============
+        #region Static parameters ===============
 
         public const int MINSIZE = 7;
         public const int MAXSIZE = 15;
@@ -264,9 +264,24 @@
             rnd = new Random(seed);
         }
 
-        public static int rand(int bound)
+        public static int Rand(int bound)
         {
             return rnd.Next(bound);
+        }
+
+        public static double RandDouble()
+        {
+            return rnd.NextDouble();
+        }
+
+        public static double RandDouble(double bound)
+        {
+            return rnd.NextDouble() * bound;
+        }
+
+        public static double RandDouble(double lower, double upper)
+        {
+            return lower + rnd.NextDouble() * (upper - lower);
         }
 
         /**
@@ -283,7 +298,7 @@
             return (long)y * width + x;
         }
 
-        //endregion Static parameters ============
+        #endregion Static parameters ============
 
         //========================================
 

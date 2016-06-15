@@ -13,14 +13,14 @@
 
         public Room(int x, int y, int width, int height)
         {
-            this.width = LevelMaker.MINSIZE + LevelMaker.rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
+            this.width = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
             this.width = Math.Min(this.width, width);
-            this.height = LevelMaker.MINSIZE + LevelMaker.rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
+            this.height = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
             this.height = Math.Min(this.height, height);
 
             if (width - this.width > 0)
             {
-                this.x = x + LevelMaker.rand(width - this.width);
+                this.x = x + LevelMaker.Rand(width - this.width);
             }
             else
             {
@@ -29,7 +29,7 @@
 
             if (height - this.height > 0)
             {
-                this.y = y + LevelMaker.rand(height - this.height);
+                this.y = y + LevelMaker.Rand(height - this.height);
             }
             else
             {

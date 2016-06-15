@@ -77,14 +77,16 @@
 			}
 		}
 
-        public void ApplyItemEffectsToHealth(int health)
+        public void PickUpItem(ItemType type)
         {
-            this.health += health;
-        }
-
-        public void ApplyItemEffectsToAmmo(int ammo)
-        {
-            this.Ammo += ammo;
+            switch (type)
+            {
+                case ItemType.PotionHealth:
+                    Heal(15);
+                    break;
+                case ItemType.EndKey:
+                    break;
+            }
         }
 
         public override void Render()

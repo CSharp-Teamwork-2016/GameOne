@@ -86,13 +86,13 @@
             }
             else
             {
-                this.direction = LevelMaker.rand(1) == 1; // 0 = horizontal, 1 = vertical
+                this.direction = LevelMaker.Rand(1) == 1; // 0 = horizontal, 1 = vertical
             }
 
             if (!this.direction)
             { // top and bottom leaves
                 if (this.height <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.rand(this.height - 2 * LevelMaker.MINSIZE);
+                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.height - 2 * LevelMaker.MINSIZE);
                 half = (int)Math.Max(half, LevelMaker.MINRATIO * this.height);
                 half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.height);
                 this.leftLeaf = new Partition(this.x, this.y, this.width, half, this);
@@ -101,7 +101,7 @@
             else
             { // left and right leaves
                 if (this.width <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.rand(this.width - 2 * LevelMaker.MINSIZE);
+                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.width - 2 * LevelMaker.MINSIZE);
                 half = (int)Math.Max(half, LevelMaker.MINRATIO * this.width);
                 half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.width);
                 this.leftLeaf = new Partition(this.x, this.y, half, this.height, this);
