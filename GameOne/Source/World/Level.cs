@@ -104,7 +104,7 @@
             }
             validTiles = validTiles.Where(tile => tile.TileType == TileType.Floor).ToList();
             int enemies = 1 + (int)Math.Sqrt(currentLevel);
-            int damage = currentLevel;
+            int damage = 1 + currentLevel;
             int HP = 50 + currentLevel * 2;
             for (int i = 0; i < enemies; i++)
             {

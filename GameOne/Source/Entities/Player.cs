@@ -59,7 +59,7 @@
                 experience -= xpToNext;
                 xpToNext = (int)((xpToNext * 1.4) / 10) * 10;
                 damage = (int)(damage * 1.25);
-                maxHealth = (int)(maxHealth * 1.2);
+                maxHealth = (int)(maxHealth * 1.1);
                 health = maxHealth;
             }
         }
