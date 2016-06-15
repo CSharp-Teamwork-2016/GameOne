@@ -5,6 +5,7 @@
     using World;
     using Entities;
     using Enumerations;
+    using System;
 
     /// <summary>
     /// Temporary class for outputting game objects without assets
@@ -111,6 +112,21 @@
             if (model is Player)
             {
                 color = Color.Green;
+                /*
+                double p1x = model.Position.X + Math.Cos(model.Direction + Math.PI / 2) * 0.5;
+                double p1y = model.Position.Y + Math.Sin(model.Direction + Math.PI / 2) * 0.5;
+                double pw = 1.2 * Math.Cos(model.Direction) + 1 * Math.Sin(model.Direction);
+                double ph = 1.2 * Math.Sin(model.Direction) - 1 * Math.Cos(model.Direction);
+                //Output.StrokeRect(p1x * gridSize, p1y * gridSize, pw * gridSize, ph * gridSize, Color.Red, 2);
+
+                double leftA = Math.Min(p1x, p1x + pw);
+                double rightA = Math.Max(p1x, p1x + pw);
+                double topA = Math.Min(p1y, p1y + ph);
+                double bottomA = Math.Max(p1y, p1y + ph);
+
+                Output.DrawLine(leftA * gridSize, model.Position.Y * gridSize, rightA * gridSize, model.Position.Y * gridSize, Color.Red, 2);
+                Output.DrawLine(model.Position.X * gridSize, topA * gridSize, model.Position.X * gridSize, bottomA * gridSize, Color.Red, 2);
+                */
             }
             if (model.State == State.HURT) color = Color.Red;
             Output.FillOval(left, top, width, height, color);
@@ -120,12 +136,19 @@
 
             if (model.State == State.ATTACK)
             {
+                /*
                 double swordX = model.Position.X + model.Radius * 1.3 * System.Math.Cos(model.Direction);
                 double swordY = model.Position.Y + model.Radius * 1.3 * System.Math.Sin(model.Direction);
                 double tipX = model.Position.X + model.Radius * 3 * System.Math.Cos(model.Direction);
                 double tipY = model.Position.Y + model.Radius * 3 * System.Math.Sin(model.Direction);
 
-                Output.DrawLine((int)(swordX * gridSize), (int)(swordY * gridSize), (int)(tipX * gridSize), (int)(tipY * gridSize), Color.Red, 3);
+                Output.DrawLine((int)(swordX * gridSize), (int)(swordY * gridSize), (int)(tipX * gridSize), (int)(tipY * gridSize), Color.Red, 5);
+                */
+                double p1x = model.Position.X + Math.Cos(model.Direction + Math.PI / 2) * 0.2;
+                double p1y = model.Position.Y + Math.Sin(model.Direction + Math.PI / 2) * 0.2;
+                double pw = 0.9 * Math.Cos(model.Direction);
+                double ph = 0.9 * Math.Sin(model.Direction);
+                Output.StrokeRect(p1x * gridSize, p1y * gridSize, pw * gridSize, ph * gridSize, Color.Red, 5);
             }
         }
 

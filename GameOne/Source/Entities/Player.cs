@@ -39,6 +39,7 @@
 
         public void DrinkPotion()
         {
+            if (timeToNextAction > 0) return;
             if (this.HealthPotions > 0 && health < maxHealth)
             {
                 this.HealthPotions--;

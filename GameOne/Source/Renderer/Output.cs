@@ -198,9 +198,9 @@
         /// <param name="y2">Ending point top offset</param>
         /// <param name="color">Line color</param>
         /// <param name="width">Line thickness</param>
-        public static void DrawLine(int x1, int y1, int x2, int y2, Color color, int width)
+        public static void DrawLine(double x1, double y1, double x2, double y2, Color color, int width)
         {
-            _DrawLine(x1, y1, x2, y2, color, width);
+            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, color, width);
         }
 
         ///
@@ -212,9 +212,9 @@
         /// <param name="x2">Ending point left offset</param>
         /// <param name="y2">Ending point top offset</param>
         /// <param name="color">Line color</param>
-        public static void DrawLine(int x1, int y1, int x2, int y2, Color color)
+        public static void DrawLine(double x1, double y1, double x2, double y2, Color color)
         {
-            _DrawLine(x1, y1, x2, y2, color, penWidth);
+            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, color, penWidth);
         }
 
         ///
@@ -226,9 +226,9 @@
         /// <param name="x2">Ending point left offset</param>
         /// <param name="y2">Ending point top offset</param>
         /// <param name="width">Line thickness</param>
-        public static void DrawLine(int x1, int y1, int x2, int y2, int width)
+        public static void DrawLine(double x1, double y1, double x2, double y2, int width)
         {
-            _DrawLine(x1, y1, x2, y2, penColor, width);
+            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, penColor, width);
         }
 
         ///
@@ -239,9 +239,9 @@
         /// <param name="y1">Starting point top offset</param>
         /// <param name="x2">Ending point left offset</param>
         /// <param name="y2">Ending point top offset</param>
-        public static void DrawLine(int x1, int y1, int x2, int y2)
+        public static void DrawLine(double x1, double y1, double x2, double y2)
         {
-            _DrawLine(x1, y1, x2, y2, penColor, penWidth);
+            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, penColor, penWidth);
         }
 
         ///
