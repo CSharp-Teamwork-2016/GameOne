@@ -18,7 +18,8 @@
         private Player player;
         private Item exitPortal;
         public bool exitOpen = false;
-        private int enemyCount = 0;
+        public int enemyCount = 0;
+        public bool exitTriggered = false;
         private List<Entity> entities;
         private List<Tile> geometry;
         private List<Tile> validFloor;
@@ -27,13 +28,14 @@
 
         public Level()
         {
+            LevelMaker.Init();
+            this.generator = new LevelMaker(currentLevel);
             this.GenerateGeometry();
             this.player = new Player(5, 5, 0.0);
             this.entities = new List<Entity>();
             this.entities.Add(this.player);
             SetStart();
             SpawnItems();
-            this.geometryMap = new Dictionary<long, Tile>();
         }
 
         public List<Tile> Geometry => this.geometry;
@@ -44,8 +46,6 @@
 
         private void GenerateGeometry()
         {
-            LevelMaker.Init();
-            this.generator = new LevelMaker(currentLevel);
             this.geometry = this.generator.Tiles.Values.ToList();
             this.geometryMap = this.generator.Tiles;
 
@@ -58,9 +58,15 @@
 
         public void NextLevel()
         {
-            currentLevel++;
-
-            // TODO
+            exitOpen = false;
+            exitTriggered = false;
+            enemyCount = 0;
+            generator.NextLevel();
+            GenerateGeometry();
+            this.entities = new List<Entity>();
+            this.entities.Add(this.player);
+            SetStart();
+            SpawnItems();
         }
 
         /// <summary>

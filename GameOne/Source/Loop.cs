@@ -72,6 +72,11 @@
                 level.exitOpen = false;
                 level.SetExit();
             }
+            if (level.exitTriggered)
+            {
+                level.exitTriggered = false;
+                level.NextLevel();
+            }
 			foreach (Entity entity in level.Entities)
 			{
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);

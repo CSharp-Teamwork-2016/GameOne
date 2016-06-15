@@ -83,6 +83,7 @@
                     HealthPotions++;
                     break;
                 case ItemType.EndKey:
+                    Loop.level.exitTriggered = true;
                     break;
             }
         }
@@ -99,7 +100,7 @@
             Primitive.CameraX = Position.X;
             Primitive.CameraY = Position.Y;
 
-            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\nPotions: {HealthPotions}\n\nLevel {xpLevel}\nXP: {experience}");
+            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\nPotions: {HealthPotions}\n\nLevel {xpLevel}\nXP: {experience}\n\nEnemies remaining: {Loop.level.enemyCount}\n");
             //Loop.debugInfo += string.Format($"State: {state}\n");
         }
 
