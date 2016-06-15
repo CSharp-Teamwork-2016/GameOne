@@ -15,8 +15,33 @@
         /// <summary>
         /// Width and height of one world tile
         /// </summary>
-		private const int gridSize = 20;
-        private const int miniMapSize = 3;
+		private static int gridSize = 40;
+        private static int miniMapSize = 3;
+        private static double _cameraX = 0, _cameraY = 0;
+
+        public static double CameraX
+        {
+            get
+            {
+                return _cameraX;
+            }
+            set
+            {
+                _cameraX = 300 - value * gridSize;
+            }
+        }
+
+        public static double CameraY
+        {
+            get
+            {
+                return _cameraY;
+            }
+            set
+            {
+                _cameraY = 200 - value * gridSize;
+            }
+        }
 
         public static void DrawTile(Tile tile)
         {
@@ -27,16 +52,18 @@
             Color color = tile.TileType == Enumerations.TileType.Floor ? Color.Gray : Color.White; // change
 
             Output.FillRect(left, top, width, height, color);
+        }
 
-            // Minimap projection
+        // Minimap projection
+        public static void DrawTileMini(Tile tile)
+        {
             if (tile.TileType == TileType.Wall)
             {
-                left = (tile.X - 0.5) * miniMapSize + 610;
-                top = (tile.Y - 0.5) * miniMapSize + 300;
-                width = miniMapSize;
-                height = miniMapSize;
-                color = Color.Black;
-                Output.FillRect(left, top, width, height, color);
+                double left = (tile.X - 0.5) * miniMapSize + 610;
+                double top = (tile.Y - 0.5) * miniMapSize + 300;
+                double width = miniMapSize;
+                double height = miniMapSize;
+                Output.FillRect(left, top, width, height, Color.Black);
             }
         }
 
@@ -77,17 +104,16 @@
 
                 Output.DrawLine((int)(swordX * gridSize), (int)(swordY * gridSize), (int)(tipX * gridSize), (int)(tipY * gridSize), Color.Red, 3);
             }
+        }
 
-            // Minimap projection
-            if (model is Player)
-            {
-                left = (model.Position.X - model.Radius) * miniMapSize + 610;
-                top = (model.Position.Y - model.Radius) * miniMapSize + 300;
-                width = 2 * miniMapSize;
-                height = 2 * miniMapSize;
-                Output.FillOval(left, top, width, height, Color.Red);
-
-            }
+        // Minimap projection
+        public static void DrawModelMini(Model model)
+        {
+            double left = (model.Position.X - model.Radius) * miniMapSize + 610;
+            double top = (model.Position.Y - model.Radius) * miniMapSize + 300;
+            double width = 2 * miniMapSize;
+            double height = 2 * miniMapSize;
+            Output.FillOval(left, top, width, height, Color.Red);
         }
     }
 }

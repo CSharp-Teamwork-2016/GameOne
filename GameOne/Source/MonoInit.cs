@@ -52,9 +52,14 @@
         protected override void Draw(GameTime gameTime)
         {
             this.GraphicsDevice.Clear(Color.CornflowerBlue);
+            Matrix Transform = Matrix.CreateTranslation((float)Renderer.Primitive.CameraX, (float)Renderer.Primitive.CameraY, 0);
+
+            this.spriteBatch.Begin(transformMatrix: Transform);
+            this.loop.Render();
+            this.spriteBatch.End();
 
             this.spriteBatch.Begin();
-            this.loop.Render();
+            this.loop.RenderUI();
             this.spriteBatch.End();
 
             base.Draw(gameTime);

@@ -26,7 +26,7 @@
         {
             this.GenerateGeometry();
             this.player = new Player(5, 5, 0.0);
-
+            SetStart();
             this.entities = new List<Entity>();
             this.entities.Add(this.player);
             this.SpawnEnemies();
@@ -108,6 +108,47 @@
             Tile result = validFloor[next];
             validFloor.Remove(result);
             return result;
+        }
+
+        // Pick starting position inside the maze and place player there
+        private void SetStart()
+        {
+            Partition start = generator.Root.LeftLeaf;
+            Partition end = generator.Root.RightLeaf;
+            List<Room> rooms = new List<Room>();
+
+            Queue<Partition> startLeaf = new Queue<Partition>();
+            startLeaf.Enqueue(start);
+            while (startLeaf.Count > 0)
+            {
+                start = startLeaf.Dequeue();
+                if (start.HasLeaves)
+                {
+                    startLeaf.Enqueue(start.LeftLeaf);
+                    startLeaf.Enqueue(start.RightLeaf);
+                }
+                else if (startLeaf.Count > 0)
+                {
+                    rooms.Add(start.Room);
+                }
+            }
+            player.Position = new System.Windows.Vector(start.Room.OriginX, start.Room.OriginY);
+
+            Queue<Partition> endLeaf = new Queue<Partition>();
+            endLeaf.Enqueue(end);
+            while (endLeaf.Count > 0)
+            {
+                end = endLeaf.Dequeue();
+                if (end.HasLeaves)
+                {
+                    endLeaf.Enqueue(end.LeftLeaf);
+                    endLeaf.Enqueue(end.RightLeaf);
+                }
+                else if (endLeaf.Count > 0)
+                {
+                    rooms.Add(end.Room);
+                }
+            }
         }
     }
 }

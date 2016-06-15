@@ -98,6 +98,9 @@
         {
             base.Update(time);
 
+            Primitive.CameraX = Position.X;
+            Primitive.CameraY = Position.Y;
+
             Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\n");
             //Loop.debugInfo += string.Format($"State: {state}\n");
         }
