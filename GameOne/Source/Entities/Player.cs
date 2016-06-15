@@ -10,12 +10,14 @@
 
         private int xpLevel;
         private int experience;
+        private int xpToNext;
 
         public Player(double x, double y, double direction, int xpLevel = 1)
             : base(x, y, direction, 0.30, new Spritesheet(), 100, 10)
         {
             this.xpLevel = xpLevel;
             experience = 0;
+            xpToNext = 320;
             this.HealthPotions = InitialHealthPotions;
             this.Ammo = InitialAmmo;
         }
@@ -40,9 +42,26 @@
             }
         }
 
+        public int XpToNext
+        {
+            get
+            {
+                return xpToNext;
+            }
+        }
+
         public void GainXP(int level)
         {
             this.experience += level;
+            if (experience >= xpToNext)
+            {
+                xpLevel++;
+                experience -= xpToNext;
+                xpToNext = (int)((xpToNext * 1.4) / 10) * 10;
+                damage = (int)(damage * 1.25);
+                maxHealth = (int)(maxHealth * 1.2);
+                health = maxHealth;
+            }
         }
 
         public void DrinkPotion()
@@ -109,7 +128,7 @@
             Primitive.CameraX = Position.X;
             Primitive.CameraY = Position.Y;
 
-            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health}\nPotions: {HealthPotions}\n\nLevel {xpLevel}\nXP: {experience}\n\nEnemies remaining: {Loop.level.enemyCount}\n");
+            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health} / {maxHealth}\nDamage: {damage}\n\nLevel {xpLevel}\nXP: {experience} / {xpToNext}\n\nEnemies remaining: {Loop.level.enemyCount}\n");
             //Loop.debugInfo += string.Format($"State: {state}\n");
         }
 

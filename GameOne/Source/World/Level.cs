@@ -104,13 +104,14 @@
             }
             validTiles = validTiles.Where(tile => tile.TileType == TileType.Floor).ToList();
             int enemies = 1 + (int)Math.Sqrt(currentLevel);
-
+            int damage = currentLevel;
+            int HP = 50 + currentLevel * 2;
             for (int i = 0; i < enemies; i++)
             {
                 Tile currentTile = GetRandomTile(validTiles);
                 double direction = Math.PI / 2 * LevelMaker.Rand(4);
                 Enemy enemy = new Enemy(currentTile.X, currentTile.Y, direction, 0.3, new Spritesheet(),
-                    50, 5, AttackType.Melee, EnemyType.Zombie, 50); // hardcoded values for enemy
+                    HP, damage, AttackType.Melee, EnemyType.Zombie, HP); // hardcoded values for enemy
                 this.entities.Add(enemy);
                 enemyCount++;
             }
