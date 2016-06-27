@@ -60,6 +60,7 @@
     <Compile Include="Source\Input.cs" />
     <Compile Include="Source\Interfaces\IMovable.cs" />
     <Compile Include="Source\Interfaces\IRenderable.cs" />
+    <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
     <Compile Include="Source\World\LevelMaker.cs" />

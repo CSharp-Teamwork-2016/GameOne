@@ -1,5 +1,7 @@
 ﻿namespace GameOne.Source
 {
+    using GameOne.Source.Sound;
+
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -15,7 +17,7 @@
         private SpriteBatch spriteBatch;
 
         // Audio
-        private Song backgroundMusic;
+        private readonly AudioManager audioManager = new AudioManager();
 
         public MonoInit()
         {
@@ -37,17 +39,7 @@
         {
             Renderer.Output.SetFont(this.Content.Load<SpriteFont>("Font"));
 
-            this.backgroundMusic = Content.Load<Song>("WoT-Battle-2");
-            MediaPlayer.Play(this.backgroundMusic);
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
-        }
-
-        protected void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
-        {
-            // 0.0f is silent, 1.0f is full volume
-            MediaPlayer.Volume -= 0.1f;
-            MediaPlayer.Play(this.backgroundMusic);
+            this.audioManager.PlayBackgroundMusic(this.Content);
         }
 
         protected override void UnloadContent()
