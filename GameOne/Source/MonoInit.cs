@@ -3,6 +3,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework.Media;
 
     public class MonoInit : Game
     {
@@ -12,6 +13,9 @@
         // Graphics context
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+
+        // Audio
+        private Song backgroundMusic;
 
         public MonoInit()
         {
@@ -32,6 +36,18 @@
         protected override void LoadContent()
         {
             Renderer.Output.SetFont(this.Content.Load<SpriteFont>("Font"));
+
+            this.backgroundMusic = Content.Load<Song>("WoT-Battle-2");
+            MediaPlayer.Play(this.backgroundMusic);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+        }
+
+        protected void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
+        {
+            // 0.0f is silent, 1.0f is full volume
+            MediaPlayer.Volume -= 0.1f;
+            MediaPlayer.Play(this.backgroundMusic);
         }
 
         protected override void UnloadContent()
