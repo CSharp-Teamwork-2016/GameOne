@@ -1,8 +1,11 @@
 ﻿namespace GameOne.Source
 {
+    using GameOne.Source.Sound;
+
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework.Media;
 
     public class MonoInit : Game
     {
@@ -12,6 +15,9 @@
         // Graphics context
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+
+        // Audio
+        private readonly AudioManager audioManager = new AudioManager();
 
         public MonoInit()
         {
@@ -32,6 +38,8 @@
         protected override void LoadContent()
         {
             Renderer.Output.SetFont(this.Content.Load<SpriteFont>("Font"));
+
+            this.audioManager.PlayBackgroundMusic(this.Content);
         }
 
         protected override void UnloadContent()
