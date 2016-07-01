@@ -19,6 +19,11 @@
         private int timeSinceLastFrame;
         private int millionSecPerFrame = 50;
 
+        public Spritesheet()
+        {
+            // for remove. With purpose not to throw exception in other classes
+        }
+
         public Spritesheet(Texture2D texture, int rows, int cols)
         {
             this.Texture = texture;
