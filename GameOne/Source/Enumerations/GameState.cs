@@ -2,9 +2,8 @@
 {
     public enum GameState
     {
-        Menu,
-        Live,
-        LoadNext,
-        GameOver
+        MainMenu,
+        Gameplay,
+        EndOfGame
     }
 }
