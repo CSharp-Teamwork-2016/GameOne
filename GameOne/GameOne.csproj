@@ -53,9 +53,11 @@
     <Compile Include="Source\Enumerations\EnemyType.cs" />
     <Compile Include="Source\Enumerations\GameState.cs" />
     <Compile Include="Source\Enumerations\ItemType.cs" />
+    <Compile Include="Source\Enumerations\ProjectileType.cs" />
     <Compile Include="Source\Enumerations\State.cs" />
     <Compile Include="Source\Enumerations\TileType.cs" />
     <Compile Include="Source\Enumerations\UserInput.cs" />
+    <Compile Include="Source\Factories\ProjectileFactory.cs" />
     <Compile Include="Source\Factories\TileFactory.cs" />
     <Compile Include="Source\Input.cs" />
     <Compile Include="Source\Interfaces\IMovable.cs" />

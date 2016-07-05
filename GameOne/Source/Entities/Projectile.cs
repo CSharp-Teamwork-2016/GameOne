@@ -6,7 +6,7 @@ namespace GameOne.Source.Entities
 
     using Renderer;
 
-    class Projectile : Model
+    public class Projectile : Model
     {
         #region Fields
 
