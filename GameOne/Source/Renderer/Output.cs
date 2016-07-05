@@ -565,6 +565,16 @@
             _StrokeOval((int)left, (int)top, (int)width, (int)height, PenColor, PenWidth);
         }
 
+        /// <summary>
+        /// Draw texture at specified position
+        /// </summary>
+        /// <param name="texture">Texture to draw</param>
+        /// <param name="position">Screen coordinates</param>
+        public static void Draw(Texture2D texture, Vector2 position)
+        {
+            batch.Draw(texture, position);
+        }
+
         private static int Index(int x, int y, int width)
         {
             return y * width + x;

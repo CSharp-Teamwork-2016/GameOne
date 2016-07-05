@@ -1,14 +1,12 @@
-﻿using GameOne.Source.UI;
-
-namespace GameOne.Source
+﻿namespace GameOne.Source
 {
-    using Enumerations;
+    using System;
     using Sound;
 
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    
+
     public class MonoInit : Game
     {
 
@@ -22,13 +20,6 @@ namespace GameOne.Source
         // Audio
         private readonly AudioManager audioManager = new AudioManager();
 
-        // initial game state
-        private GameState gameState = GameState.MainMenu;
-
-        //Main Menu
-        private MainMenu mainMenu;
-
-
         public MonoInit()
         {
             this.graphics = new GraphicsDeviceManager(this);
@@ -39,17 +30,22 @@ namespace GameOne.Source
 
         protected override void Initialize()
         {
-            base.Initialize();
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
             this.loop = new Loop(Keyboard.GetState(), Mouse.GetState());
             Renderer.Output.Init(this.spriteBatch, this.GraphicsDevice);
             this.audioManager.PlayBackgroundMusic(this.Content);
-            this.mainMenu = new MainMenu(this.Content);
+            base.Initialize();
         }
 
         protected override void LoadContent()
         {
             Renderer.Output.SetFont(this.Content.Load<SpriteFont>("Font"));
+            if (this.loop.MainMenu == null) throw new ArgumentException("Main Menu not initialized");
+            this.loop.MainMenu.LoadTextures(
+                this.Content.Load<Texture2D>("Images/Menu/MainMenu"),
+                this.Content.Load<Texture2D>("Images/Menu/ResumeGame"),
+                this.Content.Load<Texture2D>("Images/Menu/Credits"),
+                this.Content.Load<Texture2D>("Images/Menu/WePromise"));
         }
 
         protected override void UnloadContent()
@@ -60,51 +56,13 @@ namespace GameOne.Source
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            switch (this.gameState)
-            {
-                case GameState.MainMenu:
-                    this.gameState = this.mainMenu.Update(gameTime);
-                    break;
-                case GameState.Gameplay:
-                    if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    {
-                        mainMenu.MainManuScreen = this.Content.Load<Texture2D>("Images/Menu/ResumeGame");
-                        this.gameState = GameState.MainMenu;
-                    }
-
-                    this.loop.Update(gameTime, Keyboard.GetState(), Mouse.GetState());
-                    break;
-                case GameState.EndOfGame:
-                    //TODO
-                    break;
-            }
+            this.loop.Update(gameTime, Keyboard.GetState(), Mouse.GetState());
         }
 
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
 
-            switch (this.gameState)
-            {
-                case GameState.MainMenu:
-                    this.mainMenu.Draw(this.GraphicsDevice, this.spriteBatch);
-                    break;
-                case GameState.Gameplay:
-                    this.DrawGameplay(gameTime);
-                    break;
-                case GameState.EndOfGame:
-                    //TODO
-                    break;
-            }
-        }
-
-        void DrawGameplay(GameTime deltaTime)
-        {
-            // Draw the background the level
-            // Draw enemies
-            // Draw the player
-            // Draw particle effects, etc
             this.GraphicsDevice.Clear(Color.CornflowerBlue);
             Matrix Transform = Matrix.CreateTranslation((float)Renderer.Primitive.CameraX, (float)Renderer.Primitive.CameraY, 0);
 
