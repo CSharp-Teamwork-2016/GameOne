@@ -1,16 +1,24 @@
 ﻿namespace GameOne.Source.Entities
 {
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Renderer;
+    using Enumerations;
+    using Renderer;
 
     public class Player : Character
     {
+        #region Fields
+
         private const int InitialHealthPotions = 0;
         private const int InitialAmmo = 200;
 
         private int xpLevel;
         private int experience;
         private int xpToNext;
+
+        #endregion Fields
+
+        //===================================================================
+
+        #region Constructors
 
         public Player(double x, double y, double direction, int xpLevel = 1)
             : base(x, y, direction, 0.30, new Spritesheet(), 100, 10)
@@ -22,33 +30,27 @@
             this.Ammo = InitialAmmo;
         }
 
+        #endregion Constructors
+
+        //===================================================================
+
+        #region Properties
+
         public int Ammo { get; set; }
 
         public int HealthPotions { get; set; }
 
-        public int MaxHealth
-        {
-            get
-            {
-                return maxHealth;
-            }
-        }
+        public int MaxHealth => base.MaxHealth;
 
-        public int XpLevel
-        {
-            get
-            {
-                return this.xpLevel;
-            }
-        }
+        public int XpLevel => this.xpLevel;
 
-        public int XpToNext
-        {
-            get
-            {
-                return xpToNext;
-            }
-        }
+        public int XpToNext => xpToNext;
+
+        #endregion Properties
+
+        //===================================================================
+
+        #region Methods
 
         public void GainXP(int level)
         {
@@ -58,47 +60,55 @@
                 xpLevel++;
                 experience -= xpToNext;
                 xpToNext = (int)((xpToNext * 1.4) / 10) * 10;
-                damage = (int)(damage * 1.25);
-                maxHealth = (int)(maxHealth * 1.1);
-                health = maxHealth;
+                Damage = (int)(Damage * 1.25);
+                base.MaxHealth = (int)(base.MaxHealth * 1.1);
+                Health = base.MaxHealth;
             }
         }
 
         public void DrinkPotion()
         {
-            if (timeToNextAction > 0) return;
-            if (this.HealthPotions > 0 && health < maxHealth)
+            if (timeToNextAction > 0)
+            {
+                return;
+            }
+
+            if (this.HealthPotions > 0 && Health < base.MaxHealth)
             {
                 this.HealthPotions--;
                 Heal(30);
             }
         }
 
-		internal void Input(UserInput input)
-		{
-            if ((state & State.HURT) == State.HURT) return; // don't let the player move if he's hit
-			switch (input)
-			{
-				case UserInput.MoveUp:
-					MoveUp();
-					break;
-				case UserInput.MoveDown:
-					MoveDown();
-					break;
-				case UserInput.MoveLeft:
-					MoveLeft();
-					break;
-				case UserInput.MoveRight:
-					MoveRight();
-					break;
+        internal void Input(UserInput input)
+        {
+            if ((state & State.HURT) == State.HURT)
+            {
+                return; // don't let the player move if he's hit
+            }
+
+            switch (input)
+            {
+                case UserInput.MoveUp:
+                    MoveUp();
+                    break;
+                case UserInput.MoveDown:
+                    MoveDown();
+                    break;
+                case UserInput.MoveLeft:
+                    MoveLeft();
+                    break;
+                case UserInput.MoveRight:
+                    MoveRight();
+                    break;
                 case UserInput.Attack:
                     Attack();
                     break;
                 case UserInput.DrinkPotion:
                     DrinkPotion();
                     break;
-			}
-		}
+            }
+        }
 
         public void PickUpItem(ItemType type)
         {
@@ -111,7 +121,7 @@
                     HealthPotions++;
                     break;
                 case ItemType.EndKey:
-                    Loop.level.exitTriggered = true;
+                    Loop.level.ExitTriggered = true;
                     break;
             }
         }
@@ -128,7 +138,7 @@
             Primitive.CameraX = Position.X;
             Primitive.CameraY = Position.Y;
 
-            Loop.debugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {health} / {maxHealth}\nDamage: {damage}\n\nLevel {xpLevel}\nXP: {experience} / {xpToNext}\n\nEnemies remaining: {Loop.level.enemyCount}\n");
+            Loop.DebugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {Health} / {base.MaxHealth}\nDamage: {Damage}\n\nLevel {xpLevel}\nXP: {experience} / {xpToNext}\n\nEnemies remaining: {Loop.level.EnemyCount}\n");
             //Loop.debugInfo += string.Format($"State: {state}\n");
         }
 
@@ -141,7 +151,9 @@
         public void Respawn()
         {
             state = State.IDLE;
-            health = 100;
+            Health = 100;
         }
+
+        #endregion Methods
     }
 }

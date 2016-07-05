@@ -1,20 +1,17 @@
 ﻿namespace GameOne.Source.Entities
 {
-    using System;
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Renderer;
+    using Enumerations;
+    using Renderer;
 
     public class Item : Model
     {
-        private ItemType type;
-
         public Item(double x, double y, double direction, double radius, Spritesheet sprite, ItemType type)
             : base(x, y, direction, radius, sprite)
         {
-            this.type = type;
+            this.Type = type;
         }
 
-        public ItemType Type => this.type;
+        public ItemType Type { get; }
 
         public override void Update(double time)
         {

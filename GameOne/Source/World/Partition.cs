@@ -4,108 +4,101 @@
 
     public class Partition
     {
+        #region Fields
+
         private Partition parent;
-        private Partition leftLeaf;
-        private Partition rightLeaf;
 
-        private int x;
-        private int y;
-        private int width;
-        private int height;
-        private bool direction; // false = horizontal split; true = vertical split
+        #endregion Fields
 
-        private Room room;
-        private Hallway hallway;
+        //===================================================================
+
+        #region Constructors
 
         public Partition(int x, int y, int width, int height, Partition parent)
         {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
+            this.X = x;
+            this.Y = y;
+            this.Width = width;
+            this.Height = height;
             this.parent = parent;
         }
 
-        //========================================
+        #endregion Constructors
 
-        //region Properties ======================
+        //===================================================================
 
-        public int X => this.x;
+        #region Properties
 
-        public int Y => this.y;
+        public int X { get; }
 
-        public int Width => this.width;
+        public int Y { get; }
 
-        public int Height => this.height;
+        public int Width { get; }
 
-        public bool IsHorizontal => this.direction;
+        public int Height { get; }
 
-        //not sure
+        public bool IsHorizontal { get; private set; }
 
-        public Partition LeftLeaf => this.leftLeaf;
+        public Partition LeftLeaf { get; private set; }
 
-        public Partition RightLeaf => this.rightLeaf;
+        public Partition RightLeaf { get; private set; }
 
-        public Room Room => this.room;
+        public Room Room { get; private set; }
 
-        public Hallway Hallway => this.hallway;
+        public Hallway Hallway { get; private set; }
 
-        public bool HasLeaves => this.leftLeaf != null;
+        public bool HasLeaves => this.LeftLeaf != null;
 
-        //not sure
+        #endregion Properties
 
-        //endregion Properties ===================
+        //===================================================================
 
-        //========================================
-
-        //region Generation ======================
+        #region Methods
 
         public bool TrySplit()
         {
-            if (this.HasLeaves) //not sure
+            if (this.HasLeaves)
             {
-                return this.leftLeaf.TrySplit() || this.rightLeaf.TrySplit();
+                return this.LeftLeaf.TrySplit() || this.RightLeaf.TrySplit();
             }
-            else
-            {
-                return this.Split();
-            }
+
+            return this.Split();
         }
 
         private bool Split()
         {
-            this.direction = false; //false = horizontal, true = vertical
+            this.IsHorizontal = false; //false = horizontal, true = vertical
 
-            if ((double)this.width / this.height > LevelMaker.MAXRATIO)
+            if ((double)this.Width / this.Height > LevelMaker.MAXRATIO)
             {
-                this.direction = true;
+                this.IsHorizontal = true;
             }
-            else if ((double)this.height / this.width > LevelMaker.MAXRATIO)
+            else if ((double)this.Height / this.Width > LevelMaker.MAXRATIO)
             {
-                this.direction = false;
+                this.IsHorizontal = false;
             }
             else
             {
-                this.direction = LevelMaker.Rand(1) == 1; // 0 = horizontal, 1 = vertical
+                this.IsHorizontal = LevelMaker.Rand(1) == 1; // 0 = horizontal, 1 = vertical
             }
 
-            if (!this.direction)
+            if (!this.IsHorizontal)
             { // top and bottom leaves
-                if (this.height <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.height - 2 * LevelMaker.MINSIZE);
-                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.height);
-                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.height);
-                this.leftLeaf = new Partition(this.x, this.y, this.width, half, this);
-                this.rightLeaf = new Partition(this.x, this.y + half, this.width, this.height - half, this);
+                if (this.Height <= 2 * LevelMaker.MINSIZE) return false;
+                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.Height - 2 * LevelMaker.MINSIZE);
+                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.Height);
+                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.Height);
+                this.LeftLeaf = new Partition(this.X, this.Y, this.Width, half, this);
+                this.RightLeaf = new Partition(this.X, this.Y + half, this.Width, this.Height - half, this);
             }
             else
             { // left and right leaves
-                if (this.width <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.width - 2 * LevelMaker.MINSIZE);
-                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.width);
-                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.width);
-                this.leftLeaf = new Partition(this.x, this.y, half, this.height, this);
-                this.rightLeaf = new Partition(this.x + half, this.y, this.width - half, this.height, this);
+                if (this.Width <= 2 * LevelMaker.MINSIZE) return false;
+                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.Width - 2 * LevelMaker.MINSIZE);
+                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.Width);
+                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.Width);
+                this.LeftLeaf = new Partition(this.X, this.Y, half, this.Height, this);
+                this.RightLeaf = new Partition(this.X + half, this.Y, this.Width - half, this.Height, this);
             }
 
             return true;
@@ -115,12 +108,12 @@
         {
             if (this.HasLeaves) //not sure
             {
-                this.leftLeaf.MakeRoom();
-                this.rightLeaf.MakeRoom();
+                this.LeftLeaf.MakeRoom();
+                this.RightLeaf.MakeRoom();
             }
             else
             {
-                this.room = new Room(this.x, this.y, this.width, this.height);
+                this.Room = new Room(this.X, this.Y, this.Width, this.Height);
             }
         }
 
@@ -128,18 +121,16 @@
         {
             if (!this.HasLeaves)
             { // Connect room to parent partition origin
-                this.hallway = new Hallway(this.room, this.parent, this.parent.IsHorizontal);
+                this.Hallway = new Hallway(this.Room, this.parent, this.parent.IsHorizontal);
             }
             else
             { // Connect leaf partitions to each other
-                this.leftLeaf.MakeHallway();
-                this.rightLeaf.MakeHallway();
-                this.hallway = new Hallway(this.leftLeaf, this.rightLeaf, this.direction);
+                this.LeftLeaf.MakeHallway();
+                this.RightLeaf.MakeHallway();
+                this.Hallway = new Hallway(this.LeftLeaf, this.RightLeaf, this.IsHorizontal);
             }
         }
 
-        //endregion Generation ===================
-
-        //========================================
+        #endregion Methods
     }
 }

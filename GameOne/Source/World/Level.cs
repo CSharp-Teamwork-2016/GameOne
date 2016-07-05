@@ -4,53 +4,72 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using GameOne.Source.Entities;
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Factories;
-    using GameOne.Source.Renderer;
+    using Entities;
+    using Enumerations;
+    using Renderer;
 
     public class Level
     {
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
 
-        public static int currentLevel = 4;
+        #region Fields
 
-        private Player player;
+        public static int CurrentLevel = 4;
+
         private Item exitPortal;
-        public bool exitOpen = false;
-        public int enemyCount = 0;
-        public bool exitTriggered = false;
-        private List<Entity> entities;
-        private List<Tile> geometry;
         private List<Tile> validFloor;
         private Dictionary<long, Tile> geometryMap;
-        LevelMaker generator;
+        private LevelMaker generator;
+
+        #endregion Fields
+
+        //===================================================================
+
+        #region Constructors
 
         public Level()
         {
             LevelMaker.Init();
-            this.generator = new LevelMaker(currentLevel);
+            this.generator = new LevelMaker(CurrentLevel);
             this.GenerateGeometry();
-            this.player = new Player(5, 5, 0.0);
-            this.entities = new List<Entity>();
-            this.entities.Add(this.player);
+            this.Player = new Player(5, 5, 0.0);
+            this.Entities = new List<Entity>();
+            this.Entities.Add(this.Player);
             SetStart();
             SpawnItems();
         }
 
-        public List<Tile> Geometry => this.geometry;
+        #endregion Constructors
 
-        public List<Entity> Entities => this.entities;
+        //===================================================================
 
-        public Player Player => this.player;
+        #region Properties
+
+        public bool ExitOpen { get; set; }
+
+        public int EnemyCount { get; set; }
+
+        public bool ExitTriggered { get; set; }
+
+        public List<Tile> Geometry { get; private set; }
+
+        public List<Entity> Entities { get; private set; }
+
+        public Player Player { get; }
+
+        #endregion Properties
+
+        //===================================================================
+
+        #region Methods
 
         private void GenerateGeometry()
         {
-            this.geometry = this.generator.Tiles.Values.ToList();
+            this.Geometry = this.generator.Tiles.Values.ToList();
             this.geometryMap = this.generator.Tiles;
 
             validFloor = new List<Tile>();
-            foreach (Tile tile in this.geometry.Where(t => t.TileType == TileType.Floor))
+            foreach (Tile tile in this.Geometry.Where(t => t.TileType == TileType.Floor))
             {
                 validFloor.Add(tile);
             }
@@ -58,13 +77,13 @@
 
         public void NextLevel()
         {
-            exitOpen = false;
-            exitTriggered = false;
-            enemyCount = 0;
-            currentLevel = generator.NextLevel();
+            ExitOpen = false;
+            ExitTriggered = false;
+            EnemyCount = 0;
+            CurrentLevel = generator.NextLevel();
             GenerateGeometry();
-            this.entities = new List<Entity>();
-            this.entities.Add(this.player);
+            this.Entities = new List<Entity>();
+            this.Entities.Add(this.Player);
             SetStart();
             SpawnItems();
         }
@@ -75,7 +94,7 @@
         /// </summary>
         private void SpawnItems()
         {
-            int items = 1 + (int)Math.Sqrt(currentLevel);
+            int items = 1 + (int)Math.Sqrt(CurrentLevel);
 
             for (int i = 0; i < items; i++)
             {
@@ -83,7 +102,7 @@
                 // 30% chance for Quartz Flask (inventory potion)
                 ItemType type = LevelMaker.RandDouble() > 0.7 ? ItemType.QuartzFlask : ItemType.PotionHealth;
                 Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), type);
-                this.entities.Add(item);
+                this.Entities.Add(item);
             }
         }
 
@@ -103,17 +122,17 @@
                 }
             }
             validTiles = validTiles.Where(tile => tile.TileType == TileType.Floor).ToList();
-            int enemies = 1 + (int)Math.Sqrt(currentLevel);
-            int damage = 1 + currentLevel;
-            int HP = 50 + currentLevel * 2;
+            int enemies = 1 + (int)Math.Sqrt(CurrentLevel);
+            int damage = 1 + CurrentLevel;
+            int HP = 50 + CurrentLevel * 2;
             for (int i = 0; i < enemies; i++)
             {
                 Tile currentTile = GetRandomTile(validTiles);
                 double direction = Math.PI / 2 * LevelMaker.Rand(4);
                 Enemy enemy = new Enemy(currentTile.X, currentTile.Y, direction, 0.3, new Spritesheet(),
                     HP, damage, AttackType.Melee, EnemyType.Zombie, HP); // hardcoded values for enemy
-                this.entities.Add(enemy);
-                enemyCount++;
+                this.Entities.Add(enemy);
+                EnemyCount++;
             }
         }
 
@@ -155,7 +174,7 @@
                     rooms.Add(start.Room);
                 }
             }
-            player.Position = new System.Windows.Vector(start.Room.OriginX, start.Room.OriginY);
+            Player.Position = new System.Windows.Vector(start.Room.OriginX, start.Room.OriginY);
 
             Queue<Partition> endLeaf = new Queue<Partition>();
             endLeaf.Enqueue(end);
@@ -183,16 +202,18 @@
 
         public void EnemySlain()
         {
-            enemyCount--;
-            if (enemyCount == 0 && !exitOpen)
+            EnemyCount--;
+            if (EnemyCount == 0 && !ExitOpen)
             {
-                exitOpen = true;
+                ExitOpen = true;
             }
         }
 
         public void SetExit()
         {
-            this.entities.Add(exitPortal);
+            this.Entities.Add(exitPortal);
         }
+
+        #endregion Methods
     }
 }

@@ -7,77 +7,54 @@
 
     public class Output
     {
+        #region Fields
+
         private static SpriteBatch batch;
-        private static GraphicsDevice GD;
+        private static GraphicsDevice graphicDevice;
         private static SpriteFont font;
-        private static int penWidth;
-        private static Color penColor;
-        private static Color brushColor;
         private static Texture2D pixel;
 
+        #endregion Fields
+
+        //===================================================================
+
         #region Properties
+
         /// <summary>
         /// Width of the stroke made with operations that draw outlines of shapes
         /// </summary>
-        public static int PenWidth
-        {
-            get
-            {
-                return penWidth;
-            }
-
-            set
-            {
-                penWidth = value;
-            }
-        }
+        public static int PenWidth { get; set; }
 
         /// <summary>
         /// Color of the stroke made with operations that draw outlines of shapes
         /// </summary>
-        public static Color PenColor
-        {
-            get
-            {
-                return penColor;
-            }
-
-            set
-            {
-                penColor = value;
-            }
-        }
+        public static Color PenColor { get; set; }
 
         /// <summary>
         /// Fill color used with operations that draw solid shapes
         /// </summary>
-        public static Color BrushColor
-        {
-            get
-            {
-                return brushColor;
-            }
+        public static Color BrushColor { get; set; }
 
-            set
-            {
-                brushColor = value;
-            }
-        }
-        #endregion
-        ///
+        #endregion Properties
+
+        //===================================================================
+
+        //All static
+        #region Methods
+
         /// <summary>
         /// Initialize drawing surfaces
         /// </summary>
         /// <param name="spriteBatch">2D surface used for drawing</param>
-        /// <param name="GraphicsDevice">Reference <see cref="GraphicsDevice"/>, used by the main <see cref="Game"/>type</param>
-        public static void Init(SpriteBatch spriteBatch, GraphicsDevice GraphicsDevice)
+        /// <param name="graphicsDevice">Reference <see cref="GraphicsDevice"/>, used by the main <see cref="Game"/>type</param>
+        public static void Init(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             batch = spriteBatch;
-            GD = GraphicsDevice;
+            graphicDevice = graphicsDevice;
             PenWidth = 1;
             PenColor = Color.Black;
             BrushColor = Color.White;
-            pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
         }
 
@@ -98,6 +75,7 @@
         /// <param name="x">Center left offset</param>
         /// <param name="y">Center top offset</param>
         /// <param name="size">Diameter</param>
+        /// /// <param name="color">color</param>
         private static void _DrawPoint(int x, int y, int size, Color color)
         {
             Rectangle rec = new Rectangle(x - size / 2, y - size / 2, size, size);
@@ -124,7 +102,7 @@
         /// <param name="y">Top offset</param>
         public static void DrawText(string text, double x, double y)
         {
-            _DrawText(text, (float)x, (float)y, penColor);
+            _DrawText(text, (float)x, (float)y, PenColor);
         }
 
         ///
@@ -176,6 +154,7 @@
             int error = dx / 2;
             int ystep = (y1 < y2) ? 1 : -1;
             int y = y1;
+
             for (int x = x1; x <= x2; x++)
             {
                 _DrawPoint((steep ? y : x), (steep ? x : y), width, color);
@@ -214,7 +193,7 @@
         /// <param name="color">Line color</param>
         public static void DrawLine(double x1, double y1, double x2, double y2, Color color)
         {
-            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, color, penWidth);
+            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, color, PenWidth);
         }
 
         ///
@@ -228,7 +207,7 @@
         /// <param name="width">Line thickness</param>
         public static void DrawLine(double x1, double y1, double x2, double y2, int width)
         {
-            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, penColor, width);
+            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, PenColor, width);
         }
 
         ///
@@ -241,7 +220,7 @@
         /// <param name="y2">Ending point top offset</param>
         public static void DrawLine(double x1, double y1, double x2, double y2)
         {
-            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, penColor, penWidth);
+            _DrawLine((int)x1, (int)y1, (int)x2, (int)y2, PenColor, PenWidth);
         }
 
         ///
@@ -263,7 +242,7 @@
         /// <param name="height">Rectangle height</param>
         public static void FillRect(double left, double top, double width, double height)
         {
-            _FillRect((int)left, (int)top, (int)width, (int)height, brushColor);
+            _FillRect((int)left, (int)top, (int)width, (int)height, BrushColor);
         }
 
         ///
@@ -318,7 +297,7 @@
         /// <param name="color">Outline color</param>
         public static void StrokeRect(double left, double top, double width, double height, Color color)
         {
-            _StrokeRect((int)left, (int)top, (int)width, (int)height, color, penWidth);
+            _StrokeRect((int)left, (int)top, (int)width, (int)height, color, PenWidth);
         }
 
         ///
@@ -332,7 +311,7 @@
         /// <param name="stroke">Outline thickness</param>
         public static void StrokeRect(double left, double top, double width, double height, int stroke)
         {
-            _StrokeRect((int)left, (int)top, (int)width, (int)height, penColor, stroke);
+            _StrokeRect((int)left, (int)top, (int)width, (int)height, PenColor, stroke);
         }
 
         ///
@@ -345,7 +324,7 @@
         /// <param name="height">Rectangle height</param>
         public static void StrokeRect(double left, double top, double width, double height)
         {
-            _StrokeRect((int)left, (int)top, (int)width, (int)height, penColor, penWidth);
+            _StrokeRect((int)left, (int)top, (int)width, (int)height, PenColor, PenWidth);
         }
 
         ///
@@ -354,14 +333,18 @@
         /// </summary>
         private static void _FillOval(int left, int top, int width, int height, Color color)
         {
-            int cx = left + width / 2;
-            int cy = top + height / 2;
             int a = width / 2;
             int b = height / 2;
+
+            int cx = left + a;
+            int cy = top + b;
+
             int a2 = a * a;
             int b2 = b * b;
+
             int twoa2 = 2 * a2;
             int twob2 = 2 * b2;
+
             int p;
             int x = 0;
             int y = b;
@@ -374,10 +357,12 @@
 
             /* Region 1 */
             p = (int)(b2 - (a2 * b) + (0.25 * a2));
+
             while (px < py)
             {
                 x++;
                 px += twob2;
+
                 if (p < 0)
                 {
                     p += b2 + px;
@@ -395,10 +380,12 @@
 
             /* Region 2 */
             p = (int)(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
+
             while (y > 0)
             {
                 y--;
                 py -= twoa2;
+
                 if (p > 0)
                 {
                     p += a2 - py;
@@ -439,7 +426,7 @@
         /// <param name="height">Bounding rectangle height</param>
         public static void FillOval(double left, double top, double width, double height)
         {
-            _FillOval((int)left, (int)top, (int)width, (int)height, brushColor);
+            _FillOval((int)left, (int)top, (int)width, (int)height, BrushColor);
         }
 
         ///
@@ -448,14 +435,18 @@
         /// </summary>
         private static void _StrokeOval(int left, int top, int width, int height, Color color, int stroke)
         {
-            int cx = left + width / 2;
-            int cy = top + height / 2;
             int a = width / 2;
             int b = height / 2;
+
+            int cx = left + a;
+            int cy = top + b;
+
             int a2 = a * a;
             int b2 = b * b;
+
             int twoa2 = 2 * a2;
             int twob2 = 2 * b2;
+
             int p;
             int x = 0;
             int y = b;
@@ -470,6 +461,7 @@
 
             /* Region 1 */
             p = (int)(b2 - (a2 * b) + (0.25 * a2));
+
             while (px < py)
             {
                 x++;
@@ -493,10 +485,12 @@
 
             /* Region 2 */
             p = (int)(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
+
             while (y > 0)
             {
                 y--;
                 py -= twoa2;
+
                 if (p > 0)
                 {
                     p += a2 - py;
@@ -541,7 +535,7 @@
         /// <param name="color">Outline color</param>
         public static void StrokeOval(double left, double top, double width, double height, Color color)
         {
-            _StrokeOval((int)left, (int)top, (int)width, (int)height, color, penWidth);
+            _StrokeOval((int)left, (int)top, (int)width, (int)height, color, PenWidth);
         }
 
         ///
@@ -555,7 +549,7 @@
         /// <param name="stroke">Outline thickness</param>
         public static void StrokeOval(double left, double top, double width, double height, double stroke)
         {
-            _StrokeOval((int)left, (int)top, (int)width, (int)height, penColor, (int)stroke);
+            _StrokeOval((int)left, (int)top, (int)width, (int)height, PenColor, (int)stroke);
         }
 
         ///
@@ -568,12 +562,14 @@
         /// <param name="height">Bounding rectangle height</param>
         public static void StrokeOval(double left, double top, double width, double height)
         {
-            _StrokeOval((int)left, (int)top, (int)width, (int)height, penColor, penWidth);
+            _StrokeOval((int)left, (int)top, (int)width, (int)height, PenColor, PenWidth);
         }
 
         private static int Index(int x, int y, int width)
         {
             return y * width + x;
         }
+
+        #endregion Methods
     }
 }

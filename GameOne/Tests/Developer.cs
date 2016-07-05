@@ -47,7 +47,7 @@ namespace GameOne.Tests
                     Source.Loop.level.Player.Respawn();
                     break;
                 case "WARP":
-                    Source.Loop.level.exitTriggered = true;
+                    Source.Loop.level.ExitTriggered = true;
                     break;
             }
         }

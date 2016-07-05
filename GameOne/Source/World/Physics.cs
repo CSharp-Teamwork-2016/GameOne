@@ -9,6 +9,9 @@
 
     public class Physics
     {
+        //All static
+        #region Methods
+
         public static void CollisionResolution(List<Model> models)
         {
             foreach (Model model in models)
@@ -31,6 +34,7 @@
             Vector separation = Vector.Subtract(e1.Position, e2.Position);
             double dist = separation.Length;
             double penetration = dist - (e1.Radius + e2.Radius);
+
             if (penetration < 0)
             {
                 if (e1 is Item)
@@ -39,6 +43,7 @@
                     e2 = e1;
                     e1 = t;
                 }
+
                 if (e2 is Item)
                 {
                     if (e1 is Player)
@@ -49,6 +54,7 @@
                     }
                     else return;
                 }
+
                 separation.Normalize();
                 separation = Vector.Multiply(separation, penetration / 2);
                 e1.Position -= separation;
@@ -86,10 +92,16 @@
             double tileHalf = 0.5; // this may have to change, if we start checking irregular boundaries
             double distX = Math.Abs(tile.X - model.Position.X);
             double distY = Math.Abs(tile.Y - model.Position.Y);
-            if (distX > tileHalf + model.Radius || distY > tileHalf + model.Radius) return;
+
+            if (distX > tileHalf + model.Radius || distY > tileHalf + model.Radius)
+            {
+                return;
+            }
+
             if (distX <= tileHalf + model.Radius && distY <= tileHalf)
             {
                 double penetration = 0;
+
                 if (tile.X - model.Position.X < 0)
                 { // right side
                     penetration = distX - (tileHalf + model.Radius);
@@ -101,12 +113,14 @@
 
                 model.Position =
                     new Vector(model.Position.X - penetration, model.Position.Y); // resolve
+
                 return;
             }
 
             if (distX <= tileHalf && distY <= tileHalf + model.Radius)
             {
                 double penetration = 0;
+
                 if (tile.Y - model.Position.Y < 0)
                 { // bottom side
                     penetration = distY - (tileHalf + model.Radius);
@@ -120,5 +134,7 @@
                     new Vector(model.Position.X, model.Position.Y - penetration); // resolve
             }
         }
+
+        #endregion Methods
     }
 }

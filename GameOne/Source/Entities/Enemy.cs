@@ -1,18 +1,26 @@
 ﻿namespace GameOne.Source.Entities
 {
-    using System.Collections.Generic;
     using System;
+    using System.Collections.Generic;
 
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Renderer;
+    using Enumerations;
+    using Renderer;
 
     public class Enemy : Character
     {
+        #region Fields
+
         private double elapsedTime;
         private double nextTime;
         private Queue<Action> pattern;
         private EnemyType type;
         private int xpAward;
+
+        #endregion Fields
+
+        //===================================================================
+
+        #region Constructors
 
         public Enemy(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType, EnemyType type, int xpAward)
             : base(x, y, direction, radius, sprite, health, damage, attackType)
@@ -24,8 +32,13 @@
             PreparePattern();
         }
 
+        #endregion Constructors
 
-        #region Behaviour
+        //===================================================================
+
+        #region Methods
+
+        #region Methods/Behaviour
 
         private void WaitFor()
         {
@@ -52,6 +65,7 @@
             {
                 PrepareNext(0.5);
             }
+
             pattern.Peek()();
         }
 
@@ -72,7 +86,7 @@
             pattern.Enqueue(WaitFor);
         }
 
-        #endregion
+        #endregion Methods/Behaviour
 
         public override void Update(double time)
         {
@@ -92,5 +106,7 @@
             Loop.level.Player.GainXP(xpAward);
             Loop.level.EnemySlain();
         }
+
+        #endregion Methods
     }
 }

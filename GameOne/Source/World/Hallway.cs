@@ -4,10 +4,7 @@
 
     public class Hallway
     {
-        private int x;
-        private int y;
-        private int width;
-        private int height;
+        #region Constructors
 
         public Hallway(Room room, Partition parent, bool horizontal)
         {
@@ -18,17 +15,17 @@
 
             if (!horizontal)
             {
-                this.x = Math.Min(originX, targetX) - LevelMaker.HALLSIZE / 2;
-                this.y = originY - LevelMaker.HALLSIZE / 2;
-                this.width = Math.Abs(originX - targetX) + LevelMaker.HALLSIZE;
-                this.height = LevelMaker.HALLSIZE;
+                this.X = Math.Min(originX, targetX) - LevelMaker.HALLSIZE / 2;
+                this.Y = originY - LevelMaker.HALLSIZE / 2;
+                this.Width = Math.Abs(originX - targetX) + LevelMaker.HALLSIZE;
+                this.Height = LevelMaker.HALLSIZE;
             }
             else
             { // vertical
-                this.x = originX - LevelMaker.HALLSIZE / 2;
-                this.y = Math.Min(originY, targetY) - LevelMaker.HALLSIZE / 2;
-                this.width = LevelMaker.HALLSIZE;
-                this.height = Math.Abs(originY - targetY) + LevelMaker.HALLSIZE;
+                this.X = originX - LevelMaker.HALLSIZE / 2;
+                this.Y = Math.Min(originY, targetY) - LevelMaker.HALLSIZE / 2;
+                this.Width = LevelMaker.HALLSIZE;
+                this.Height = Math.Abs(originY - targetY) + LevelMaker.HALLSIZE;
             }
         }
 
@@ -36,8 +33,6 @@
         {
             int originX;
             int originY;
-            int targetX;
-            int targetY;
 
             if (horizontal)
             {
@@ -50,6 +45,7 @@
                     originX = leftLeaf.X + leftLeaf.Width / 2;
                 }
 
+                int targetX;
                 if (rightLeaf.Room != null)
                 {
                     targetX = rightLeaf.Room.X + rightLeaf.Room.Width / 2;
@@ -60,10 +56,10 @@
                 }
 
                 originY = leftLeaf.Y + leftLeaf.Height / 2;
-                this.x = originX - LevelMaker.HALLSIZE / 2;
-                this.y = originY - LevelMaker.HALLSIZE / 2;
-                this.width = targetX - originX + LevelMaker.HALLSIZE;
-                this.height = LevelMaker.HALLSIZE;
+                this.X = originX - LevelMaker.HALLSIZE / 2;
+                this.Y = originY - LevelMaker.HALLSIZE / 2;
+                this.Width = targetX - originX + LevelMaker.HALLSIZE;
+                this.Height = LevelMaker.HALLSIZE;
             }
             else
             { // vertical
@@ -76,6 +72,7 @@
                     originY = leftLeaf.Y + leftLeaf.Height / 2;
                 }
 
+                int targetY;
                 if (rightLeaf.Room != null)
                 {
                     targetY = rightLeaf.Room.Y + rightLeaf.Room.Height / 2;
@@ -86,25 +83,27 @@
                 }
 
                 originX = leftLeaf.X + leftLeaf.Width / 2;
-                this.x = originX - LevelMaker.HALLSIZE / 2;
-                this.y = originY - LevelMaker.HALLSIZE / 2;
-                this.width = LevelMaker.HALLSIZE;
-                this.height = targetY - originY + LevelMaker.HALLSIZE;
+                this.X = originX - LevelMaker.HALLSIZE / 2;
+                this.Y = originY - LevelMaker.HALLSIZE / 2;
+                this.Width = LevelMaker.HALLSIZE;
+                this.Height = targetY - originY + LevelMaker.HALLSIZE;
             }
         }
 
-        //========================================
-        //region Properties
+        #endregion Constructors
 
-        public int X => this.x;
+        //===================================================================
 
-        public int Y => this.y;
+        #region Properties
 
-        public int Width => this.width;
+        public int X { get; }
 
-        public int Height => this.height;
+        public int Y { get; }
 
-        //endregion Properties ==============================
+        public int Width { get; }
+
+        public int Height { get; }
+
+        #endregion Properties
     }
 }
-

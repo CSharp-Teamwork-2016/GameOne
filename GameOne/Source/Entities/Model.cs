@@ -2,70 +2,31 @@
 {
     using System.Windows;
 
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Interfaces;
-    using GameOne.Source.Renderer;
+    using Enumerations;
+    using Interfaces;
+    using Renderer;
 
     public abstract class Model : Entity, IRenderable
     {
-        private Vector position;
-        private double direction;
-        private double radius;
         private Spritesheet sprite;
         protected State state;
 
         protected Model(double x, double y, double direction, double radius, Spritesheet sprite)
         {
-            this.position = new Vector(x, y);
-            this.direction = direction;
-            this.radius = radius;
+            this.Position = new Vector(x, y);
+            this.Direction = direction;
+            this.Radius = radius;
             this.sprite = sprite;
             this.state = State.IDLE;
         }
 
-        public bool Alive
-        {
-            get { return state != State.DEAD; }
-        }
+        public bool Alive => state != State.DEAD;
 
-		public Vector Position
-		{
-			get
-			{
-				return this.position;
-			}
+        public Vector Position { get; set; }
 
-			set
-			{
-				this.position = value;
-			}
-		}
+        public double Direction { get; protected set; }
 
-        public double Direction
-        {
-            get
-            {
-                return this.direction;
-            }
-
-            protected set
-            {
-                this.direction = value;
-            }
-        }
-
-        public double Radius
-        {
-            get
-            {
-                return this.radius;
-            }
-
-            set
-            {
-                this.radius = value;
-            }
-        }
+        public double Radius { get; set; }
 
         public State State => this.state;
 

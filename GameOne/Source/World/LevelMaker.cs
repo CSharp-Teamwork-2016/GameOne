@@ -11,7 +11,11 @@
     /// </summary>
     internal class LevelMaker
     {
+
+        #region Fields
+
         private const int REFSIZE = 15;
+
         private int depth;
         private int width;
         private int height;
@@ -19,7 +23,22 @@
         private Queue<Partition> queue;
         private Dictionary<long, Tile> levelMatrix;
 
-        //========================================
+        #endregion Fields
+
+        //===================================================================
+
+        #region Constructors
+
+        public LevelMaker(int depth)
+        {
+            this.depth = depth;
+            this.CalcSize();
+            this.MakeLevel();
+        }
+
+        #endregion Constructors
+
+        //===================================================================
 
         #region Properties
 
@@ -29,19 +48,13 @@
 
         public Dictionary<long, Tile> Tiles => this.levelMatrix;
 
-        #endregion Properties ===================
+        #endregion Properties
 
-        //========================================
+        //===================================================================
 
-        #region Initialization ==================
+        #region Methods
 
-        public LevelMaker(int depth)
-        {
-            this.depth = depth;
-            this.CalcSize();
-            this.MakeLevel();
-        }
-
+        //Initialization
         public int NextLevel()
         {
             this.depth += (int)Math.Max(2, this.depth * 0.2);
@@ -77,12 +90,7 @@
             this.height = (int)(this.width * 0.67);
         }
 
-        #endregion Initialization ===============
-
-        //========================================
-
-        #region Extract geometry ================
-
+        //Extract geometry
         public List<Partition> GetBsp()
         {
             var partitions = new List<Partition>();
@@ -174,12 +182,12 @@
                         {
                             if (!this.levelMatrix.ContainsKey(currentIndex))
                             {
-                                this.levelMatrix.Add(currentIndex, TileFactory.getTile(col, row, 1));
+                                this.levelMatrix.Add(currentIndex, TileFactory.GetTile(col, row, 1));
                             }
                         }
                         else
                         {
-                            this.levelMatrix[currentIndex] = TileFactory.getTile(col, row, 2);
+                            this.levelMatrix[currentIndex] = TileFactory.GetTile(col, row, 2);
                         }
                     }
                 }
@@ -201,12 +209,12 @@
                         {
                             if (!this.levelMatrix.ContainsKey(currentIndex))
                             {
-                                this.levelMatrix.Add(currentIndex, TileFactory.getTile(col, row, 1));
+                                this.levelMatrix.Add(currentIndex, TileFactory.GetTile(col, row, 1));
                             }
                         }
                         else
                         {
-                            this.levelMatrix[currentIndex] = TileFactory.getTile(col, row, 2);
+                            this.levelMatrix[currentIndex] = TileFactory.GetTile(col, row, 2);
                         }
                     }
                 }
@@ -247,9 +255,9 @@
             return (long)y * width + x;
         }
 
-        #endregion Extract geometry =============
+        #endregion Methods
 
-        //========================================
+        //===================================================================
 
         #region Static parameters ===============
 
@@ -304,11 +312,7 @@
             return (long)y * width + x;
         }
 
-        #endregion Static parameters ============
-
-        //========================================
-
-
+        #endregion Static parameters
     }
 }
 
