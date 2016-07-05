@@ -11,21 +11,11 @@ namespace GameOne.Source.UI
     {
         #region Fields
 
-        // textures
-
-        private ContentManager content;
-
         #endregion Fields
 
         //===================================================================
 
         #region Constructors
-
-        public MainMenu(ContentManager content)
-        {
-            this.content = content;
-            this.MainManuScreen = content.Load<Texture2D>("Images/Menu/MainMenu");
-        }
 
         #endregion Constructors
 
@@ -33,7 +23,12 @@ namespace GameOne.Source.UI
 
         #region Properties
 
-        public Texture2D MainManuScreen { get; set; }
+        public Texture2D MainMenuScreen { get; set; }
+        public Texture2D ResumeScreen { get; set; }
+        public Texture2D CreditsScreen { get; set; }
+        public Texture2D WePromiseScreen { get; set; }
+
+        public Texture2D CurrentScreen { get; set; }
 
         #endregion Properties
 
@@ -46,7 +41,7 @@ namespace GameOne.Source.UI
             // Respond to user input for menu selections, etc
 
             //Start New Game or Resume curren
-            if ((this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/MainMenu") || this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/ResumeGame")) &&
+            if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
                 Mouse.GetState().X <= 550 &&
@@ -56,7 +51,7 @@ namespace GameOne.Source.UI
                 return GameState.Gameplay;
             }
             //Exit Game
-            else if ((this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/MainMenu") || this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/ResumeGame")) &&
+            else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
                 Mouse.GetState().X <= 550 &&
@@ -67,68 +62,69 @@ namespace GameOne.Source.UI
                 //We may add "Are you sure", "Do you want to save?" or something...
             }
             //Credits
-            else if ((this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/MainMenu") || this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/ResumeGame")) &&
+            else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
                 Mouse.GetState().X <= 550 &&
                 Mouse.GetState().Y >= 300 &&
                 Mouse.GetState().Y <= 340)
             {
-                this.MainManuScreen = this.content.Load<Texture2D>("Images/Menu/Credits");
+                this.CurrentScreen = this.CreditsScreen;
                 return GameState.MainMenu;
             }
             //Back From Credits or Save or Load. If we start New Game, then go to main menue, then press Credits, then back, first button will be New Game, but it will actualy Resume current game. I will fix it later<=====================================================================
-            else if ((this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/Credits") || this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/WePromise")) &&
+            else if ((this.CurrentScreen == this.CreditsScreen || this.CurrentScreen == this.WePromiseScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
                 Mouse.GetState().X <= 550 &&
                 Mouse.GetState().Y >= 400 &&
                 Mouse.GetState().Y <= 450)
             {
-                this.MainManuScreen = this.content.Load<Texture2D>("Images/Menu/MainMenu");
+                this.CurrentScreen = this.MainMenuScreen;
                 return GameState.MainMenu;
             }
-            else if ((this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/Credits") || this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/WePromise")) &&
+            else if ((this.CurrentScreen == this.CreditsScreen || this.CurrentScreen == this.WePromiseScreen) &&
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                this.MainManuScreen = this.content.Load<Texture2D>("Images/Menu/MainMenu");
+                this.CurrentScreen = this.MainMenuScreen;
                 return GameState.MainMenu;
             }
             //Save TODO
-            else if ((this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/MainMenu") || this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/ResumeGame")) &&
+            else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
                 Mouse.GetState().X <= 550 &&
                 Mouse.GetState().Y >= 150 &&
                 Mouse.GetState().Y <= 190)
             {
-                this.MainManuScreen = this.content.Load<Texture2D>("Images/Menu/WePromise");
+                this.CurrentScreen = this.WePromiseScreen;
                 return GameState.MainMenu;
             }
             //Load TODO
-            else if ((this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/MainMenu") || this.MainManuScreen == this.content.Load<Texture2D>("Images/Menu/ResumeGame")) &&
+            else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
                 Mouse.GetState().X <= 550 &&
                 Mouse.GetState().Y >= 200 &&
                 Mouse.GetState().Y <= 240)
             {
-                this.MainManuScreen = this.content.Load<Texture2D>("Images/Menu/WePromise");
+                this.CurrentScreen = this.WePromiseScreen;
                 return GameState.MainMenu;
             }
 
             return GameState.MainMenu;
         }
 
+        public void LoadTextures(Texture2D MainMenuScreen, Texture2D ResumeScreen, Texture2D CreditsScreen, Texture2D WePromiseScreen)
+        {
+            this.MainMenuScreen = MainMenuScreen;
+            this.ResumeScreen = ResumeScreen;
+            this.CreditsScreen = CreditsScreen;
+            this.WePromiseScreen = WePromiseScreen;
+
+            this.CurrentScreen = MainMenuScreen;
+        }
 
         #endregion Methods
-
-        public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
-        {
-            graphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            spriteBatch.Draw(this.MainManuScreen, Vector2.Zero);
-            spriteBatch.End();
-        }
     }
 }
