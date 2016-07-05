@@ -4,60 +4,55 @@
 
     public class Room
     {
-        private int x;
-        private int y;
-        private int width;
-        private int height;
-        private int originX;
-        private int originY;
+        #region Constructors
 
         public Room(int x, int y, int width, int height)
         {
-            this.width = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
-            this.width = Math.Min(this.width, width);
-            this.height = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
-            this.height = Math.Min(this.height, height);
+            this.Width = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
+            this.Width = Math.Min(this.Width, width);
+            this.Height = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
+            this.Height = Math.Min(this.Height, height);
 
-            if (width - this.width > 0)
+            if (width - this.Width > 0)
             {
-                this.x = x + LevelMaker.Rand(width - this.width);
+                this.X = x + LevelMaker.Rand(width - this.Width);
             }
             else
             {
-                this.x = x;
+                this.X = x;
             }
 
-            if (height - this.height > 0)
+            if (height - this.Height > 0)
             {
-                this.y = y + LevelMaker.Rand(height - this.height);
+                this.Y = y + LevelMaker.Rand(height - this.Height);
             }
             else
             {
-                this.y = y;
+                this.Y = y;
             }
 
-            this.originX = this.x + this.width / 2;
-            this.originY = this.y + this.height / 2;
+            this.OriginX = this.X + this.Width / 2;
+            this.OriginY = this.Y + this.Height / 2;
         }
 
-        //========================================
+        #endregion Constructors
 
-        //region Properties
+        //===================================================================
 
-        public int X => this.x;
+        #region Properties
 
-        public int Y => this.y;
+        public int X { get; }
 
-        public int Width => this.width;
+        public int Y { get; }
 
-        public int Height => this.height;
+        public int Width { get; }
 
-        public int OriginX => this.originX;
+        public int Height { get; }
 
-        public int OriginY => this.originY;
+        public int OriginX { get; }
 
-        //endregion Properties ===================
+        public int OriginY { get; }
 
-        //========================================
+        #endregion Properties
     }
 }

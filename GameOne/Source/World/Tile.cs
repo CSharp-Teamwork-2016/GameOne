@@ -9,51 +9,47 @@
         // Must implement IRenderable, for z-level sorting by the same method as Entities
         // Chlid classes may include active level elements, like doors, buttons or traps
 
-        private static int nextId = 0; // needs to be initialized to 0
+        #region Fields
+
+        private static int nextId; // needs to be initialized to 0
         private int id;
 
-        private double x, y;
-        private TileType tileType;
         private bool transparent;
         private string texture; // TODO
 
+        #endregion Fields
+
+        //===================================================================
+
+        #region Constructors
+
         public Tile(double x, double y, TileType tileType, bool transparent = false)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
             this.id = nextId++;
-            this.tileType = tileType;
+            this.TileType = tileType;
             this.transparent = transparent;
             // this.texture = textureName;
         }
 
-        public double X
-        {
-            get
-            {
-                return this.x;
-            }
-        }
+        #endregion Constructors
 
-        public double Y
-        {
-            get
-            {
-                return this.y;
-            }
-        }
+        //===================================================================
 
-        public TileType TileType
-        {
-            get
-            {
-                return this.tileType;
-            }
-            set
-            {
-                this.tileType = value;
-            }
-        }
+        #region Properties
+
+        public double X { get; }
+
+        public double Y { get; }
+
+        public TileType TileType { get; set; }
+
+        #endregion Properties
+
+        //===================================================================
+
+        #region Methods
 
         public void Overlay() // if overlay - change transparency
         {
@@ -64,5 +60,7 @@
         {
             return this.transparent;
         }
+
+        #endregion Methods
     }
 }

@@ -4,6 +4,7 @@
     {
         MainMenu,
         Gameplay,
-        EndOfGame
+        EndOfGame,
+        MapEditor
     }
 }

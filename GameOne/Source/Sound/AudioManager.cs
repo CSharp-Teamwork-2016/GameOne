@@ -6,9 +6,17 @@
 
     public class AudioManager
     {
+        #region Fields
+
         private Song backgroundMusic;
         private Song hurtEffect;
-        
+
+        #endregion Fields
+
+        //===================================================================
+
+        #region Methods
+
         public void PlayBackgroundMusic(ContentManager content)
         {
             this.backgroundMusic = content.Load<Song>("WoT-Battle-2");
@@ -31,5 +39,7 @@
             MediaPlayer.Volume -= 0.1f;
             MediaPlayer.Play(this.backgroundMusic);
         }
+
+        #endregion Methods
     }
 }

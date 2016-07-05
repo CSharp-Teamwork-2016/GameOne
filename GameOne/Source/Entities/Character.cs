@@ -4,69 +4,57 @@
     using System.Windows;
     using System.Linq;
 
-    using GameOne.Source.Enumerations;
-    using GameOne.Source.Renderer;
+    using Enumerations;
+    using Renderer;
 
     public abstract class Character : Model
     {
-        protected int health;
-        protected int maxHealth;
-        protected int damage;
+        #region Fields
+
         private Vector velocity;
-        private AttackType attackType;
         private double attackTime;
         private double damageTime;
         protected double timeToNextAction;
+
+        #endregion Fields
+
+        //===================================================================
+
+        #region Constructors
 
         protected Character(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType = AttackType.Melee)
             : base(x, y, direction, radius, sprite)
         {
             this.velocity = new Vector(0, 0);
 
-            this.health = health;
-            this.maxHealth = health;
-            this.damage = damage;
-            this.attackType = attackType;
+            this.Health = health;
+            this.MaxHealth = health;
+            this.Damage = damage;
+            this.AttackType = attackType;
             timeToNextAction = 0;
         }
 
+        #endregion Constructors
+
+        //===================================================================
+
         #region Properties
 
-        public int Health
-        {
-            get
-            {
-                return this.health;
-            }
-        }
+        public int Health { get; protected set; }
 
-        public int MaxHealth
-        {
-            get
-            {
-                return maxHealth;
-            }
-        }
+        public int MaxHealth { get; protected set; }
 
-        public int Damage
-        {
-            get
-            {
-                return this.damage;
-            }
-        }
+        public int Damage { get; protected set; }
 
-        public AttackType AttackType
-        {
-            get
-            {
-                return this.attackType;
-            }
-        }
+        public AttackType AttackType { get; }
 
-        #endregion
+        #endregion Properties
 
-        #region Movement
+        //===================================================================
+
+        #region Methods
+
+        #region Methods/Movement
 
         public void MoveUp()
         {
@@ -100,21 +88,37 @@
             this.velocity.Y = y;
         }
 
-        #endregion
+        #endregion Methods/Movement
 
         public virtual void TakeDamage(int damage)
         {
-            if (state == State.DEAD) return;
-            if ((state & State.HURT) == State.HURT) return;
+            if (state == State.DEAD)
+            {
+                return;
+            }
+
+            if ((state & State.HURT) == State.HURT)
+            {
+                return;
+            }
+
             state |= State.HURT;
             damageTime = 0;
-            this.health -= damage;
-            if (health <= 0) Die();
+            this.Health -= damage;
+
+            if (Health <= 0)
+            {
+                Die();
+            }
         }
 
         public void Attack()
         {
-            if (timeToNextAction > 0) return;
+            if (timeToNextAction > 0)
+            {
+                return;
+            }
+
             if ((state & State.ATTACK) != State.ATTACK)
             {
                 state |= State.ATTACK;
@@ -125,22 +129,30 @@
 
         public override void Update(double time)
         {
-            if (state == State.DEAD) return;
+            if (state == State.DEAD)
+            {
+                return;
+            }
+
             if ((state & State.ATTACK) == State.ATTACK)
             {
                 attackTime += time;
+
                 if (attackTime >= 0.2)
                 {
                     state ^= State.ATTACK;
                     attackTime = 0;
                     return;
                 }
+
                 foreach (Character entity in Loop.level.Entities.OfType<Character>().Where(e => e != this && (Position - e.Position).Length < 2))
                 {
                     double p1x = Position.X + Math.Cos(Direction + Math.PI / 2) * 0.5;
                     double p1y = Position.Y + Math.Sin(Direction + Math.PI / 2) * 0.5;
+
                     double pw = 1.2 * Math.Cos(Direction) + 1 * Math.Sin(Direction);
                     double ph = 1.2 * Math.Sin(Direction) - 1 * Math.Cos(Direction);
+
                     double leftA = Math.Min(p1x, p1x + pw);
                     double rightA = Math.Max(p1x, p1x + pw);
                     double topA = Math.Min(p1y, p1y + ph);
@@ -148,20 +160,29 @@
 
                     if (entity.Position.X >= leftA && entity.Position.X <= rightA &&
                         entity.Position.Y >= topA && entity.Position.Y <= bottomA)
-                        entity.TakeDamage(damage);
+                    {
+                        entity.TakeDamage(Damage);
+                    }
                 }
             }
+
             if ((state & State.HURT) == State.HURT)
             {
                 damageTime += time;
+
                 if (damageTime >= 0.4)
                 {
                     damageTime = 0;
                     state ^= State.HURT;
                 }
             }
+
             timeToNextAction -= time;
-            if (timeToNextAction < 0) timeToNextAction = 0;
+
+            if (timeToNextAction < 0)
+            {
+                timeToNextAction = 0;
+            }
 
             // Motion
             if (this.velocity.Length > 0)
@@ -175,6 +196,7 @@
 
                 friction *= 15 * time;
                 this.velocity += friction;
+
                 if (this.velocity.Length <= friction.Length)
                 {
                     this.velocity.X = 0;
@@ -190,14 +212,18 @@
 
         public void Heal(int amount)
         {
-            health += amount;
-            if (health > maxHealth) health = maxHealth;
+            Health += amount;
+            if (Health > MaxHealth)
+            {
+                Health = MaxHealth;
+            }
         }
 
         public void Knockback()
         {
             double x = -5 * Math.Cos(this.Direction);
             double y = -5 * Math.Sin(this.Direction);
+
             this.velocity.X = x;
             this.velocity.Y = y;
         }
@@ -206,5 +232,7 @@
         {
             state = State.DEAD;
         }
+
+        #endregion Methods
     }
 }

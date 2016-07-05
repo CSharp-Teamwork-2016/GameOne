@@ -18,69 +18,68 @@
     // Main loop
     public class Loop
 	{
-		// Game objects
-		public static Level level;
+        #region Fields
 
-		// Debug
-		public static string debugInfo;
-		public static string console;
+        // Game objects
+        public static Level level;
+        private Input input;
 
-		private Input input;
+        #endregion Fields
 
-		public Loop(KeyboardState keyboardState, MouseState mouseState)
+        //===================================================================
+
+        #region Constructors
+
+        public Loop(KeyboardState keyboardState, MouseState mouseState)
+        {
+            level = new Level();
+
+            DebugInfo = string.Empty;
+            Console = string.Empty;
+            this.input = new Input(keyboardState, mouseState);
+        }
+
+        #endregion Constructors
+
+        //===================================================================
+
+        #region Properties
+
+        // Debug
+        public static string DebugInfo { get; set; }
+        // Debug
+        public static string Console { get; set; }
+
+        public static bool ShowFPS { get; set; }
+
+        #endregion Properties
+
+        //===================================================================
+
+        #region Methods
+
+        internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState) // ??
 		{
-			level = new Level();
-
-			debugInfo = "";
-			console = "";
-			this.input = new Input(keyboardState, mouseState);
-		}
-
-	    public static string DebugInfo
-	    {
-	        get
-	        {
-	            return debugInfo;
-	        }
-	        set
-	        {
-	            debugInfo = value;
-	        }
-	    }
-
-	    public static string Console
-	    {
-	        get
-	        {
-	            return console;
-	        }
-	        set
-	        {
-	            console = value;
-	        }
-	    }
-
-		public static bool ShowFPS { get; set; }
-
-		internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState) // ??
-		{
-			debugInfo = "";
+            DebugInfo = string.Empty;
 			level.Player.Input(this.input.Update(keyboardState, mouseState));
 
-            if (level.exitOpen)
+            if (level.ExitOpen)
             {
-                level.exitOpen = false;
+                level.ExitOpen = false;
                 level.SetExit();
             }
-            if (level.exitTriggered)
+
+            if (level.ExitTriggered)
             {
-                level.exitTriggered = false;
+                level.ExitTriggered = false;
                 level.NextLevel();
             }
+
 			foreach (Entity entity in level.Entities)
 			{
 				entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
 			}
+
 			Physics.CollisionResolution(level.Entities
                     .OfType<Model>()
                     .Where(e => e.Alive)
@@ -99,15 +98,17 @@
 				test();
 			}
 			// Debug info
-			if (ShowFPS)
-				debugInfo += string.Format($"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}");
+            if (ShowFPS)
+            {
+                DebugInfo += string.Format($"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}");
+            }
 #endif
 		}
 
 		internal void Render()
 		{
 			level.Geometry.ForEach(Primitive.DrawTile);
-			foreach (var entity in level.Entities.Where(e => e is Entities.Model))
+			foreach (var entity in level.Entities.Where(e => e is Model))
 			{
 			    var model = (Model)entity;
 				Primitive.DrawModel(model);
@@ -146,10 +147,12 @@
             }
             level.Geometry.ForEach(Primitive.DrawTileMini);
             Primitive.DrawModelMini(level.Player);
-            Output.DrawText(string.Format($"Depth: {Level.currentLevel}"), 610, 270, Color.Black);
+            Output.DrawText(string.Format($"Depth: {Level.CurrentLevel}"), 610, 270, Color.Black);
             // Output debug info
-            Output.DrawText(debugInfo, 610, 50, Color.Black);
-			Output.DrawText(string.Format($"~/> {console}_"), 10, 450, Color.Black);
+            Output.DrawText(DebugInfo, 610, 50, Color.Black);
+			Output.DrawText(string.Format($"~/> {Console}_"), 10, 450, Color.Black);
         }
-	}
+
+        #endregion Methods
+    }
 }

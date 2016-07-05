@@ -10,6 +10,7 @@
     
     public class MonoInit : Game
     {
+
         // Main loop
         private Loop loop;
 

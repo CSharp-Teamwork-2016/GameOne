@@ -13,12 +13,24 @@
     /// </summary>
     public class Primitive
     {
+        #region Fields
+
+        private const int CAMERAXMODIFIER = 300;
+        private const int CAMERAYMODIFIER = 200;
+
         /// <summary>
         /// Width and height of one world tile
         /// </summary>
-		private static int gridSize = 40;
+        private static int gridSize = 40;
         private static int miniMapSize = 3;
-        private static double _cameraX = 0, _cameraY = 0;
+        private static double _cameraX;
+        private static double _cameraY;
+
+        #endregion Fields
+
+        //===================================================================
+
+        #region Properties
 
         public static double CameraX
         {
@@ -28,7 +40,7 @@
             }
             set
             {
-                _cameraX = 300 - value * gridSize;
+                _cameraX = CAMERAXMODIFIER - value * gridSize;
             }
         }
 
@@ -40,9 +52,16 @@
             }
             set
             {
-                _cameraY = 200 - value * gridSize;
+                _cameraY = CAMERAYMODIFIER - value * gridSize;
             }
         }
+
+        #endregion Properties
+
+        //===================================================================
+
+            //All static
+        #region Methods
 
         public static void DrawTile(Tile tile)
         {
@@ -50,16 +69,26 @@
             double top = (tile.Y - 0.5) * gridSize + 1;
             double width = gridSize - 2;
             double height = gridSize - 2;
-            Color color = tile.TileType == Enumerations.TileType.Floor ? Color.Gray : Color.White; // change
+            Color color = tile.TileType == TileType.Floor ? Color.Gray : Color.White; // change
 
             Output.FillRect(left, top, width, height, color);
         }
 
         public static void DrawModel(Model model)
         {
-            if (model.State == State.DEAD) return;
-            if (model is Character) DrawCharacter((Character)model);
-            else if (model is Item) DrawItem((Item)model);
+            if (model.State == State.DEAD)
+            {
+                return;
+            }
+
+            if (model is Character)
+            {
+                DrawCharacter((Character)model);
+            }
+            else if (model is Item)
+            {
+                DrawItem((Item)model);
+            }
         }
 
         private static void DrawItem(Item model)
@@ -83,7 +112,7 @@
                 width /= 2;
                 left += width / 2;
                 Output.FillRect(left, top, width, height, Color.Red);
-                Output.FillRect(left + 2, top - 4, width -4, 4, Color.White);
+                Output.FillRect(left + 2, top - 4, width - 4, 4, Color.White);
                 Output.StrokeRect(left, top, width, height, Color.White, 1);
             }
             else if (model.Type == ItemType.QuartzFlask)
@@ -128,6 +157,7 @@
                 Output.DrawLine(model.Position.X * gridSize, topA * gridSize, model.Position.X * gridSize, bottomA * gridSize, Color.Red, 2);
                 */
             }
+
             if (model.State == State.HURT) color = Color.Red;
             Output.FillOval(left, top, width, height, color);
             Output.StrokeOval(left, top, width, height, Color.White, 2);
@@ -172,5 +202,7 @@
             double height = 2 * miniMapSize;
             Output.FillOval(left, top, width, height, Color.Red);
         }
+
+        #endregion Methods
     }
 }

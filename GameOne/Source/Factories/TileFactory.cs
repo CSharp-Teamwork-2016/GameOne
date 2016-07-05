@@ -5,7 +5,7 @@
 
     public class TileFactory
     {
-        public static Tile getTile(int x, int y, TileType type)
+        public static Tile GetTile(int x, int y, TileType type)
         {
             switch (type)
             {
@@ -20,16 +20,16 @@
             }
         }
 
-        public static Tile getTile(int x, int y, int type)
+        public static Tile GetTile(int x, int y, int type)
         {
             switch (type)
             {
                 case 1:
-                    return getTile(x, y, TileType.Wall);
+                    return GetTile(x, y, TileType.Wall);
                 case 2:
-                    return getTile(x, y, TileType.Floor);
+                    return GetTile(x, y, TileType.Floor);
                 case 3:
-                    return getTile(x, y, TileType.Door);
+                    return GetTile(x, y, TileType.Door);
                 default:
                     return null;
             }
