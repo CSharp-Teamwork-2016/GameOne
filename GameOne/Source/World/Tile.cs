@@ -1,6 +1,6 @@
 ﻿namespace GameOne.Source.World
 {
-    using GameOne.Source.Enumerations;
+    using Enumerations;
 
     public class Tile
     {

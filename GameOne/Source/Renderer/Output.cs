@@ -575,6 +575,11 @@
             batch.Draw(texture, position);
         }
 
+        public static void Draw(Texture2D texture, Rectangle rect)
+        {
+            batch.Draw(texture, destinationRectangle: rect);
+        }
+
         private static int Index(int x, int y, int width)
         {
             return y * width + x;

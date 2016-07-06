@@ -46,6 +46,8 @@
                 this.Content.Load<Texture2D>("Images/Menu/ResumeGame"),
                 this.Content.Load<Texture2D>("Images/Menu/Credits"),
                 this.Content.Load<Texture2D>("Images/Menu/WePromise"));
+            Renderer.Primitive.FloorTile = this.Content.Load<Texture2D>("Images/floor");
+            Renderer.Primitive.WallTile = this.Content.Load<Texture2D>("Images/wall");
         }
 
         protected override void UnloadContent()

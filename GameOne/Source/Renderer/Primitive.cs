@@ -56,6 +56,9 @@
             }
         }
 
+        public static Microsoft.Xna.Framework.Graphics.Texture2D FloorTile { get; set; }
+        public static Microsoft.Xna.Framework.Graphics.Texture2D WallTile { get; set; }
+
         #endregion Properties
 
         //===================================================================
@@ -65,13 +68,15 @@
 
         public static void DrawTile(Tile tile)
         {
-            double left = (tile.X - 0.5) * gridSize + 1;
-            double top = (tile.Y - 0.5) * gridSize + 1;
-            double width = gridSize - 2;
-            double height = gridSize - 2;
-            Color color = tile.TileType == TileType.Floor ? Color.Gray : Color.White; // change
+            double left = (tile.X - 0.5) * gridSize;
+            double top = (tile.Y - 0.5) * gridSize;
+            double width = gridSize;
+            double height = gridSize;
+            //Color color = tile.TileType == TileType.Floor ? Color.Gray : Color.White; // change
 
-            Output.FillRect(left, top, width, height, color);
+            //Output.FillRect(left, top, width, height, color);
+            Output.Draw(tile.TileType == TileType.Floor ? FloorTile : WallTile,
+                new Rectangle((int)left, (int)top, (int)width, (int)height));
         }
 
         public static void DrawModel(Model model)
@@ -150,10 +155,10 @@
             if (model.State == State.HURT) color = Color.Red;
             if (model is Enemy && ((Enemy)model).Type == EnemyType.Sentry)
             {
-                Output.FillRect(left, top, width / 3, height / 3, Color.Brown);
-                Output.FillRect(left + width / 3 * 2, top, width / 3, height / 3, Color.Brown);
-                Output.FillRect(left, top + height / 3 * 2, width / 3, height / 3, Color.Brown);
-                Output.FillRect(left + width / 3 * 2, top + height / 3 * 2, width / 3, height / 3, Color.Brown);
+                Output.FillRect(left, top, width / 3, height / 3, color);
+                Output.FillRect(left + width / 3 * 2, top, width / 3, height / 3, color);
+                Output.FillRect(left, top + height / 3 * 2, width / 3, height / 3, color);
+                Output.FillRect(left + width / 3 * 2, top + height / 3 * 2, width / 3, height / 3, color);
                 left += 4;
                 top += 4;
                 width -= 8;
@@ -181,7 +186,7 @@
             double width = model.Radius * 2 * gridSize;
             double height = model.Radius * 2 * gridSize;
 
-            Color color = Color.DarkRed;
+            Color color = Color.Red;
 
             Output.FillOval(left, top, width, height, color);
             //Output.StrokeOval(left, top, width, height, Color.White, 2);
