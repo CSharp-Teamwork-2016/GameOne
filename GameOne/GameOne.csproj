@@ -69,6 +69,7 @@
     <Compile Include="Source\World\EntityHandler.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
+    <Compile Include="Source\World\LevelEditor.cs" />
     <Compile Include="Source\World\LevelMaker.cs" />
     <Compile Include="Source\World\Partition.cs" />
     <Compile Include="Source\World\Physics.cs" />
