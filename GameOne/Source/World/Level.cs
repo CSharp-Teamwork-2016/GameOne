@@ -7,7 +7,7 @@
     using Entities;
     using Enumerations;
     using Renderer;
-
+    using Factories;
     public class Level
     {
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
@@ -130,9 +130,9 @@
             for (int i = 0; i < enemies; i++)
             {
                 Tile currentTile = GetRandomTile(validTiles);
-                double direction = Math.Round(Math.PI / 2 * LevelMaker.Rand(4), 2);
-                Enemy enemy = new Enemy(currentTile.X, currentTile.Y, direction, 0.3, new Spritesheet(),
-                    HP, damage, AttackType.Melee, EnemyType.Zombie, HP); // hardcoded values for enemy
+                EnemyType enemyType = EnemyType.Zombie;
+                if (LevelMaker.RandDouble(0, 1) >= 0.7) enemyType = EnemyType.Sentry;
+                Enemy enemy = EnemyFactory.MakeEnemy(currentTile.X, currentTile.Y, enemyType, CurrentLevel);
                 this.Entities.Add(enemy);
                 EnemyCount++;
             }

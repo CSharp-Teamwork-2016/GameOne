@@ -36,6 +36,8 @@
 
         //===================================================================
 
+        public EnemyType Type => this.type;
+
         #region Methods
 
         #region Methods/Behaviour
@@ -70,7 +72,9 @@
             pattern.Peek()();
 
             // Random firing pattern hack
-            if (World.LevelMaker.RandDouble(0, 1) > 0.99)
+            double probability = 0.99;
+            if (type == EnemyType.Sentry) probability = 0.95;
+            if (World.LevelMaker.RandDouble(0, 1) > probability)
                 FireProjectile();
         }
 
@@ -80,15 +84,28 @@
             this.nextTime = World.LevelMaker.RandDouble(1, 4);
 
             pattern = new Queue<Action>();
-            pattern.Enqueue(MoveForward);
-            pattern.Enqueue(WaitFor);
-            pattern.Enqueue(TurnRight);
-            pattern.Enqueue(WaitFor);
-            pattern.Enqueue(MoveForward);
-            pattern.Enqueue(WaitFor);
-            pattern.Enqueue(TurnRight);
-            pattern.Enqueue(TurnRight);
-            pattern.Enqueue(WaitFor);
+            if (type == EnemyType.Zombie)
+            {
+                pattern.Enqueue(MoveForward);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(MoveForward);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+            }
+            else if (type == EnemyType.Sentry)
+            {
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+            }
         }
 
         #endregion Methods/Behaviour

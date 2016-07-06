@@ -58,6 +58,7 @@
     <Compile Include="Source\Enumerations\TileType.cs" />
     <Compile Include="Source\Enumerations\UserInput.cs" />
     <Compile Include="Source\Events\ProjectileEventArgs.cs" />
+    <Compile Include="Source\Factories\EnemyFactory.cs" />
     <Compile Include="Source\Factories\ProjectileFactory.cs" />
     <Compile Include="Source\Factories\TileFactory.cs" />
     <Compile Include="Source\Input.cs" />
