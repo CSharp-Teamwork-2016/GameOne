@@ -45,6 +45,7 @@
             DebugInfo = string.Empty;
             Console = string.Empty;
             this.input = new Input(keyboardState, mouseState);
+            LevelEditor.Init(input);
             this.mainMenu = new MainMenu();
             this.entityHandler = new EntityHandler();
             entityHandler.Subscribe(level.Entities);
@@ -96,6 +97,17 @@
                         this.GameUpdate(time, Keyboard.GetState(), Mouse.GetState());
                     }
                     break;
+                case GameState.LevelEditor:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    {
+                        this.gameState = GameState.MainMenu;
+                        this.MainMenu.CurrentScreen = this.MainMenu.ResumeScreen;
+                    }
+                    else
+                    {
+                        LevelEditor.Update(time, Keyboard.GetState(), Mouse.GetState());
+                    }
+                    break;
                 case GameState.EndOfGame:
                     //TODO
                     break;
@@ -141,12 +153,11 @@
                 case GameState.MainMenu:
                     break;
                 case GameState.Gameplay:
-                    level.Geometry.ForEach(Primitive.DrawTile);
-                    foreach (var entity in level.Entities.Where(e => e is Model))
-                    {
-                        var model = (Model)entity;
-                        Primitive.DrawModel(model);
-                    }
+                    RenderLevel();
+                    break;
+                case GameState.LevelEditor:
+                    RenderLevel();
+                    RendeGrid();
                     break;
                 case GameState.EndOfGame:
                     //TODO
@@ -160,6 +171,23 @@
             }
         }
 
+        private void RenderLevel()
+        {
+            level.Geometry.ForEach(Primitive.DrawTile);
+            foreach (var entity in level.Entities.Where(e => e is Model))
+            {
+                var model = (Model)entity;
+                Primitive.DrawModel(model);
+            }
+        }
+
+        private void RendeGrid()
+        {
+            level.Geometry.ForEach(Primitive.DrawGrid);
+            Tile target = new Tile((int)Primitive.ToWorldX(input.MouseX), (int)Primitive.ToWorldY(input.MouseY), LevelEditor.CurrentTile);
+            Primitive.DrawTile(target);
+        }
+
         internal void RenderUI()
         {
             switch (this.gameState)
@@ -168,39 +196,23 @@
                     Output.Draw(MainMenu.CurrentScreen, Vector2.Zero);
                     break;
                 case GameState.Gameplay:
-                    Output.FillRect(600, 0, 200, 480, Color.White);
-                    // Healthbar
-                    double hpx = 610;
-                    double hpy = 10;
-                    double hpw = 180;
-                    double hph = 10;
-                    double hpc = ((double)level.Player.Health / level.Player.MaxHealth) * hpw;
-                    Output.StrokeRect(hpx, hpy, hpw, hph, Color.Red);
-                    Output.FillRect(hpx, hpy, hpc, hph, Color.Red);
-                    // Flasks
-                    for (int i = 0; i < level.Player.HealthPotions; i++)
-                    {
-                        double left = 610 + i * 20;
-                        double top = 30;
-                        double width = 16;
-                        double height = 16;
-                        Output.FillRect(left, top, width, height, Color.Purple);
-                        Output.FillRect(left + 4, top - 4, width - 8, 4, Color.Gray);
-                        Output.StrokeRect(left, top, width, height, Color.Gray, 1);
-                    }
+                    double hpc = (double)level.Player.Health / level.Player.MaxHealth;
+                    UserInterface.DrawSideBar(hpc, level.Player.HealthPotions, Level.CurrentLevel);
                     level.Geometry.ForEach(Primitive.DrawTileMini);
                     Primitive.DrawModelMini(level.Player);
                     if (level.Entities.Contains(level.ExitPortal)) Primitive.DrawModelMini(level.ExitPortal);
-                    Output.DrawText(string.Format($"Depth: {Level.CurrentLevel}"), 610, 270, Color.Black);
-                    // Output debug info
-                    Output.DrawText(DebugInfo, 610, 50, Color.Black);
-                    Output.DrawText(string.Format($"~/> {Console}_"), 10, 450, Color.Black);
+                    UserInterface.DrawConsole(DebugInfo, Console);
+                    break;
+                case GameState.LevelEditor:
+                    double tileX = Primitive.ToWorldX(input.MouseX);
+                    double tileY = Primitive.ToWorldY(input.MouseY);
+                    Output.DrawText(string.Format($"{tileX}{Environment.NewLine}{tileY}"), input.MouseX + 20, input.MouseY, Color.White);
                     break;
                 case GameState.EndOfGame:
                     //TODO
                     break;
             }
-        }
+        } 
 
         #endregion Methods
     }

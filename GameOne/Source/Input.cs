@@ -9,6 +9,9 @@
         private KeyboardState kbPrevious;
         private MouseState msPrevious;
 
+        public double MouseX => msPrevious.X;
+        public double MouseY => msPrevious.Y;
+
         public Input(KeyboardState keyboardState, MouseState mouseState)
         {
             this.kbPrevious = keyboardState;

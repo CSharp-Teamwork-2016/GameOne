@@ -111,6 +111,16 @@ namespace GameOne.Source.UI
                 this.CurrentScreen = this.WePromiseScreen;
                 return GameState.MainMenu;
             }
+            // Level Editor
+            else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
+                Mouse.GetState().LeftButton == ButtonState.Pressed &&
+                Mouse.GetState().X >= 250 &&
+                Mouse.GetState().X <= 550 &&
+                Mouse.GetState().Y >= 250 &&
+                Mouse.GetState().Y <= 290)
+            {
+                return GameState.LevelEditor;
+            }
 
             return GameState.MainMenu;
         }

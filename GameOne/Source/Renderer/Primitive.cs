@@ -66,6 +66,23 @@
         //All static
         #region Methods
 
+        public static void PanCameraUp(double dist)
+        {
+            _cameraY += dist;
+        }
+        public static void PanCameraDown(double dist)
+        {
+            _cameraY -= dist;
+        }
+        public static void PanCameraLeft(double dist)
+        {
+            _cameraX += dist;
+        }
+        public static void PanCameraRight(double dist)
+        {
+            _cameraX -= dist;
+        }
+
         public static void DrawTile(Tile tile)
         {
             double left = (tile.X - 0.5) * gridSize;
@@ -77,6 +94,17 @@
             //Output.FillRect(left, top, width, height, color);
             Output.Draw(tile.TileType == TileType.Floor ? FloorTile : WallTile,
                 new Rectangle((int)left, (int)top, (int)width, (int)height));
+        }
+
+        public static void DrawGrid(Tile tile)
+        {
+            double left = (tile.X - 0.5) * gridSize;
+            double top = (tile.Y - 0.5) * gridSize;
+            double width = gridSize;
+            double height = gridSize;
+            Color color = Color.White; // change
+
+            Output.StrokeRect(left, top, width, height, color);
         }
 
         public static void DrawModel(Model model)
@@ -213,6 +241,16 @@
             Color color = Color.Red;
             if (model is Item) color = Color.Gold;
             Output.FillOval(left, top, width, height, color);
+        }
+
+        // Canvas coordinates
+        public static double ToWorldX(double canvasX)
+        {
+            return (canvasX - _cameraX) / gridSize;
+        }
+        public static double ToWorldY(double canvasY)
+        {
+            return (canvasY - _cameraY) / gridSize;
         }
 
         #endregion Methods

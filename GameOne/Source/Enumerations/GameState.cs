@@ -5,6 +5,6 @@
         MainMenu,
         Gameplay,
         EndOfGame,
-        MapEditor
+        LevelEditor
     }
 }
