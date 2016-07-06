@@ -36,6 +36,8 @@
 
         //===================================================================
 
+        public EnemyType Type => this.type;
+
         #region Methods
 
         #region Methods/Behaviour
@@ -47,7 +49,8 @@
 
         private void TurnRight()
         {
-            Direction += Math.PI / 2;
+            Direction += Math.Round(Math.PI / 2, 2);
+            Direction %= Math.Round(2 * Math.PI, 2);
             PrepareNext(0, -0.5);
         }
 
@@ -67,6 +70,12 @@
             }
 
             pattern.Peek()();
+
+            // Random firing pattern hack
+            double probability = 0.99;
+            if (type == EnemyType.Sentry) probability = 0.95;
+            if (World.LevelMaker.RandDouble(0, 1) > probability)
+                FireProjectile();
         }
 
         private void PreparePattern()
@@ -75,21 +84,38 @@
             this.nextTime = World.LevelMaker.RandDouble(1, 4);
 
             pattern = new Queue<Action>();
-            pattern.Enqueue(MoveForward);
-            pattern.Enqueue(WaitFor);
-            pattern.Enqueue(TurnRight);
-            pattern.Enqueue(WaitFor);
-            pattern.Enqueue(MoveForward);
-            pattern.Enqueue(WaitFor);
-            pattern.Enqueue(TurnRight);
-            pattern.Enqueue(TurnRight);
-            pattern.Enqueue(WaitFor);
+            if (type == EnemyType.Zombie)
+            {
+                pattern.Enqueue(MoveForward);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(MoveForward);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+            }
+            else if (type == EnemyType.Sentry)
+            {
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(WaitFor);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(TurnRight);
+                pattern.Enqueue(WaitFor);
+            }
         }
 
         #endregion Methods/Behaviour
 
         public override void Update(double time)
         {
+            if (state == State.DEAD)
+            {
+                return;
+            }
             // Behaviour
             ProcessPattern(time);
             base.Update(time);
@@ -100,7 +126,7 @@
             // TODO
         }
 
-        protected override void Die()
+        public override void Die()
         {
             base.Die();
             Loop.level.Player.GainXP(xpAward);

@@ -10,6 +10,7 @@
         Ghoul,
         Skeleton,
         Scavanger,
-        Wraith
+        Wraith,
+        Sentry
     }
 }

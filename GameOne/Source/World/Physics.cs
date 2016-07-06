@@ -9,6 +9,11 @@
 
     public class Physics
     {
+        public static readonly double UpDirection = Math.Round(1.5 * Math.PI, 2);
+        public static readonly double DownDirection = Math.Round(0.5 * Math.PI, 2);
+        public static readonly double LeftDirection = Math.Round(Math.PI, 2);
+        public static readonly double RightDirection = 0.0;
+
         //All static
         #region Methods
 
@@ -37,23 +42,8 @@
 
             if (penetration < 0)
             {
-                if (e1 is Item)
-                {
-                    Model t = e2;
-                    e2 = e1;
-                    e1 = t;
-                }
-
-                if (e2 is Item)
-                {
-                    if (e1 is Player)
-                    {
-                        ((Item)e2).Collect();
-                        ((Player)e1).PickUpItem(((Item)e2).Type);
-                        return;
-                    }
-                    else return;
-                }
+                if (HandleItems(e1, e2)) return;
+                if (HandleProjectiles(e1, e2)) return;
 
                 separation.Normalize();
                 separation = Vector.Multiply(separation, penetration / 2);
@@ -69,6 +59,66 @@
                     ((Character)e2).TakeDamage(((Character)e1).Damage);
                 }
             }
+        }
+
+        private static bool HandleItems(Model e1, Model e2)
+        {
+            if (e1 is Item)
+            {
+                Model t = e2;
+                e2 = e1;
+                e1 = t;
+            }
+
+            if (e2 is Item)
+            {
+                if (e1 is Player)
+                {
+                    ((Item)e2).Collect();
+                    ((Player)e1).PickUpItem(((Item)e2).Type);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private static bool HandleProjectiles(Model e1, Model e2)
+        {
+            if (e1 is Projectile)
+            {
+                Model t = e2;
+                e2 = e1;
+                e1 = t;
+            }
+
+            if (e2 is Projectile)
+            {
+                Projectile projectile = (Projectile)e2;
+                if (e1 is Character)
+                {
+                    Character target = (Character)e1;
+                    if (target is Player)
+                    {
+                        if (projectile.Source is Enemy)
+                        {
+                            projectile.Die();
+                            target.TakeDamage(projectile.Source.Damage);
+                        }
+                        return true;
+                    }
+                    else if (target is Enemy)
+                    {
+                        if (projectile.Source is Player)
+                        {
+                            projectile.Die();
+                            target.TakeDamage((int)(projectile.Source.Damage * 0.4));
+                        }
+                        return true;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         public static void BoundsCheck(List<Model> models, List<Tile> tiles)
@@ -100,6 +150,12 @@
 
             if (distX <= tileHalf + model.Radius && distY <= tileHalf)
             {
+                if (model is Projectile)
+                {
+                    model.Die();
+                    return;
+                }
+
                 double penetration = 0;
 
                 if (tile.X - model.Position.X < 0)
@@ -119,6 +175,12 @@
 
             if (distX <= tileHalf && distY <= tileHalf + model.Radius)
             {
+                if (model is Projectile)
+                {
+                    model.Die();
+                    return;
+                }
+
                 double penetration = 0;
 
                 if (tile.Y - model.Position.Y < 0)

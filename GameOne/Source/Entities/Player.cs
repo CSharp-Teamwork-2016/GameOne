@@ -21,7 +21,7 @@
         #region Constructors
 
         public Player(double x, double y, double direction, int xpLevel = 1)
-            : base(x, y, direction, 0.30, new Spritesheet(), 100, 10)
+            : base(x, y, direction, 0.30, new Spritesheet(), 100, 30)
         {
             this.xpLevel = xpLevel;
             experience = 0;
@@ -106,6 +106,9 @@
                     break;
                 case UserInput.DrinkPotion:
                     DrinkPotion();
+                    break;
+                case UserInput.Shoot:
+                    FireProjectile();
                     break;
             }
         }

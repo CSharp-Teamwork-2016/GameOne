@@ -40,6 +40,9 @@
                     case Keys.LeftControl:
                         result = UserInput.Attack;
                         break;
+                    case Keys.LeftShift:
+                        result = UserInput.Shoot;
+                        break;
                     case Keys.D1:
                         if (this.kbPrevious.IsKeyUp(key))
                         {

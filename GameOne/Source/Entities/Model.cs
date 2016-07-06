@@ -31,5 +31,10 @@
         public State State => this.state;
 
         public abstract void Render();
+        
+        public virtual void Die()
+        {
+            state = State.DEAD;
+        }
     }
 }

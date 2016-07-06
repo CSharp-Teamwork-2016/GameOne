@@ -6,6 +6,8 @@
 
     using Enumerations;
     using Renderer;
+    using Events;
+    using World;
 
     public abstract class Character : Model
     {
@@ -58,25 +60,25 @@
 
         public void MoveUp()
         {
-            this.Direction = 1.5 * Math.PI;
+            this.Direction = Physics.UpDirection;
             this.velocity.Y = -3;
         }
 
         public void MoveDown()
         {
-            this.Direction = 0.5 * Math.PI;
+            this.Direction = Physics.DownDirection;
             this.velocity.Y = 3;
         }
 
         public void MoveLeft()
         {
-            this.Direction = Math.PI;
+            this.Direction = Physics.LeftDirection;
             this.velocity.X = -3;
         }
 
         public void MoveRight()
         {
-            this.Direction = 0;
+            this.Direction = Physics.RightDirection;
             this.velocity.X = 3;
         }
 
@@ -124,6 +126,24 @@
                 state |= State.ATTACK;
                 attackTime = 0;
                 timeToNextAction = 0.6;
+            }
+        }
+
+        public void FireProjectile()
+        {
+            if (timeToNextAction > 0)
+            {
+                return;
+            }
+
+            if ((state & State.ATTACK) != State.ATTACK)
+            {
+                attackTime = 0;
+                timeToNextAction = 0.3;
+
+                ProjectileEventArgs args = new ProjectileEventArgs();
+                args.Type = ProjectileType.Bullet;
+                FireProjectileEvent(this, args);
             }
         }
 
@@ -228,11 +248,12 @@
             this.velocity.Y = y;
         }
 
-        protected virtual void Die()
-        {
-            state = State.DEAD;
-        }
-
         #endregion Methods
+
+        #region Events
+
+        public event EventHandler<ProjectileEventArgs> FireProjectileEvent;
+
+        #endregion
     }
 }
