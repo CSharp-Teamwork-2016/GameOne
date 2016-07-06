@@ -57,6 +57,7 @@
     <Compile Include="Source\Enumerations\State.cs" />
     <Compile Include="Source\Enumerations\TileType.cs" />
     <Compile Include="Source\Enumerations\UserInput.cs" />
+    <Compile Include="Source\Events\ProjectileEventArgs.cs" />
     <Compile Include="Source\Factories\ProjectileFactory.cs" />
     <Compile Include="Source\Factories\TileFactory.cs" />
     <Compile Include="Source\Input.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Source\Interfaces\IRenderable.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\UI\MainMenu.cs" />
+    <Compile Include="Source\World\EntityHandler.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
     <Compile Include="Source\World\LevelMaker.cs" />

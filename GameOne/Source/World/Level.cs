@@ -57,6 +57,8 @@
 
         public Player Player { get; }
 
+        public Item ExitPortal => this.exitPortal;
+
         #endregion Properties
 
         //===================================================================
@@ -128,7 +130,7 @@
             for (int i = 0; i < enemies; i++)
             {
                 Tile currentTile = GetRandomTile(validTiles);
-                double direction = Math.PI / 2 * LevelMaker.Rand(4);
+                double direction = Math.Round(Math.PI / 2 * LevelMaker.Rand(4), 2);
                 Enemy enemy = new Enemy(currentTile.X, currentTile.Y, direction, 0.3, new Spritesheet(),
                     HP, damage, AttackType.Melee, EnemyType.Zombie, HP); // hardcoded values for enemy
                 this.Entities.Add(enemy);
@@ -166,8 +168,8 @@
                 start = startLeaf.Dequeue();
                 if (start.HasLeaves)
                 {
-                    startLeaf.Enqueue(start.LeftLeaf);
                     startLeaf.Enqueue(start.RightLeaf);
+                    startLeaf.Enqueue(start.LeftLeaf);
                 }
                 else if (startLeaf.Count > 0)
                 {

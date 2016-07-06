@@ -24,6 +24,7 @@
         // Game objects
         public static Level level;
         private Input input;
+        private EntityHandler entityHandler;
 
         // initial game state
         private GameState gameState = GameState.MainMenu;
@@ -45,6 +46,9 @@
             Console = string.Empty;
             this.input = new Input(keyboardState, mouseState);
             this.mainMenu = new MainMenu();
+            this.entityHandler = new EntityHandler();
+            entityHandler.Subscribe(level.Entities);
+            entityHandler.SubscribeToPlayer(level.Player);
         }
 
         #endregion Constructors
@@ -113,23 +117,10 @@
             {
                 level.ExitTriggered = false;
                 level.NextLevel();
+                entityHandler.Subscribe(level.Entities);
             }
 
-            foreach (Entity entity in level.Entities)
-            {
-                entity.Update(time.ElapsedGameTime.Milliseconds / 1000.0);
-            }
-
-            Physics.CollisionResolution(level.Entities
-                    .OfType<Model>()
-                    .Where(e => e.Alive)
-                    .ToList());
-            Physics.BoundsCheck(level.Entities
-                    .OfType<Model>()
-                    .ToList(),
-                    level.Geometry
-                    .Where(tile => tile.TileType == TileType.Wall)
-                    .ToList());
+            entityHandler.ProcessEntities(level.Entities, level.Geometry, time.ElapsedGameTime.Milliseconds / 1000.0);
 
             // Execute tests
             foreach (Action test in Tests.ListOf.OnUpdate)
@@ -199,6 +190,7 @@
                     }
                     level.Geometry.ForEach(Primitive.DrawTileMini);
                     Primitive.DrawModelMini(level.Player);
+                    if (level.Entities.Contains(level.ExitPortal)) Primitive.DrawModelMini(level.ExitPortal);
                     Output.DrawText(string.Format($"Depth: {Level.CurrentLevel}"), 610, 270, Color.Black);
                     // Output debug info
                     Output.DrawText(DebugInfo, 610, 50, Color.Black);

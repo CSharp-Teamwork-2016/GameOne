@@ -1,39 +1,53 @@
-﻿using System.Windows;
-using GameOne.Source.Renderer;
-
-namespace GameOne.Source.Factories
+﻿namespace GameOne.Source.Factories
 {
+    using System.Windows;
     using System;
+    
     using Entities;
+    using Enumerations;
+    using World;
 
     public class ProjectileFactory
     {
-        public static Projectile MakeProjectile(Character source, Enum bulletType)
+        private const double BulletSpeed = 8;
+
+        public static Projectile MakeProjectile(Character source, ProjectileType type)
         {
-            double direction = source.Direction;
+            double direction = source.Direction % (2 * Math.PI);
             double velocityX = 0;
             double velocityY = 0;
 
-            if (direction == 1.5 * Math.PI)
+            if (direction == Physics.UpDirection)
             {
-                velocityY = -6;
+                velocityY = (-BulletSpeed);
             }
-            else if (direction == 0.5 * Math.PI)
+            else if (direction == Physics.DownDirection)
             {
-                velocityY = 6;
+                velocityY = BulletSpeed;
             }
-            else if (direction == Math.PI)
+            else if (direction == Physics.LeftDirection)
             {
-                velocityX = -6;
+                velocityX = (-BulletSpeed);
             }
-            else if (direction == 0)
+            else if (direction == Physics.RightDirection)
             {
-                velocityX = 6;
+                velocityX = BulletSpeed;
+            }
+
+            double radius;
+            switch (type)
+            {
+                case ProjectileType.Bullet:
+                    radius = 0.15;
+                    break;
+                default:
+                    radius = 0.15;
+                    break;
             }
 
             Vector velocity = new Vector(velocityX, velocityY);
 
-            return new Projectile(source.Position.X, source.Position.Y, source.Direction, 0.1, new Spritesheet(), source, velocity); //Check the radius
+            return new Projectile(source.Position.X, source.Position.Y, direction, radius, null, source, velocity);
         }
     }
 }

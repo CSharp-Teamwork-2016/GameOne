@@ -8,6 +8,7 @@
 		MoveLeft,
 		MoveRight,
         Attack,
-        DrinkPotion
+        DrinkPotion,
+        Shoot
     }
 }

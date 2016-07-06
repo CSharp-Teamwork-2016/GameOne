@@ -5,12 +5,14 @@ namespace GameOne.Source.Entities
     using System.Windows;
 
     using Renderer;
+    using Enumerations;
 
     public class Projectile : Model
     {
         #region Fields
 
         private Vector velocity;
+        private ProjectileType type; // for later use
 
         #endregion Fields
 

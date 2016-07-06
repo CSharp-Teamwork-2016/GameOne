@@ -89,6 +89,10 @@
             {
                 DrawItem((Item)model);
             }
+            else if (model is Projectile)
+            {
+                DrawProjectile((Projectile)model);
+            }
         }
 
         private static void DrawItem(Item model)
@@ -182,13 +186,26 @@
             }
         }
 
+        private static void DrawProjectile(Projectile model)
+        {
+            double left = (model.Position.X - model.Radius) * gridSize;
+            double top = (model.Position.Y - model.Radius) * gridSize;
+            double width = model.Radius * 2 * gridSize;
+            double height = model.Radius * 2 * gridSize;
+
+            Color color = Color.DarkRed;
+
+            Output.FillOval(left, top, width, height, color);
+            //Output.StrokeOval(left, top, width, height, Color.White, 2);
+        }
+
         // Minimap projection
         public static void DrawTileMini(Tile tile)
         {
             if (tile.TileType == TileType.Wall)
             {
-                double left = (tile.X - 0.5) * miniMapSize + 610;
-                double top = (tile.Y - 0.5) * miniMapSize + 300;
+                double left = (tile.X) * miniMapSize + 610;
+                double top = (tile.Y) * miniMapSize + 300;
                 double width = miniMapSize;
                 double height = miniMapSize;
                 Output.FillRect(left, top, width, height, Color.Black);
@@ -200,7 +217,9 @@
             double top = (model.Position.Y - model.Radius) * miniMapSize + 300;
             double width = 2 * miniMapSize;
             double height = 2 * miniMapSize;
-            Output.FillOval(left, top, width, height, Color.Red);
+            Color color = Color.Red;
+            if (model is Item) color = Color.Gold;
+            Output.FillOval(left, top, width, height, color);
         }
 
         #endregion Methods

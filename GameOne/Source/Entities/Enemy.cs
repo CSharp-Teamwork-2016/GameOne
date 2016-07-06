@@ -47,7 +47,8 @@
 
         private void TurnRight()
         {
-            Direction += Math.PI / 2;
+            Direction += Math.Round(Math.PI / 2, 2);
+            Direction %= Math.Round(2 * Math.PI, 2);
             PrepareNext(0, -0.5);
         }
 
@@ -67,6 +68,10 @@
             }
 
             pattern.Peek()();
+
+            // Random firing pattern hack
+            if (World.LevelMaker.RandDouble(0, 1) > 0.99)
+                FireProjectile();
         }
 
         private void PreparePattern()
@@ -90,6 +95,10 @@
 
         public override void Update(double time)
         {
+            if (state == State.DEAD)
+            {
+                return;
+            }
             // Behaviour
             ProcessPattern(time);
             base.Update(time);
@@ -100,7 +109,7 @@
             // TODO
         }
 
-        protected override void Die()
+        public override void Die()
         {
             base.Die();
             Loop.level.Player.GainXP(xpAward);
