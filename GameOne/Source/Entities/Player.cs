@@ -40,8 +40,6 @@
 
         public int HealthPotions { get; set; }
 
-        public int MaxHealth => base.MaxHealth;
-
         public int XpLevel => this.xpLevel;
 
         public int XpToNext => xpToNext;
@@ -127,11 +125,6 @@
                     Loop.level.ExitTriggered = true;
                     break;
             }
-        }
-
-        public override void Render()
-        {
-            // TODO
         }
 
         public override void Update(double time)

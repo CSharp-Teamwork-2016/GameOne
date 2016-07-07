@@ -62,6 +62,7 @@
     <Compile Include="Source\Factories\ProjectileFactory.cs" />
     <Compile Include="Source\Factories\TileFactory.cs" />
     <Compile Include="Source\Input.cs" />
+    <Compile Include="Source\Interfaces\IControlable.cs" />
     <Compile Include="Source\Interfaces\IMovable.cs" />
     <Compile Include="Source\Interfaces\IRenderable.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />

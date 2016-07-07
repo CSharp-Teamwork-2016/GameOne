@@ -18,11 +18,6 @@
             //Loop.debugInfo += string.Format($"{Alive}\n");
         }
 
-        public override void Render()
-        {
-            // TODO
-        }
-
         public void Collect()
         {
             state = State.DEAD;

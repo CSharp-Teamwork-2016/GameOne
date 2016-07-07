@@ -6,8 +6,9 @@ namespace GameOne.Source.Entities
 
     using Renderer;
     using Enumerations;
+    using Interfaces;
 
-    public class Projectile : Model
+    public class Projectile : Model, IMovable
     {
         #region Fields
 
@@ -47,11 +48,6 @@ namespace GameOne.Source.Entities
             {
                 this.Position += this.velocity * time;
             }
-        }
-
-        public override void Render()
-        {
-            throw new System.NotImplementedException();
         }
 
         #endregion Methods

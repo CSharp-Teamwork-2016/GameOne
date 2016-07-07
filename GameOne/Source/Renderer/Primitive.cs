@@ -214,7 +214,7 @@
             double width = model.Radius * 2 * gridSize;
             double height = model.Radius * 2 * gridSize;
 
-            Color color = Color.Red;
+            Color color = Color.LightPink;
 
             Output.FillOval(left, top, width, height, color);
             //Output.StrokeOval(left, top, width, height, Color.White, 2);

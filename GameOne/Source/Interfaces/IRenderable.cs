@@ -1,8 +1,13 @@
 ﻿namespace GameOne.Source.Interfaces
 {
+    using Enumerations;
+
     public interface IRenderable
     {
-        // This method is deprecated, this interface needs to define a method to get current frame
-        void Render();
+        bool Alive { get; }
+        System.Windows.Vector Position { get; }
+        double Direction { get; }
+        double Radius { get; }
+        State State { get; }
     }
 }

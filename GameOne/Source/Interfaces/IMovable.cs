@@ -2,8 +2,7 @@
 {
     public interface IMovable
     {
-        void Forward(double time);
-
-        void Accelerate(double time);
+        System.Windows.Vector Position { get; }
+        double Direction { get; }
     }
 }

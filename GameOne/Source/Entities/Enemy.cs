@@ -121,11 +121,6 @@
             base.Update(time);
         }
 
-        public override void Render()
-        {
-            // TODO
-        }
-
         public override void Die()
         {
             base.Die();

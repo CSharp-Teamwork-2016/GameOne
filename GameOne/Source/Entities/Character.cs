@@ -8,8 +8,9 @@
     using Renderer;
     using Events;
     using World;
+    using Interfaces;
 
-    public abstract class Character : Model
+    public abstract class Character : Model, IControlable, IMovable
     {
         #region Fields
 
