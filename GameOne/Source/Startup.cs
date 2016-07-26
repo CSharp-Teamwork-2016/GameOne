@@ -1,9 +1,8 @@
 ﻿#define DEBUG
-
-using System;
-
 namespace GameOne.Source
 {
+    using System;
+
 #if WINDOWS || LINUX
     /// <summary>
     /// The main class.
@@ -17,7 +16,9 @@ namespace GameOne.Source
         public static void Main()
         {
             using (var game = new MonoInit())
+            {
                 game.Run();
+            }
         }
     }
 #endif

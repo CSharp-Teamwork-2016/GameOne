@@ -1,11 +1,12 @@
 ﻿namespace GameOne.Source.Renderer
 {
-    using Microsoft.Xna.Framework;
-
-    using World;
+    using System;
     using Entities;
     using Enumerations;
-    using System;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using World;
+    using Model = Entities.Model;
 
     /// <summary>
     /// Temporary class for outputting game objects without assets
@@ -15,20 +16,18 @@
     {
         #region Fields
 
-        private const int CAMERAXMODIFIER = 300;
-        private const int CAMERAYMODIFIER = 200;
+        private const int Cameraxmodifier = 300;
+        private const int Cameraymodifier = 200;
+        private const int GridSize = 40;
+        private const int MiniMapSize = 3;
 
         /// <summary>
         /// Width and height of one world tile
         /// </summary>
-        private static int gridSize = 40;
-        private static int miniMapSize = 3;
-        private static double _cameraX;
-        private static double _cameraY;
+        private static double cameraX;
+        private static double cameraY;
 
         #endregion Fields
-
-        //===================================================================
 
         #region Properties
 
@@ -36,11 +35,12 @@
         {
             get
             {
-                return _cameraX;
+                return cameraX;
             }
+
             set
             {
-                _cameraX = CAMERAXMODIFIER - value * gridSize;
+                cameraX = Cameraxmodifier - (value * GridSize);
             }
         }
 
@@ -48,60 +48,61 @@
         {
             get
             {
-                return _cameraY;
+                return cameraY;
             }
+
             set
             {
-                _cameraY = CAMERAYMODIFIER - value * gridSize;
+                cameraY = Cameraymodifier - (value * GridSize);
             }
         }
 
-        public static Microsoft.Xna.Framework.Graphics.Texture2D FloorTile { get; set; }
-        public static Microsoft.Xna.Framework.Graphics.Texture2D WallTile { get; set; }
+        public static Texture2D FloorTile { get; set; }
+
+        public static Texture2D WallTile { get; set; }
 
         #endregion Properties
 
-        //===================================================================
-
-        //All static
         #region Methods
 
         public static void PanCameraUp(double dist)
         {
-            _cameraY += dist;
+            cameraY += dist;
         }
+
         public static void PanCameraDown(double dist)
         {
-            _cameraY -= dist;
+            cameraY -= dist;
         }
+
         public static void PanCameraLeft(double dist)
         {
-            _cameraX += dist;
+            cameraX += dist;
         }
+
         public static void PanCameraRight(double dist)
         {
-            _cameraX -= dist;
+            cameraX -= dist;
         }
 
         public static void DrawTile(Tile tile)
         {
-            double left = (tile.X - 0.5) * gridSize;
-            double top = (tile.Y - 0.5) * gridSize;
-            double width = gridSize;
-            double height = gridSize;
-            //Color color = tile.TileType == TileType.Floor ? Color.Gray : Color.White; // change
+            double left = (tile.X - 0.5) * GridSize;
+            double top = (tile.Y - 0.5) * GridSize;
+            double width = GridSize;
+            double height = GridSize;
+            // Color color = tile.TileType == TileType.Floor ? Color.Gray : Color.White; // change
 
-            //Output.FillRect(left, top, width, height, color);
-            Output.Draw(tile.TileType == TileType.Floor ? FloorTile : WallTile,
-                new Rectangle((int)left, (int)top, (int)width, (int)height));
+            // Output.FillRect(left, top, width, height, color);
+            Output.Draw(tile.TileType == TileType.Floor ? FloorTile : WallTile, new Rectangle((int)left, (int)top, (int)width, (int)height));
         }
 
         public static void DrawGrid(Tile tile)
         {
-            double left = (tile.X - 0.5) * gridSize;
-            double top = (tile.Y - 0.5) * gridSize;
-            double width = gridSize;
-            double height = gridSize;
+            double left = (tile.X - 0.5) * GridSize;
+            double top = (tile.Y - 0.5) * GridSize;
+            double width = GridSize;
+            double height = GridSize;
             Color color = Color.White; // change
 
             Output.StrokeRect(left, top, width, height, color);
@@ -128,21 +129,61 @@
             }
         }
 
+        // Minimap projection
+        public static void DrawTileMini(Tile tile)
+        {
+            if (tile.TileType == TileType.Wall)
+            {
+                double left = (tile.X * MiniMapSize) + 610;
+                double top = (tile.Y * MiniMapSize) + 300;
+                double width = MiniMapSize;
+                double height = MiniMapSize;
+                Output.FillRect(left, top, width, height, Color.Black);
+            }
+        }
+
+        public static void DrawModelMini(Model model)
+        {
+            double left = ((model.Position.X - model.Radius) * MiniMapSize) + 610;
+            double top = ((model.Position.Y - model.Radius) * MiniMapSize) + 300;
+            double width = 2 * MiniMapSize;
+            double height = 2 * MiniMapSize;
+            Color color = Color.Red;
+
+            if (model is Item)
+            {
+                color = Color.Gold;
+            }
+
+            Output.FillOval(left, top, width, height, color);
+        }
+
+        // Canvas coordinates
+        public static double ToWorldX(double canvasX)
+        {
+            return (canvasX - cameraX) / GridSize;
+        }
+
+        public static double ToWorldY(double canvasY)
+        {
+            return (canvasY - cameraY) / GridSize;
+        }
+
         private static void DrawItem(Item model)
         {
-            double left = (model.Position.X - model.Radius) * gridSize;
-            double top = (model.Position.Y - model.Radius) * gridSize;
-            double width = model.Radius * 2 * gridSize;
-            double height = model.Radius * 2 * gridSize;
+            double left = (model.Position.X - model.Radius) * GridSize;
+            double top = (model.Position.Y - model.Radius) * GridSize;
+            double width = model.Radius * 2 * GridSize;
+            double height = model.Radius * 2 * GridSize;
 
             Color color = Color.Purple;
             if (model.Type == ItemType.EndKey)
             {
                 Output.StrokeOval(left + 2, top + 2, width - 4, height - 4, Color.Black, 2);
                 Output.FillRect(left, top, width / 3, height / 3, Color.Gold);
-                Output.FillRect(left + width / 3 * 2, top, width / 3, height / 3, Color.Gold);
-                Output.FillRect(left, top + height / 3 * 2, width / 3, height / 3, Color.Gold);
-                Output.FillRect(left + width / 3 * 2, top + height / 3 * 2, width / 3, height / 3, Color.Gold);
+                Output.FillRect(left + (width / 3 * 2), top, width / 3, height / 3, Color.Gold);
+                Output.FillRect(left, top + (height / 3 * 2), width / 3, height / 3, Color.Gold);
+                Output.FillRect(left + (width / 3 * 2), top + (height / 3 * 2), width / 3, height / 3, Color.Gold);
             }
             else if (model.Type == ItemType.PotionHealth)
             {
@@ -167,92 +208,63 @@
 
         private static void DrawCharacter(Character model)
         {
-            double left = (model.Position.X - model.Radius) * gridSize;
-            double top = (model.Position.Y - model.Radius) * gridSize;
-            double width = model.Radius * 2 * gridSize;
-            double height = model.Radius * 2 * gridSize;
-            double dirX = model.Position.X + model.Radius * 1.3 * System.Math.Cos(model.Direction);
-            double dirY = model.Position.Y + model.Radius * 1.3 * System.Math.Sin(model.Direction);
+            double left = (model.Position.X - model.Radius) * GridSize;
+            double top = (model.Position.Y - model.Radius) * GridSize;
+            double width = model.Radius * 2 * GridSize;
+            double height = model.Radius * 2 * GridSize;
+            double dirX = model.Position.X + (model.Radius * 1.3 * System.Math.Cos(model.Direction));
+            double dirY = model.Position.Y + (model.Radius * 1.3 * System.Math.Sin(model.Direction));
 
             Color color = Color.LightGray;
+
             if (model is Player)
             {
                 color = Color.Green;
             }
 
-            if (model.State == State.HURT) color = Color.Red;
+            if (model.State == State.HURT)
+            {
+                color = Color.Red;
+            }
+
             if (model is Enemy && ((Enemy)model).Type == EnemyType.Sentry)
             {
                 Output.FillRect(left, top, width / 3, height / 3, color);
-                Output.FillRect(left + width / 3 * 2, top, width / 3, height / 3, color);
-                Output.FillRect(left, top + height / 3 * 2, width / 3, height / 3, color);
-                Output.FillRect(left + width / 3 * 2, top + height / 3 * 2, width / 3, height / 3, color);
+                Output.FillRect(left + (width / 3 * 2), top, width / 3, height / 3, color);
+                Output.FillRect(left, top + (height / 3 * 2), width / 3, height / 3, color);
+                Output.FillRect(left + (width / 3 * 2), top + (height / 3 * 2), width / 3, height / 3, color);
                 left += 4;
                 top += 4;
                 width -= 8;
                 height -= 8;
             }
+
             Output.FillOval(left, top, width, height, color);
             Output.StrokeOval(left, top, width, height, Color.White, 2);
-            Output.DrawLine((int)(model.Position.X * gridSize), (int)(model.Position.Y * gridSize),
-                    (int)(dirX * gridSize), (int)(dirY * gridSize), Color.White, 2);
+            Output.DrawLine((int)(model.Position.X * GridSize), (int)(model.Position.Y * GridSize), (int)(dirX * GridSize), (int)(dirY * GridSize), Color.White, 2);
 
             if (model.State == State.ATTACK)
             {
-                double p1x = model.Position.X + Math.Cos(model.Direction + Math.PI / 2) * 0.2;
-                double p1y = model.Position.Y + Math.Sin(model.Direction + Math.PI / 2) * 0.2;
+                double p1x = model.Position.X + (Math.Cos(model.Direction + Math.PI / 2) * 0.2);
+                double p1y = model.Position.Y + (Math.Sin(model.Direction + Math.PI / 2) * 0.2);
                 double pw = 0.9 * Math.Cos(model.Direction);
                 double ph = 0.9 * Math.Sin(model.Direction);
-                Output.StrokeRect(p1x * gridSize, p1y * gridSize, pw * gridSize, ph * gridSize, Color.Red, 5);
+                Output.StrokeRect(p1x * GridSize, p1y * GridSize, pw * GridSize, ph * GridSize, Color.Red, 5);
             }
         }
 
         private static void DrawProjectile(Projectile model)
         {
-            double left = (model.Position.X - model.Radius) * gridSize;
-            double top = (model.Position.Y - model.Radius) * gridSize;
-            double width = model.Radius * 2 * gridSize;
-            double height = model.Radius * 2 * gridSize;
+            double left = (model.Position.X - model.Radius) * GridSize;
+            double top = (model.Position.Y - model.Radius) * GridSize;
+            double width = model.Radius * 2 * GridSize;
+            double height = model.Radius * 2 * GridSize;
 
             Color color = Color.LightPink;
 
             Output.FillOval(left, top, width, height, color);
-            //Output.StrokeOval(left, top, width, height, Color.White, 2);
+            // Output.StrokeOval(left, top, width, height, Color.White, 2);
         }
-
-        // Minimap projection
-        public static void DrawTileMini(Tile tile)
-        {
-            if (tile.TileType == TileType.Wall)
-            {
-                double left = (tile.X) * miniMapSize + 610;
-                double top = (tile.Y) * miniMapSize + 300;
-                double width = miniMapSize;
-                double height = miniMapSize;
-                Output.FillRect(left, top, width, height, Color.Black);
-            }
-        }
-        public static void DrawModelMini(Model model)
-        {
-            double left = (model.Position.X - model.Radius) * miniMapSize + 610;
-            double top = (model.Position.Y - model.Radius) * miniMapSize + 300;
-            double width = 2 * miniMapSize;
-            double height = 2 * miniMapSize;
-            Color color = Color.Red;
-            if (model is Item) color = Color.Gold;
-            Output.FillOval(left, top, width, height, color);
-        }
-
-        // Canvas coordinates
-        public static double ToWorldX(double canvasX)
-        {
-            return (canvasX - _cameraX) / gridSize;
-        }
-        public static double ToWorldY(double canvasY)
-        {
-            return (canvasY - _cameraY) / gridSize;
-        }
-
         #endregion Methods
     }
 }

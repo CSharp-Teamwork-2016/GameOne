@@ -1,8 +1,11 @@
 ﻿namespace GameOne.Source.Interfaces
 {
+    using System.Windows;
+
     public interface IMovable
     {
-        System.Windows.Vector Position { get; }
+        Vector Position { get; }
+
         double Direction { get; }
     }
 }

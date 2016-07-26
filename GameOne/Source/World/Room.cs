@@ -8,9 +8,9 @@
 
         public Room(int x, int y, int width, int height)
         {
-            this.Width = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
+            this.Width = LevelMaker.Minsize + LevelMaker.Rand(LevelMaker.Maxsize - LevelMaker.Minsize);
             this.Width = Math.Min(this.Width, width);
-            this.Height = LevelMaker.MINSIZE + LevelMaker.Rand(LevelMaker.MAXSIZE - LevelMaker.MINSIZE);
+            this.Height = LevelMaker.Minsize + LevelMaker.Rand(LevelMaker.Maxsize - LevelMaker.Minsize);
             this.Height = Math.Min(this.Height, height);
 
             if (width - this.Width > 0)
@@ -31,13 +31,11 @@
                 this.Y = y;
             }
 
-            this.OriginX = this.X + this.Width / 2;
-            this.OriginY = this.Y + this.Height / 2;
+            this.OriginX = this.X + (this.Width / 2);
+            this.OriginY = this.Y + (this.Height / 2);
         }
 
         #endregion Constructors
-
-        //===================================================================
 
         #region Properties
 

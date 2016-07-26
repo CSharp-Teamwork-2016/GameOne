@@ -1,6 +1,6 @@
 ﻿namespace GameOne.Source.Enumerations
 {
-    enum ActionAI
+    public enum ActionAI
     {
         Wait,
         Walk,

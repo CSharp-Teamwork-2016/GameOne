@@ -1,8 +1,7 @@
 ﻿namespace GameOne.Source.Factories
 {
-    using System.Windows;
     using System;
-    
+    using System.Windows;
     using Entities;
     using Enumerations;
     using World;
@@ -19,7 +18,7 @@
 
             if (direction == Physics.UpDirection)
             {
-                velocityY = (-BulletSpeed);
+                velocityY = -BulletSpeed;
             }
             else if (direction == Physics.DownDirection)
             {
@@ -27,7 +26,7 @@
             }
             else if (direction == Physics.LeftDirection)
             {
-                velocityX = (-BulletSpeed);
+                velocityX = -BulletSpeed;
             }
             else if (direction == Physics.RightDirection)
             {

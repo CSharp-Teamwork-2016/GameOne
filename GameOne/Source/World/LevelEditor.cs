@@ -1,15 +1,13 @@
 ﻿namespace GameOne.Source.World
 {
     using System.Linq;
-
+    using Enumerations;
+    using Factories;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
-
-    using Enumerations;
     using Renderer;
-    using Factories;
 
-    class LevelEditor
+    public class LevelEditor
     {
         private static Input input;
         private static double panSpeed = 3;
@@ -71,7 +69,7 @@
         {
             int targetX = (int)Primitive.ToWorldX(input.MouseX);
             int targetY = (int)Primitive.ToWorldY(input.MouseY);
-            Tile target = Loop.level.Geometry.Where(t => t.X == targetX && t.Y == targetY).FirstOrDefault();
+            Tile target = Loop.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
             if (target != null)
             {
                 Loop.level.Geometry.Remove(target);
@@ -82,12 +80,9 @@
         {
             int targetX = (int)Primitive.ToWorldX(input.MouseX);
             int targetY = (int)Primitive.ToWorldY(input.MouseY);
-            Tile target = Loop.level.Geometry.Where(t => t.X == targetX && t.Y == targetY).FirstOrDefault();
-            if (target != null)
-            {
-                return;
-            }
-            else
+            Tile target = Loop.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
+
+            if (target == null)
             {
                 target = TileFactory.GetTile(targetX, targetY, CurrentTile);
                 Loop.level.Geometry.Add(target);

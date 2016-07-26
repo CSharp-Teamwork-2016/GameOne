@@ -1,27 +1,24 @@
 ﻿namespace GameOne.Source.Entities
 {
     using System;
-    using System.Windows;
     using System.Linq;
-
+    using System.Windows;
     using Enumerations;
-    using Renderer;
     using Events;
-    using World;
     using Interfaces;
+    using Renderer;
+    using World;
 
     public abstract class Character : Model, IControlable, IMovable
     {
         #region Fields
-
+        
+        protected double timeToNextAction;
         private Vector velocity;
         private double attackTime;
         private double damageTime;
-        protected double timeToNextAction;
 
         #endregion Fields
-
-        //===================================================================
 
         #region Constructors
 
@@ -34,12 +31,16 @@
             this.MaxHealth = health;
             this.Damage = damage;
             this.AttackType = attackType;
-            timeToNextAction = 0;
+            this.timeToNextAction = 0;
         }
 
         #endregion Constructors
 
-        //===================================================================
+        #region Events
+
+        public event EventHandler<ProjectileEventArgs> FireProjectileEvent;
+
+        #endregion
 
         #region Properties
 
@@ -52,8 +53,6 @@
         public AttackType AttackType { get; }
 
         #endregion Properties
-
-        //===================================================================
 
         #region Methods
 
@@ -95,84 +94,84 @@
 
         public virtual void TakeDamage(int damage)
         {
-            if (state == State.DEAD)
+            if (this.state == State.DEAD)
             {
                 return;
             }
 
-            if ((state & State.HURT) == State.HURT)
+            if ((this.state & State.HURT) == State.HURT)
             {
                 return;
             }
 
-            state |= State.HURT;
-            damageTime = 0;
+            this.state |= State.HURT;
+            this.damageTime = 0;
             this.Health -= damage;
 
-            if (Health <= 0)
+            if (this.Health <= 0)
             {
-                Die();
+                this.Die();
             }
         }
 
         public void Attack()
         {
-            if (timeToNextAction > 0)
+            if (this.timeToNextAction > 0)
             {
                 return;
             }
 
-            if ((state & State.ATTACK) != State.ATTACK)
+            if ((this.state & State.ATTACK) != State.ATTACK)
             {
-                state |= State.ATTACK;
-                attackTime = 0;
-                timeToNextAction = 0.6;
+                this.state |= State.ATTACK;
+                this.attackTime = 0;
+                this.timeToNextAction = 0.6;
             }
         }
 
         public void FireProjectile()
         {
-            if (timeToNextAction > 0)
+            if (this.timeToNextAction > 0)
             {
                 return;
             }
 
-            if ((state & State.ATTACK) != State.ATTACK)
+            if ((this.state & State.ATTACK) != State.ATTACK)
             {
-                attackTime = 0;
-                timeToNextAction = 0.3;
+                this.attackTime = 0;
+                this.timeToNextAction = 0.3;
 
                 ProjectileEventArgs args = new ProjectileEventArgs();
                 args.Type = ProjectileType.Bullet;
-                FireProjectileEvent(this, args);
+                this.FireProjectileEvent(this, args);
             }
         }
 
         public override void Update(double time)
         {
-            if (state == State.DEAD)
+            if (this.state == State.DEAD)
             {
                 return;
             }
 
-            if ((state & State.ATTACK) == State.ATTACK)
+            if ((this.state & State.ATTACK) == State.ATTACK)
             {
-                attackTime += time;
+                this.attackTime += time;
 
-                if (attackTime >= 0.2)
+                if (this.attackTime >= 0.2)
                 {
-                    state ^= State.ATTACK;
-                    attackTime = 0;
+                    this.state ^= State.ATTACK;
+                    this.attackTime = 0;
                     return;
                 }
 
-                foreach (Character entity in Loop.level.Entities.OfType<Character>().Where(e => e != this && (Position - e.Position).Length < 2))
+                foreach (Character entity in Loop.level.Entities.OfType<Character>().Where(e => e != this && (this.Position - e.Position).Length < 2))
                 {
-                    double p1x = Position.X + Math.Cos(Direction + Math.PI / 2) * 0.5;
-                    double p1y = Position.Y + Math.Sin(Direction + Math.PI / 2) * 0.5;
+                    double p1x = this.Position.X + (Math.Cos(this.Direction + Math.PI / 2) * 0.5);
+                    double p1y = this.Position.Y + (Math.Sin(this.Direction + Math.PI / 2) * 0.5);
 
-                    double pw = 1.2 * Math.Cos(Direction) + 1 * Math.Sin(Direction);
-                    double ph = 1.2 * Math.Sin(Direction) - 1 * Math.Cos(Direction);
+                    double pw = (1.2 * Math.Cos(this.Direction)) + (1 * Math.Sin(this.Direction));
+                    double ph = (1.2 * Math.Sin(this.Direction)) - (1 * Math.Cos(this.Direction));
 
                     double leftA = Math.Min(p1x, p1x + pw);
                     double rightA = Math.Max(p1x, p1x + pw);
@@ -182,27 +181,27 @@
                     if (entity.Position.X >= leftA && entity.Position.X <= rightA &&
                         entity.Position.Y >= topA && entity.Position.Y <= bottomA)
                     {
-                        entity.TakeDamage(Damage);
+                        entity.TakeDamage(this.Damage);
                     }
                 }
             }
 
-            if ((state & State.HURT) == State.HURT)
+            if ((this.state & State.HURT) == State.HURT)
             {
-                damageTime += time;
+                this.damageTime += time;
 
-                if (damageTime >= 0.4)
+                if (this.damageTime >= 0.4)
                 {
-                    damageTime = 0;
-                    state ^= State.HURT;
+                    this.damageTime = 0;
+                    this.state ^= State.HURT;
                 }
             }
 
-            timeToNextAction -= time;
+            this.timeToNextAction -= time;
 
-            if (timeToNextAction < 0)
+            if (this.timeToNextAction < 0)
             {
-                timeToNextAction = 0;
+                this.timeToNextAction = 0;
             }
 
             // Motion
@@ -233,10 +232,10 @@
 
         public void Heal(int amount)
         {
-            Health += amount;
-            if (Health > MaxHealth)
+            this.Health += amount;
+            if (this.Health > this.MaxHealth)
             {
-                Health = MaxHealth;
+                this.Health = this.MaxHealth;
             }
         }
 
@@ -250,11 +249,5 @@
         }
 
         #endregion Methods
-
-        #region Events
-
-        public event EventHandler<ProjectileEventArgs> FireProjectileEvent;
-
-        #endregion
     }
 }

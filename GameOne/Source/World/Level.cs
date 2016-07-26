@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Entities;
     using Enumerations;
-    using Renderer;
     using Factories;
+    using Renderer;
+
     public class Level
     {
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
@@ -16,14 +16,11 @@
 
         public static int CurrentLevel = 4;
 
-        private Item exitPortal;
         private List<Tile> validFloor;
         private Dictionary<long, Tile> geometryMap;
-        private LevelMaker generator;
+        private readonly LevelMaker generator;
 
         #endregion Fields
-
-        //===================================================================
 
         #region Constructors
 
@@ -35,13 +32,11 @@
             this.Player = new Player(5, 5, 0.0);
             this.Entities = new List<Entity>();
             this.Entities.Add(this.Player);
-            SetStart();
-            SpawnItems();
+            this.SetStart();
+            this.SpawnItems();
         }
 
         #endregion Constructors
-
-        //===================================================================
 
         #region Properties
 
@@ -57,37 +52,47 @@
 
         public Player Player { get; }
 
-        public Item ExitPortal => this.exitPortal;
+        public Item ExitPortal { get; private set; }
 
         #endregion Properties
 
-        //===================================================================
-
         #region Methods
+        public void NextLevel()
+        {
+            this.ExitOpen = false;
+            this.ExitTriggered = false;
+            this.EnemyCount = 0;
+            CurrentLevel = this.generator.NextLevel();
+            this.GenerateGeometry();
+            this.Entities = new List<Entity>();
+            this.Entities.Add(this.Player);
+            this.SetStart();
+            this.SpawnItems();
+        }
 
+        public void EnemySlain()
+        {
+            this.EnemyCount--;
+            if (this.EnemyCount == 0 && !this.ExitOpen)
+            {
+                this.ExitOpen = true;
+            }
+        }
+
+        public void SetExit()
+        {
+            this.Entities.Add(this.ExitPortal);
+        }
         private void GenerateGeometry()
         {
             this.Geometry = this.generator.Tiles.Values.ToList();
             this.geometryMap = this.generator.Tiles;
 
-            validFloor = new List<Tile>();
+            this.validFloor = new List<Tile>();
             foreach (Tile tile in this.Geometry.Where(t => t.TileType == TileType.Floor))
             {
-                validFloor.Add(tile);
+                this.validFloor.Add(tile);
             }
-        }
-
-        public void NextLevel()
-        {
-            ExitOpen = false;
-            ExitTriggered = false;
-            EnemyCount = 0;
-            CurrentLevel = generator.NextLevel();
-            GenerateGeometry();
-            this.Entities = new List<Entity>();
-            this.Entities.Add(this.Player);
-            SetStart();
-            SpawnItems();
         }
 
         /// <summary>
@@ -100,7 +105,7 @@
 
             for (int i = 0; i < items; i++)
             {
-                Tile currentTile = GetRandomTile();
+                Tile currentTile = this.GetRandomTile();
                 // 30% chance for Quartz Flask (inventory potion)
                 ItemType type = LevelMaker.RandDouble() > 0.7 ? ItemType.QuartzFlask : ItemType.PotionHealth;
                 Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), type);
@@ -120,29 +125,35 @@
             {
                 for (int y = room.Y; y < room.Y + room.Height; y++)
                 {
-                    validTiles.Add(geometryMap[generator.GetIndex(x, y)]);
+                    validTiles.Add(this.geometryMap[this.generator.GetIndex(x, y)]);
                 }
             }
+
             validTiles = validTiles.Where(tile => tile.TileType == TileType.Floor).ToList();
             int enemies = 1 + (int)Math.Sqrt(CurrentLevel);
             int damage = 1 + CurrentLevel;
-            int HP = 50 + CurrentLevel * 2;
+            int hp = 50 + (CurrentLevel * 2);
             for (int i = 0; i < enemies; i++)
             {
-                Tile currentTile = GetRandomTile(validTiles);
+                Tile currentTile = this.GetRandomTile(validTiles);
                 EnemyType enemyType = EnemyType.Zombie;
-                if (LevelMaker.RandDouble(0, 1) >= 0.7) enemyType = EnemyType.Sentry;
+
+                if (LevelMaker.RandDouble(0, 1) >= 0.7)
+                {
+                    enemyType = EnemyType.Sentry;
+                }
+
                 Enemy enemy = EnemyFactory.MakeEnemy(currentTile.X, currentTile.Y, enemyType, CurrentLevel);
                 this.Entities.Add(enemy);
-                EnemyCount++;
+                this.EnemyCount++;
             }
         }
 
         private Tile GetRandomTile()
         {
-            int next = LevelMaker.Rand(validFloor.Count);
-            Tile result = validFloor[next];
-            validFloor.Remove(result);
+            int next = LevelMaker.Rand(this.validFloor.Count);
+            Tile result = this.validFloor[next];
+            this.validFloor.Remove(result);
             return result;
         }
 
@@ -157,8 +168,8 @@
         // Pick starting position inside the maze and place player there
         private void SetStart()
         {
-            Partition start = generator.Root.LeftLeaf;
-            Partition end = generator.Root.RightLeaf;
+            Partition start = this.generator.Root.LeftLeaf;
+            Partition end = this.generator.Root.RightLeaf;
             List<Room> rooms = new List<Room>();
 
             Queue<Partition> startLeaf = new Queue<Partition>();
@@ -176,7 +187,8 @@
                     rooms.Add(start.Room);
                 }
             }
-            Player.Position = new System.Windows.Vector(start.Room.OriginX, start.Room.OriginY);
+
+            this.Player.Position = new System.Windows.Vector(start.Room.OriginX, start.Room.OriginY);
 
             Queue<Partition> endLeaf = new Queue<Partition>();
             endLeaf.Enqueue(end);
@@ -194,26 +206,12 @@
                 }
             }
             // produce EndKey
-            exitPortal = new Item(end.Room.OriginX, end.Room.OriginY, 0, 0.3, new Spritesheet(), ItemType.EndKey);
+            this.ExitPortal = new Item(end.Room.OriginX, end.Room.OriginY, 0, 0.3, new Spritesheet(), ItemType.EndKey);
 
             foreach (Room room in rooms)
             {
-                SpawnEnemies(room);
+                this.SpawnEnemies(room);
             }
-        }
-
-        public void EnemySlain()
-        {
-            EnemyCount--;
-            if (EnemyCount == 0 && !ExitOpen)
-            {
-                ExitOpen = true;
-            }
-        }
-
-        public void SetExit()
-        {
-            this.Entities.Add(exitPortal);
         }
 
         #endregion Methods

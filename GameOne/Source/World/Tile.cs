@@ -19,8 +19,6 @@
 
         #endregion Fields
 
-        //===================================================================
-
         #region Constructors
 
         public Tile(double x, double y, TileType tileType, bool transparent = false)
@@ -35,8 +33,6 @@
 
         #endregion Constructors
 
-        //===================================================================
-
         #region Properties
 
         public double X { get; }
@@ -46,8 +42,6 @@
         public TileType TileType { get; set; }
 
         #endregion Properties
-
-        //===================================================================
 
         #region Methods
 

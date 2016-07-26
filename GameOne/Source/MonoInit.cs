@@ -1,15 +1,13 @@
 ﻿namespace GameOne.Source
 {
     using System;
-    using Sound;
-
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Sound;
 
     public class MonoInit : Game
     {
-
         // Main loop
         private Loop loop;
 
@@ -40,7 +38,12 @@
         protected override void LoadContent()
         {
             Renderer.Output.SetFont(this.Content.Load<SpriteFont>("Font"));
-            if (this.loop.MainMenu == null) throw new ArgumentException("Main Menu not initialized");
+
+            if (this.loop.MainMenu == null)
+            {
+                throw new ArgumentException("Main Menu not initialized");
+            }
+
             this.loop.MainMenu.LoadTextures(
                 this.Content.Load<Texture2D>("Images/Menu/MainMenu"),
                 this.Content.Load<Texture2D>("Images/Menu/ResumeGame"),
@@ -66,9 +69,9 @@
             base.Draw(gameTime);
 
             this.GraphicsDevice.Clear(Color.CornflowerBlue);
-            Matrix Transform = Matrix.CreateTranslation((float)Renderer.Primitive.CameraX, (float)Renderer.Primitive.CameraY, 0);
+            Matrix transform = Matrix.CreateTranslation((float)Renderer.Primitive.CameraX, (float)Renderer.Primitive.CameraY, 0);
 
-            this.spriteBatch.Begin(transformMatrix: Transform);
+            this.spriteBatch.Begin(transformMatrix: transform);
             this.loop.Render();
             this.spriteBatch.End();
 

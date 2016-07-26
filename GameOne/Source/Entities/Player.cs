@@ -1,5 +1,6 @@
 ﻿namespace GameOne.Source.Entities
 {
+    using System;
     using Enumerations;
     using Renderer;
 
@@ -10,29 +11,23 @@
         private const int InitialHealthPotions = 0;
         private const int InitialAmmo = 200;
 
-        private int xpLevel;
         private int experience;
-        private int xpToNext;
 
         #endregion Fields
-
-        //===================================================================
 
         #region Constructors
 
         public Player(double x, double y, double direction, int xpLevel = 1)
             : base(x, y, direction, 0.30, new Spritesheet(), 100, 30)
         {
-            this.xpLevel = xpLevel;
-            experience = 0;
-            xpToNext = 320;
+            this.XpLevel = xpLevel;
+            this.experience = 0;
+            this.XpToNext = 320;
             this.HealthPotions = InitialHealthPotions;
             this.Ammo = InitialAmmo;
         }
 
         #endregion Constructors
-
-        //===================================================================
 
         #region Properties
 
@@ -40,74 +35,39 @@
 
         public int HealthPotions { get; set; }
 
-        public int XpLevel => this.xpLevel;
+        public int XpLevel { get; private set; }
 
-        public int XpToNext => xpToNext;
+        public int XpToNext { get; private set; }
 
         #endregion Properties
-
-        //===================================================================
 
         #region Methods
 
         public void GainXP(int level)
         {
             this.experience += level;
-            if (experience >= xpToNext)
+            if (this.experience >= this.XpToNext)
             {
-                xpLevel++;
-                experience -= xpToNext;
-                xpToNext = (int)((xpToNext * 1.4) / 10) * 10;
-                Damage = (int)(Damage * 1.25);
+                this.XpLevel++;
+                this.experience -= this.XpToNext;
+                this.XpToNext = (int)((this.XpToNext * 1.4) / 10) * 10;
+                this.Damage = (int)(this.Damage * 1.25);
                 base.MaxHealth = (int)(base.MaxHealth * 1.1);
-                Health = base.MaxHealth;
+                this.Health = base.MaxHealth;
             }
         }
 
         public void DrinkPotion()
         {
-            if (timeToNextAction > 0)
+            if (this.timeToNextAction > 0)
             {
                 return;
             }
 
-            if (this.HealthPotions > 0 && Health < base.MaxHealth)
+            if (this.HealthPotions > 0 && this.Health < base.MaxHealth)
             {
                 this.HealthPotions--;
-                Heal(30);
-            }
-        }
-
-        internal void Input(UserInput input)
-        {
-            if ((state & State.HURT) == State.HURT)
-            {
-                return; // don't let the player move if he's hit
-            }
-
-            switch (input)
-            {
-                case UserInput.MoveUp:
-                    MoveUp();
-                    break;
-                case UserInput.MoveDown:
-                    MoveDown();
-                    break;
-                case UserInput.MoveLeft:
-                    MoveLeft();
-                    break;
-                case UserInput.MoveRight:
-                    MoveRight();
-                    break;
-                case UserInput.Attack:
-                    Attack();
-                    break;
-                case UserInput.DrinkPotion:
-                    DrinkPotion();
-                    break;
-                case UserInput.Shoot:
-                    FireProjectile();
-                    break;
+                this.Heal(30);
             }
         }
 
@@ -116,10 +76,10 @@
             switch (type)
             {
                 case ItemType.PotionHealth:
-                    Heal(15);
+                    this.Heal(15);
                     break;
                 case ItemType.QuartzFlask:
-                    HealthPotions++;
+                    this.HealthPotions++;
                     break;
                 case ItemType.EndKey:
                     Loop.level.ExitTriggered = true;
@@ -131,23 +91,56 @@
         {
             base.Update(time);
 
-            Primitive.CameraX = Position.X;
-            Primitive.CameraY = Position.Y;
+            Primitive.CameraX = this.Position.X;
+            Primitive.CameraY = this.Position.Y;
 
-            Loop.DebugInfo = string.Format($"Player stats:\nState: {state}\nHealth: {Health} / {base.MaxHealth}\nDamage: {Damage}\n\nLevel {xpLevel}\nXP: {experience} / {xpToNext}\n\nEnemies remaining: {Loop.level.EnemyCount}\n");
-            //Loop.debugInfo += string.Format($"State: {state}\n");
+            Loop.DebugInfo = $"Player stats:{Environment.NewLine}State: {this.state}{Environment.NewLine}Health: {this.Health} / {base.MaxHealth}{Environment.NewLine}Damage: {this.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.XpLevel}{Environment.NewLine}XP: {this.experience} / {this.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies remaining: {Loop.level.EnemyCount}{Environment.NewLine}";
+            // Loop.debugInfo += string.Format($"State: {state}\n");
         }
 
         public override void TakeDamage(int damage)
         {
             base.TakeDamage(damage);
-            Knockback();
+            this.Knockback();
         }
 
         public void Respawn()
         {
-            state = State.IDLE;
-            Health = 100;
+            this.state = State.IDLE;
+            this.Health = 100;
+        }
+
+        internal void Input(UserInput input)
+        {
+            if ((this.state & State.HURT) == State.HURT)
+            {
+                return; // don't let the player move if he's hit
+            }
+
+            switch (input)
+            {
+                case UserInput.MoveUp:
+                    this.MoveUp();
+                    break;
+                case UserInput.MoveDown:
+                    this.MoveDown();
+                    break;
+                case UserInput.MoveLeft:
+                    this.MoveLeft();
+                    break;
+                case UserInput.MoveRight:
+                    this.MoveRight();
+                    break;
+                case UserInput.Attack:
+                    this.Attack();
+                    break;
+                case UserInput.DrinkPotion:
+                    this.DrinkPotion();
+                    break;
+                case UserInput.Shoot:
+                    this.FireProjectile();
+                    break;
+            }
         }
 
         #endregion Methods

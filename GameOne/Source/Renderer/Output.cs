@@ -16,8 +16,6 @@
 
         #endregion Fields
 
-        //===================================================================
-
         #region Properties
 
         /// <summary>
@@ -36,10 +34,7 @@
         public static Color BrushColor { get; set; }
 
         #endregion Properties
-
-        //===================================================================
-
-        //All static
+        
         #region Methods
 
         /// <summary>
@@ -70,29 +65,6 @@
 
         ///
         /// <summary>
-        /// Draw square point
-        /// </summary>
-        /// <param name="x">Center left offset</param>
-        /// <param name="y">Center top offset</param>
-        /// <param name="size">Diameter</param>
-        /// /// <param name="color">color</param>
-        private static void _DrawPoint(int x, int y, int size, Color color)
-        {
-            Rectangle rec = new Rectangle(x - size / 2, y - size / 2, size, size);
-            batch.Draw(pixel, rec, color);
-        }
-
-        ///
-        /// <summary>
-        /// Draw text
-        /// </summary>
-        private static void _DrawText(string text, float x, float y, Color color)
-        {
-            batch.DrawString(font, text, new Vector2(x, y), color);
-        }
-
-        ///
-        /// <summary>
         /// Outputs texts to the screen on the specified location, using the default font and currently set PenColor
         /// <para><paramref name="x"/> and <paramref name="y"/> are supplied in screen units</para>
         /// <para>Origin point is the upper left corner of the resulting object</para>
@@ -118,53 +90,6 @@
         public static void DrawText(string text, double x, double y, Color color)
         {
             _DrawText(text, (float)x, (float)y, color);
-        }
-
-        ///
-        /// <summary>
-        /// Draw line
-        /// </summary>
-        private static void _DrawLine(int x1, int y1, int x2, int y2, Color color, int width)
-        {
-            bool steep = Math.Abs(y2 - y1) > Math.Abs(x2 - x1);
-            if (steep)
-            {
-                int t;
-                t = x1; // swap x0 and y0
-                x1 = y1;
-                y1 = t;
-                t = x2; // swap x1 and y1
-                x2 = y2;
-                y2 = t;
-            }
-
-            if (x1 > x2)
-            {
-                int t;
-                t = x1; // swap x0 and x1
-                x1 = x2;
-                x2 = t;
-                t = y1; // swap y0 and y1
-                y1 = y2;
-                y2 = t;
-            }
-
-            int dx = x2 - x1;
-            int dy = Math.Abs(y2 - y1);
-            int error = dx / 2;
-            int ystep = (y1 < y2) ? 1 : -1;
-            int y = y1;
-
-            for (int x = x1; x <= x2; x++)
-            {
-                _DrawPoint((steep ? y : x), (steep ? x : y), width, color);
-                error = error - dy;
-                if (error < 0)
-                {
-                    y += ystep;
-                    error += dx;
-                }
-            }
         }
 
         ///
@@ -225,15 +150,6 @@
 
         ///
         /// <summary>
-        /// Draw solid rectangle
-        /// </summary>
-        private static void _FillRect(int left, int top, int width, int height, Color color)
-        {
-            batch.Draw(pixel, new Rectangle(left, top, width, height), color);
-        }
-
-        ///
-        /// <summary>
         /// Draw a solid rectangle using the currently set BrushColor
         /// </summary>
         /// <param name="left">Left offset</param>
@@ -258,19 +174,7 @@
         {
             _FillRect((int)left, (int)top, (int)width, (int)height, color);
         }
-
-        ///
-        /// <summary>
-        /// Draw rectangle outline
-        /// </summary>
-        private static void _StrokeRect(int left, int top, int width, int height, Color color, int stroke)
-        {
-            _DrawLine(left, top, left + width - 1, top, color, stroke);
-            _DrawLine(left, top + height - 1, left + width - 1, top + height - 1, color, stroke);
-            _DrawLine(left, top, left, top + height - 1, color, stroke);
-            _DrawLine(left + width - 1, top, left + width - 1, top + height - 1, color, stroke);
-        }
-
+        
         ///
         /// <summary>
         /// Draw the outline of the specified rectangle, using <paramref name="color"/> and thickness defined by <paramref name="stroke"/>
@@ -329,81 +233,6 @@
 
         ///
         /// <summary>
-        /// Draw solid oval/ellipse
-        /// </summary>
-        private static void _FillOval(int left, int top, int width, int height, Color color)
-        {
-            int a = width / 2;
-            int b = height / 2;
-
-            int cx = left + a;
-            int cy = top + b;
-
-            int a2 = a * a;
-            int b2 = b * b;
-
-            int twoa2 = 2 * a2;
-            int twob2 = 2 * b2;
-
-            int p;
-            int x = 0;
-            int y = b;
-            int px = 0;
-            int py = twoa2 * y;
-
-            /* Plot the initial point in each quadrant. */
-            _DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
-            _DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
-
-            /* Region 1 */
-            p = (int)(b2 - (a2 * b) + (0.25 * a2));
-
-            while (px < py)
-            {
-                x++;
-                px += twob2;
-
-                if (p < 0)
-                {
-                    p += b2 + px;
-                }
-                else
-                {
-                    y--;
-                    py -= twoa2;
-                    p += b2 + px - py;
-                }
-
-                _DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
-                _DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
-            }
-
-            /* Region 2 */
-            p = (int)(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
-
-            while (y > 0)
-            {
-                y--;
-                py -= twoa2;
-
-                if (p > 0)
-                {
-                    p += a2 - py;
-                }
-                else
-                {
-                    x++;
-                    px += twob2;
-                    p += a2 - py + px;
-                }
-
-                _DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
-                _DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
-            }
-        }
-
-        ///
-        /// <summary>
         /// Draw a solid oval inside the rectangle, specified by the given coordinates and color
         /// </summary>
         /// <param name="left">Bounding rectangle left offset</param>
@@ -427,86 +256,6 @@
         public static void FillOval(double left, double top, double width, double height)
         {
             _FillOval((int)left, (int)top, (int)width, (int)height, BrushColor);
-        }
-
-        ///
-        /// <summary>
-        /// Draw oval/ellipse outline
-        /// </summary>
-        private static void _StrokeOval(int left, int top, int width, int height, Color color, int stroke)
-        {
-            int a = width / 2;
-            int b = height / 2;
-
-            int cx = left + a;
-            int cy = top + b;
-
-            int a2 = a * a;
-            int b2 = b * b;
-
-            int twoa2 = 2 * a2;
-            int twob2 = 2 * b2;
-
-            int p;
-            int x = 0;
-            int y = b;
-            int px = 0;
-            int py = twoa2 * y;
-
-            /* Plot the initial point in each quadrant. */
-            _DrawPoint(cx + x, cy + y, stroke, color);
-            _DrawPoint(cx - x, cy + y, stroke, color);
-            _DrawPoint(cx + x, cy - y, stroke, color);
-            _DrawPoint(cx - x, cy - y, stroke, color);
-
-            /* Region 1 */
-            p = (int)(b2 - (a2 * b) + (0.25 * a2));
-
-            while (px < py)
-            {
-                x++;
-                px += twob2;
-                if (p < 0)
-                {
-                    p += b2 + px;
-                }
-                else
-                {
-                    y--;
-                    py -= twoa2;
-                    p += b2 + px - py;
-                }
-
-                _DrawPoint(cx + x, cy + y, stroke, color);
-                _DrawPoint(cx - x, cy + y, stroke, color);
-                _DrawPoint(cx + x, cy - y, stroke, color);
-                _DrawPoint(cx - x, cy - y, stroke, color);
-            }
-
-            /* Region 2 */
-            p = (int)(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
-
-            while (y > 0)
-            {
-                y--;
-                py -= twoa2;
-
-                if (p > 0)
-                {
-                    p += a2 - py;
-                }
-                else
-                {
-                    x++;
-                    px += twob2;
-                    p += a2 - py + px;
-                }
-
-                _DrawPoint(cx + x, cy + y, stroke, color);
-                _DrawPoint(cx - x, cy + y, stroke, color);
-                _DrawPoint(cx + x, cy - y, stroke, color);
-                _DrawPoint(cx - x, cy - y, stroke, color);
-            }
         }
 
         ///
@@ -582,7 +331,254 @@
 
         private static int Index(int x, int y, int width)
         {
-            return y * width + x;
+            return (y * width) + x;
+        }
+
+        ///
+        /// <summary>
+        /// Draw square point
+        /// </summary>
+        /// <param name="x">Center left offset</param>
+        /// <param name="y">Center top offset</param>
+        /// <param name="size">Diameter</param>
+        /// /// <param name="color">color</param>
+        private static void _DrawPoint(int x, int y, int size, Color color)
+        {
+            Rectangle rec = new Rectangle(x - (size / 2), y - (size / 2), size, size);
+            batch.Draw(pixel, rec, color);
+        }
+
+        ///
+        /// <summary>
+        /// Draw text
+        /// </summary>
+        private static void _DrawText(string text, float x, float y, Color color)
+        {
+            batch.DrawString(font, text, new Vector2(x, y), color);
+        }
+
+        ///
+        /// <summary>
+        /// Draw line
+        /// </summary>
+        private static void _DrawLine(int x1, int y1, int x2, int y2, Color color, int width)
+        {
+            bool steep = Math.Abs(y2 - y1) > Math.Abs(x2 - x1);
+            if (steep)
+            {
+                int t;
+                t = x1; // swap x0 and y0
+                x1 = y1;
+                y1 = t;
+                t = x2; // swap x1 and y1
+                x2 = y2;
+                y2 = t;
+            }
+
+            if (x1 > x2)
+            {
+                int t;
+                t = x1; // swap x0 and x1
+                x1 = x2;
+                x2 = t;
+                t = y1; // swap y0 and y1
+                y1 = y2;
+                y2 = t;
+            }
+
+            int dx = x2 - x1;
+            int dy = Math.Abs(y2 - y1);
+            int error = dx / 2;
+            int ystep = (y1 < y2) ? 1 : -1;
+            int y = y1;
+
+            for (int x = x1; x <= x2; x++)
+            {
+                _DrawPoint(steep ? y : x, steep ? x : y, width, color);
+                error = error - dy;
+                if (error < 0)
+                {
+                    y += ystep;
+                    error += dx;
+                }
+            }
+        }
+
+        ///
+        /// <summary>
+        /// Draw solid rectangle
+        /// </summary>
+        private static void _FillRect(int left, int top, int width, int height, Color color)
+        {
+            batch.Draw(pixel, new Rectangle(left, top, width, height), color);
+        }
+
+        ///
+        /// <summary>
+        /// Draw rectangle outline
+        /// </summary>
+        private static void _StrokeRect(int left, int top, int width, int height, Color color, int stroke)
+        {
+            _DrawLine(left, top, left + width - 1, top, color, stroke);
+            _DrawLine(left, top + height - 1, left + width - 1, top + height - 1, color, stroke);
+            _DrawLine(left, top, left, top + height - 1, color, stroke);
+            _DrawLine(left + width - 1, top, left + width - 1, top + height - 1, color, stroke);
+        }
+        
+        ///
+        /// <summary>
+        /// Draw solid oval/ellipse
+        /// </summary>
+        private static void _FillOval(int left, int top, int width, int height, Color color)
+        {
+            int a = width / 2;
+            int b = height / 2;
+
+            int cx = left + a;
+            int cy = top + b;
+
+            int a2 = a * a;
+            int b2 = b * b;
+
+            int twoa2 = 2 * a2;
+            int twob2 = 2 * b2;
+
+            int p;
+            int x = 0;
+            int y = b;
+            int px = 0;
+            int py = twoa2 * y;
+
+            /* Plot the initial point in each quadrant. */
+            _DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
+            _DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
+
+            /* Region 1 */
+            p = (int)(b2 - (a2 * b) + (0.25 * a2));
+
+            while (px < py)
+            {
+                x++;
+                px += twob2;
+
+                if (p < 0)
+                {
+                    p += b2 + px;
+                }
+                else
+                {
+                    y--;
+                    py -= twoa2;
+                    p += b2 + px - py;
+                }
+
+                _DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
+                _DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
+            }
+
+            /* Region 2 */
+            p = (int)((b2 * (x + 0.5) * (x + 0.5)) + (a2 * (y - 1) * (y - 1)) - (a2 * b2));
+
+            while (y > 0)
+            {
+                y--;
+                py -= twoa2;
+
+                if (p > 0)
+                {
+                    p += a2 - py;
+                }
+                else
+                {
+                    x++;
+                    px += twob2;
+                    p += a2 - py + px;
+                }
+
+                _DrawLine(cx + x, cy + y, cx - x, cy + y, color, 1);
+                _DrawLine(cx + x, cy - y, cx - x, cy - y, color, 1);
+            }
+        }
+
+
+        ///
+        /// <summary>
+        /// Draw oval/ellipse outline
+        /// </summary>
+        private static void _StrokeOval(int left, int top, int width, int height, Color color, int stroke)
+        {
+            int a = width / 2;
+            int b = height / 2;
+
+            int cx = left + a;
+            int cy = top + b;
+
+            int a2 = a * a;
+            int b2 = b * b;
+
+            int twoa2 = 2 * a2;
+            int twob2 = 2 * b2;
+
+            int p;
+            int x = 0;
+            int y = b;
+            int px = 0;
+            int py = twoa2 * y;
+
+            /* Plot the initial point in each quadrant. */
+            _DrawPoint(cx + x, cy + y, stroke, color);
+            _DrawPoint(cx - x, cy + y, stroke, color);
+            _DrawPoint(cx + x, cy - y, stroke, color);
+            _DrawPoint(cx - x, cy - y, stroke, color);
+
+            /* Region 1 */
+            p = (int)(b2 - (a2 * b) + (0.25 * a2));
+
+            while (px < py)
+            {
+                x++;
+                px += twob2;
+                if (p < 0)
+                {
+                    p += b2 + px;
+                }
+                else
+                {
+                    y--;
+                    py -= twoa2;
+                    p += b2 + px - py;
+                }
+
+                _DrawPoint(cx + x, cy + y, stroke, color);
+                _DrawPoint(cx - x, cy + y, stroke, color);
+                _DrawPoint(cx + x, cy - y, stroke, color);
+                _DrawPoint(cx - x, cy - y, stroke, color);
+            }
+
+            /* Region 2 */
+            p = (int)((b2 * (x + 0.5) * (x + 0.5)) + (a2 * (y - 1) * (y - 1)) - (a2 * b2));
+
+            while (y > 0)
+            {
+                y--;
+                py -= twoa2;
+
+                if (p > 0)
+                {
+                    p += a2 - py;
+                }
+                else
+                {
+                    x++;
+                    px += twob2;
+                    p += a2 - py + px;
+                }
+
+                _DrawPoint(cx + x, cy + y, stroke, color);
+                _DrawPoint(cx - x, cy + y, stroke, color);
+                _DrawPoint(cx + x, cy - y, stroke, color);
+                _DrawPoint(cx - x, cy - y, stroke, color);
+            }
         }
 
         #endregion Methods

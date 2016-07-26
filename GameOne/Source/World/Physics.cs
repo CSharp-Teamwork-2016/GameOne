@@ -14,7 +14,6 @@
         public static readonly double LeftDirection = Math.Round(Math.PI, 2);
         public static readonly double RightDirection = 0.0;
 
-        //All static
         #region Methods
 
         public static void CollisionResolution(List<Model> models)
@@ -22,6 +21,14 @@
             foreach (Model model in models)
             {
                 Hitscan(model, models.Where(current => current != model).ToList());
+            }
+        }
+
+        public static void BoundsCheck(List<Model> models, List<Tile> tiles)
+        {
+            foreach (Model model in models)
+            {
+                Wallscan(model, tiles);
             }
         }
 
@@ -35,21 +42,32 @@
 
         private static void Resolve(Model e1, Model e2)
         {
-            if (!e1.Alive || !e2.Alive) return;
+            if (!e1.Alive || !e2.Alive)
+            {
+                return;
+            }
+
             Vector separation = Vector.Subtract(e1.Position, e2.Position);
             double dist = separation.Length;
             double penetration = dist - (e1.Radius + e2.Radius);
 
             if (penetration < 0)
             {
-                if (HandleItems(e1, e2)) return;
-                if (HandleProjectiles(e1, e2)) return;
+                if (HandleItems(e1, e2))
+                {
+                    return;
+                }
+
+                if (HandleProjectiles(e1, e2))
+                {
+                    return;
+                }
 
                 separation.Normalize();
                 separation = Vector.Multiply(separation, penetration / 2);
                 e1.Position -= separation;
                 e2.Position += separation;
-                //Loop.DebugInfo += "Collision\n";
+                // Loop.DebugInfo += "Collision\n";
                 if (e1 is Player && e2 is Enemy)
                 {
                     ((Character)e1).TakeDamage(((Character)e2).Damage);
@@ -77,8 +95,10 @@
                     ((Item)e2).Collect();
                     ((Player)e1).PickUpItem(((Item)e2).Type);
                 }
+
                 return true;
             }
+
             return false;
         }
 
@@ -104,6 +124,7 @@
                             projectile.Die();
                             target.TakeDamage(projectile.Source.Damage);
                         }
+
                         return true;
                     }
                     else if (target is Enemy)
@@ -113,20 +134,15 @@
                             projectile.Die();
                             target.TakeDamage((int)(projectile.Source.Damage * 0.4));
                         }
+
                         return true;
                     }
                 }
+
                 return true;
             }
-            return false;
-        }
 
-        public static void BoundsCheck(List<Model> models, List<Tile> tiles)
-        {
-            foreach (Model model in models)
-            {
-                Wallscan(model, tiles);
-            }
+            return false;
         }
 
         private static void Wallscan(Model current, List<Tile> tiles)

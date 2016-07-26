@@ -11,11 +11,11 @@
 
     public class EntityHandler
     {
-        private List<Entity> register;
+        private readonly List<Entity> register;
 
         public EntityHandler()
         {
-            register = new List<Entity>();
+            this.register = new List<Entity>();
         }
 
         public void ProcessEntities(List<Entity> entities, List<Tile> tiles, double time)
@@ -29,22 +29,38 @@
                     .OfType<Model>()
                     .Where(e => e.Alive)
                     .ToList());
-            Physics.BoundsCheck(entities
-                    .OfType<Model>()
-                    .ToList(),
-                    tiles
-                    .Where(tile => tile.TileType == TileType.Wall)
-                    .ToList());
+
+            var modelEntitiesTo = entities.OfType<Model>().ToList();
+            var tileWalls = tiles.Where(tile => tile.TileType == TileType.Wall).ToList();
+
+            Physics.BoundsCheck(modelEntitiesTo, tileWalls);
 
             // Add new entities to list
-            foreach (var item in register)
+            foreach (var item in this.register)
             {
                 entities.Add(item);
             }
-            register.Clear();
+
+            this.register.Clear();
 
             // Remove dead entities
-            RemoveDead(entities);
+            this.RemoveDead(entities);
+        }
+
+        public void Subscribe(List<Entity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                if (entity is Character && !(entity is Player))
+                {
+                    ((Character)entity).FireProjectileEvent += this.RegisterProjectile;
+                }
+            }
+        }
+
+        public void SubscribeToPlayer(Player player)
+        {
+            player.FireProjectileEvent += this.RegisterProjectile;
         }
 
         private void RemoveDead(List<Entity> entities)
@@ -56,26 +72,10 @@
             }
         }
 
-        public void Subscribe(List<Entity> entities)
-        {
-            foreach (var entity in entities)
-            {
-                if (entity is Character && !(entity is Player))
-                {
-                    ((Character)entity).FireProjectileEvent += RegisterProjectile;
-                }
-            }
-        }
-
-        public void SubscribeToPlayer(Player player)
-        {
-            player.FireProjectileEvent += RegisterProjectile;
-        }
-
         private void RegisterProjectile(object sender, ProjectileEventArgs e)
         {
             Projectile projectile = ProjectileFactory.MakeProjectile((Character)sender, e.Type);
-            register.Add(projectile);
+            this.register.Add(projectile);
         }
     }
 }
