@@ -1,23 +1,18 @@
-﻿
-
-namespace GameOne.Source.Entities
+﻿namespace GameOne.Source.Entities
 {
     using System.Windows;
-
-    using Renderer;
     using Enumerations;
     using Interfaces;
+    using Renderer;
 
     public class Projectile : Model, IMovable
     {
         #region Fields
 
-        private Vector velocity;
+        private readonly Vector velocity;
         private ProjectileType type; // for later use
 
         #endregion Fields
-
-        //===================================================================
 
         #region Constructors
 
@@ -29,22 +24,18 @@ namespace GameOne.Source.Entities
         }
 
         #endregion Constructors
-
-        //===================================================================
-
+        
         #region Properties
 
         public Character Source { get; }
 
         #endregion Properties
 
-        //===================================================================
-
         #region Methods
 
         public override void Update(double time)
         {
-            if (Alive)
+            if (this.Alive)
             {
                 this.Position += this.velocity * time;
             }

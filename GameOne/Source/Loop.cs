@@ -23,18 +23,15 @@
 
         // Game objects
         public static Level level;
-        private Input input;
-        private EntityHandler entityHandler;
+        private readonly Input input;
+        private readonly EntityHandler entityHandler;
 
         // initial game state
         private GameState gameState = GameState.MainMenu;
 
-        //Main Menu
-        private MainMenu mainMenu;
+        // Main Menu
 
         #endregion Fields
-
-        //===================================================================
 
         #region Constructors
 
@@ -45,16 +42,14 @@
             DebugInfo = string.Empty;
             Console = string.Empty;
             this.input = new Input(keyboardState, mouseState);
-            LevelEditor.Init(input);
-            this.mainMenu = new MainMenu();
+            LevelEditor.Init(this.input);
+            this.MainMenu = new MainMenu();
             this.entityHandler = new EntityHandler();
-            entityHandler.Subscribe(level.Entities);
-            entityHandler.SubscribeToPlayer(level.Player);
+            this.entityHandler.Subscribe(level.Entities);
+            this.entityHandler.SubscribeToPlayer(level.Player);
         }
 
         #endregion Constructors
-
-        //===================================================================
 
         #region Properties
 
@@ -65,17 +60,9 @@
 
         public static bool ShowFPS { get; set; }
 
-        public MainMenu MainMenu
-        {
-            get
-            {
-                return this.mainMenu;
-            }
-        }
+        public MainMenu MainMenu { get; }
 
         #endregion Properties
-
-        //===================================================================
 
         #region Methods
 
@@ -84,7 +71,7 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    this.gameState = this.mainMenu.Update(time);
+                    this.gameState = this.MainMenu.Update(time);
                     break;
                 case GameState.Gameplay:
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -96,6 +83,7 @@
                     {
                         this.GameUpdate(time, Keyboard.GetState(), Mouse.GetState());
                     }
+
                     break;
                 case GameState.LevelEditor:
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -107,9 +95,66 @@
                     {
                         LevelEditor.Update(time, Keyboard.GetState(), Mouse.GetState());
                     }
+
                     break;
                 case GameState.EndOfGame:
-                    //TODO
+                    // TODO
+                    break;
+            }
+        }
+
+        internal void Render()
+        {
+            switch (this.gameState)
+            {
+                case GameState.MainMenu:
+                    break;
+                case GameState.Gameplay:
+                    this.RenderLevel();
+                    break;
+                case GameState.LevelEditor:
+                    this.RenderLevel();
+                    this.RendeGrid();
+                    break;
+                case GameState.EndOfGame:
+                    // TODO
+                    break;
+            }
+
+            // Execute tests
+            foreach (Action test in Tests.ListOf.OnDraw)
+            {
+                test();
+            }
+        }
+
+        internal void RenderUI()
+        {
+            switch (this.gameState)
+            {
+                case GameState.MainMenu:
+                    Output.Draw(this.MainMenu.CurrentScreen, Vector2.Zero);
+                    break;
+                case GameState.Gameplay:
+                    double hpc = (double)level.Player.Health / level.Player.MaxHealth;
+                    UserInterface.DrawSideBar(hpc, level.Player.HealthPotions, Level.CurrentLevel);
+                    level.Geometry.ForEach(Primitive.DrawTileMini);
+                    Primitive.DrawModelMini(level.Player);
+
+                    if (level.Entities.Contains(level.ExitPortal))
+                    {
+                        Primitive.DrawModelMini(level.ExitPortal);
+                    }
+
+                    UserInterface.DrawConsole(DebugInfo, Console);
+                    break;
+                case GameState.LevelEditor:
+                    double tileX = Primitive.ToWorldX(this.input.MouseX);
+                    double tileY = Primitive.ToWorldY(this.input.MouseY);
+                    Output.DrawText($"{tileX}{Environment.NewLine}{tileY}", this.input.MouseX + 20, this.input.MouseY, Color.White);
+                    break;
+                case GameState.EndOfGame:
+                    // TODO
                     break;
             }
         }
@@ -129,10 +174,10 @@
             {
                 level.ExitTriggered = false;
                 level.NextLevel();
-                entityHandler.Subscribe(level.Entities);
+                this.entityHandler.Subscribe(level.Entities);
             }
 
-            entityHandler.ProcessEntities(level.Entities, level.Geometry, time.ElapsedGameTime.Milliseconds / 1000.0);
+            this.entityHandler.ProcessEntities(level.Entities, level.Geometry, time.ElapsedGameTime.Milliseconds / 1000.0);
 
             // Execute tests
             foreach (Action test in Tests.ListOf.OnUpdate)
@@ -142,32 +187,7 @@
             // Debug info
             if (ShowFPS)
             {
-                DebugInfo += string.Format($"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}");
-            }
-        }
-
-        internal void Render()
-        {
-            switch (this.gameState)
-            {
-                case GameState.MainMenu:
-                    break;
-                case GameState.Gameplay:
-                    RenderLevel();
-                    break;
-                case GameState.LevelEditor:
-                    RenderLevel();
-                    RendeGrid();
-                    break;
-                case GameState.EndOfGame:
-                    //TODO
-                    break;
-            }
-
-            // Execute tests
-            foreach (Action test in Tests.ListOf.OnDraw)
-            {
-                test();
+                DebugInfo += $"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}";
             }
         }
 
@@ -184,35 +204,9 @@
         private void RendeGrid()
         {
             level.Geometry.ForEach(Primitive.DrawGrid);
-            Tile target = new Tile((int)Primitive.ToWorldX(input.MouseX), (int)Primitive.ToWorldY(input.MouseY), LevelEditor.CurrentTile);
+            Tile target = new Tile((int)Primitive.ToWorldX(this.input.MouseX), (int)Primitive.ToWorldY(this.input.MouseY), LevelEditor.CurrentTile);
             Primitive.DrawTile(target);
         }
-
-        internal void RenderUI()
-        {
-            switch (this.gameState)
-            {
-                case GameState.MainMenu:
-                    Output.Draw(MainMenu.CurrentScreen, Vector2.Zero);
-                    break;
-                case GameState.Gameplay:
-                    double hpc = (double)level.Player.Health / level.Player.MaxHealth;
-                    UserInterface.DrawSideBar(hpc, level.Player.HealthPotions, Level.CurrentLevel);
-                    level.Geometry.ForEach(Primitive.DrawTileMini);
-                    Primitive.DrawModelMini(level.Player);
-                    if (level.Entities.Contains(level.ExitPortal)) Primitive.DrawModelMini(level.ExitPortal);
-                    UserInterface.DrawConsole(DebugInfo, Console);
-                    break;
-                case GameState.LevelEditor:
-                    double tileX = Primitive.ToWorldX(input.MouseX);
-                    double tileY = Primitive.ToWorldY(input.MouseY);
-                    Output.DrawText(string.Format($"{tileX}{Environment.NewLine}{tileY}"), input.MouseX + 20, input.MouseY, Color.White);
-                    break;
-                case GameState.EndOfGame:
-                    //TODO
-                    break;
-            }
-        } 
 
         #endregion Methods
     }

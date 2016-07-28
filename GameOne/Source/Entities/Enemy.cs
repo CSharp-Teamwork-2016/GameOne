@@ -13,12 +13,10 @@
         private double elapsedTime;
         private double nextTime;
         private Queue<Action> pattern;
-        private EnemyType type;
-        private int xpAward;
+        private readonly EnemyType type;
+        private readonly int xpAward;
 
         #endregion Fields
-
-        //===================================================================
 
         #region Constructors
 
@@ -29,53 +27,75 @@
             this.xpAward = xpAward;
 
             // Behaviour
-            PreparePattern();
+            this.PreparePattern();
         }
 
         #endregion Constructors
-
-        //===================================================================
 
         public EnemyType Type => this.type;
 
         #region Methods
 
+        public override void Update(double time)
+        {
+            if (this.state == State.DEAD)
+            {
+                return;
+            }
+            // Behaviour
+            this.ProcessPattern(time);
+            base.Update(time);
+        }
+
+        public override void Die()
+        {
+            base.Die();
+            Loop.level.Player.GainXP(this.xpAward);
+            Loop.level.EnemySlain();
+        }
+
         #region Methods/Behaviour
 
         private void WaitFor()
         {
-
         }
 
         private void TurnRight()
         {
-            Direction += Math.Round(Math.PI / 2, 2);
-            Direction %= Math.Round(2 * Math.PI, 2);
-            PrepareNext(0, -0.5);
+            this.Direction += Math.Round(Math.PI / 2, 2);
+            this.Direction %= Math.Round(2 * Math.PI, 2);
+            this.PrepareNext(0, -0.5);
         }
 
         private void PrepareNext(double delay = 0, double extend = 0)
         {
-            elapsedTime = 0;
-            nextTime = World.LevelMaker.RandDouble(0 + delay, 1 + delay + extend);
-            pattern.Enqueue(pattern.Dequeue());
+            this.elapsedTime = 0;
+            this.nextTime = World.LevelMaker.RandDouble(0 + delay, 1 + delay + extend);
+            this.pattern.Enqueue(this.pattern.Dequeue());
         }
 
         private void ProcessPattern(double time)
         {
-            elapsedTime += time;
-            if (elapsedTime >= nextTime)
+            this.elapsedTime += time;
+            if (this.elapsedTime >= this.nextTime)
             {
-                PrepareNext(0.5);
+                this.PrepareNext(0.5);
             }
 
-            pattern.Peek()();
+            this.pattern.Peek()();
 
             // Random firing pattern hack
             double probability = 0.99;
-            if (type == EnemyType.Sentry) probability = 0.95;
+
+            if (this.type == EnemyType.Sentry)
+            {
+                probability = 0.95;
+            }
+
             if (World.LevelMaker.RandDouble(0, 1) > probability)
-                FireProjectile();
+            {
+                this.FireProjectile();
+            }
         }
 
         private void PreparePattern()
@@ -83,50 +103,32 @@
             this.elapsedTime = 0;
             this.nextTime = World.LevelMaker.RandDouble(1, 4);
 
-            pattern = new Queue<Action>();
-            if (type == EnemyType.Zombie)
+            this.pattern = new Queue<Action>();
+            if (this.type == EnemyType.Zombie)
             {
-                pattern.Enqueue(MoveForward);
-                pattern.Enqueue(WaitFor);
-                pattern.Enqueue(TurnRight);
-                pattern.Enqueue(WaitFor);
-                pattern.Enqueue(MoveForward);
-                pattern.Enqueue(WaitFor);
-                pattern.Enqueue(TurnRight);
-                pattern.Enqueue(TurnRight);
-                pattern.Enqueue(WaitFor);
+                this.pattern.Enqueue(this.MoveForward);
+                this.pattern.Enqueue(this.WaitFor);
+                this.pattern.Enqueue(this.TurnRight);
+                this.pattern.Enqueue(this.WaitFor);
+                this.pattern.Enqueue(this.MoveForward);
+                this.pattern.Enqueue(this.WaitFor);
+                this.pattern.Enqueue(this.TurnRight);
+                this.pattern.Enqueue(this.TurnRight);
+                this.pattern.Enqueue(this.WaitFor);
             }
-            else if (type == EnemyType.Sentry)
+            else if (this.type == EnemyType.Sentry)
             {
-                pattern.Enqueue(WaitFor);
-                pattern.Enqueue(TurnRight);
-                pattern.Enqueue(WaitFor);
-                pattern.Enqueue(WaitFor);
-                pattern.Enqueue(TurnRight);
-                pattern.Enqueue(TurnRight);
-                pattern.Enqueue(WaitFor);
+                this.pattern.Enqueue(this.WaitFor);
+                this.pattern.Enqueue(this.TurnRight);
+                this.pattern.Enqueue(this.WaitFor);
+                this.pattern.Enqueue(this.WaitFor);
+                this.pattern.Enqueue(this.TurnRight);
+                this.pattern.Enqueue(this.TurnRight);
+                this.pattern.Enqueue(this.WaitFor);
             }
         }
 
         #endregion Methods/Behaviour
-
-        public override void Update(double time)
-        {
-            if (state == State.DEAD)
-            {
-                return;
-            }
-            // Behaviour
-            ProcessPattern(time);
-            base.Update(time);
-        }
-
-        public override void Die()
-        {
-            base.Die();
-            Loop.level.Player.GainXP(xpAward);
-            Loop.level.EnemySlain();
-        }
 
         #endregion Methods
     }

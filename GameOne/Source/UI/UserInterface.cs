@@ -3,7 +3,6 @@
     using Microsoft.Xna.Framework;
 
     using Renderer;
-    using Enumerations;
 
     public class UserInterface
     {
@@ -21,7 +20,7 @@
             // Flasks
             for (int i = 0; i < potions; i++)
             {
-                double left = 610 + i * 20;
+                double left = 610 + (i * 20);
                 double top = 30;
                 double width = 16;
                 double height = 16;
@@ -29,6 +28,7 @@
                 Output.FillRect(left + 4, top - 4, width - 8, 4, Color.Gray);
                 Output.StrokeRect(left, top, width, height, Color.Gray, 1);
             }
+
             Output.DrawText(string.Format($"Depth: {depth}"), 610, 270, Color.Black);
         }
 

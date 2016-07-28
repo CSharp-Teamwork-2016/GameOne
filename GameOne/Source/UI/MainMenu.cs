@@ -1,38 +1,25 @@
-﻿using GameOne.Source.Enumerations;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
-
-namespace GameOne.Source.UI
+﻿namespace GameOne.Source.UI
 {
+    using Enumerations;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
     public class MainMenu
     {
-        #region Fields
-
-        #endregion Fields
-
-        //===================================================================
-
-        #region Constructors
-
-        #endregion Constructors
-
-        //===================================================================
-
         #region Properties
 
         public Texture2D MainMenuScreen { get; set; }
+
         public Texture2D ResumeScreen { get; set; }
+
         public Texture2D CreditsScreen { get; set; }
+
         public Texture2D WePromiseScreen { get; set; }
 
         public Texture2D CurrentScreen { get; set; }
 
         #endregion Properties
-
-        //===================================================================
 
         #region Methods
 
@@ -40,7 +27,7 @@ namespace GameOne.Source.UI
         {
             // Respond to user input for menu selections, etc
 
-            //Start New Game or Resume curren
+            // Start New Game or Resume curren
             if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
@@ -50,7 +37,7 @@ namespace GameOne.Source.UI
             {
                 return GameState.Gameplay;
             }
-            //Exit Game
+            // Exit Game
             else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
@@ -59,9 +46,9 @@ namespace GameOne.Source.UI
                 Mouse.GetState().Y <= 390)
             {
                 System.Environment.Exit(1);
-                //We may add "Are you sure", "Do you want to save?" or something...
+                // We may add "Are you sure", "Do you want to save?" or something...
             }
-            //Credits
+            // Credits
             else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
@@ -72,7 +59,7 @@ namespace GameOne.Source.UI
                 this.CurrentScreen = this.CreditsScreen;
                 return GameState.MainMenu;
             }
-            //Back From Credits or Save or Load. If we start New Game, then go to main menue, then press Credits, then back, first button will be New Game, but it will actualy Resume current game. I will fix it later<=====================================================================
+            // Back From Credits or Save or Load. If we start New Game, then go to main menue, then press Credits, then back, first button will be New Game, but it will actualy Resume current game. I will fix it later<=====================================================================
             else if ((this.CurrentScreen == this.CreditsScreen || this.CurrentScreen == this.WePromiseScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
@@ -89,7 +76,7 @@ namespace GameOne.Source.UI
                 this.CurrentScreen = this.MainMenuScreen;
                 return GameState.MainMenu;
             }
-            //Save TODO
+            // Save TODO
             else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
@@ -100,7 +87,7 @@ namespace GameOne.Source.UI
                 this.CurrentScreen = this.WePromiseScreen;
                 return GameState.MainMenu;
             }
-            //Load TODO
+            // Load TODO
             else if ((this.CurrentScreen == this.MainMenuScreen || this.CurrentScreen == this.ResumeScreen) &&
                 Mouse.GetState().LeftButton == ButtonState.Pressed &&
                 Mouse.GetState().X >= 250 &&
@@ -125,14 +112,14 @@ namespace GameOne.Source.UI
             return GameState.MainMenu;
         }
 
-        public void LoadTextures(Texture2D MainMenuScreen, Texture2D ResumeScreen, Texture2D CreditsScreen, Texture2D WePromiseScreen)
+        public void LoadTextures(Texture2D mainMenuScreen, Texture2D resumeScreen, Texture2D creditsScreen, Texture2D wePromiseScreen)
         {
-            this.MainMenuScreen = MainMenuScreen;
-            this.ResumeScreen = ResumeScreen;
-            this.CreditsScreen = CreditsScreen;
-            this.WePromiseScreen = WePromiseScreen;
+            this.MainMenuScreen = mainMenuScreen;
+            this.ResumeScreen = resumeScreen;
+            this.CreditsScreen = creditsScreen;
+            this.WePromiseScreen = wePromiseScreen;
 
-            this.CurrentScreen = MainMenuScreen;
+            this.CurrentScreen = mainMenuScreen;
         }
 
         #endregion Methods

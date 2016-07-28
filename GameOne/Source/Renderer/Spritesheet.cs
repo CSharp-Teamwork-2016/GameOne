@@ -7,17 +7,16 @@
     {
         // Methods and information for loading and sequencing series of frames into animations
         // Individual frames and sequences may be separate classes
+
         public Texture2D Texture;
-        public int Rows { get; set; }
-        public int Cols { get; set; }
 
         private int currentFrame;
 
-        private int totalFrames;
+        private readonly int totalFrames;
 
-        //slow down frame animation
+        // slow down frame animation
         private int timeSinceLastFrame;
-        private int millionSecPerFrame = 50;
+        private const int MillionSecPerFrame = 50;
 
         public Spritesheet()
         {
@@ -33,19 +32,23 @@
             this.totalFrames = this.Rows * this.Cols;
         }
 
+        public int Rows { get; set; }
+
+        public int Cols { get; set; }
+
         public void Update(GameTime gameTime)
         {
             this.timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
 
-            if (this.timeSinceLastFrame > this.millionSecPerFrame)
+            if (this.timeSinceLastFrame > MillionSecPerFrame)
             {
-                this.timeSinceLastFrame -= this.millionSecPerFrame;
+                this.timeSinceLastFrame -= MillionSecPerFrame;
                 this.currentFrame++;
                 this.timeSinceLastFrame = 0;
 
-                if (currentFrame == totalFrames)
+                if (this.currentFrame == this.totalFrames)
                 {
-                    currentFrame = 0;
+                    this.currentFrame = 0;
                 }
             }
         }
@@ -63,9 +66,7 @@
             spriteBatch.Begin();
             spriteBatch.Draw(this.Texture, destinationRectangle, sourceRectangle, Color.White);
             spriteBatch.End();
-
         }
-
         // TODO
     }
 }

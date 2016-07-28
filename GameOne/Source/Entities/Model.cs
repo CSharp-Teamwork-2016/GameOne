@@ -8,8 +8,8 @@
 
     public abstract class Model : Entity, IRenderable
     {
-        private Spritesheet sprite;
         protected State state;
+        private Spritesheet sprite;
 
         protected Model(double x, double y, double direction, double radius, Spritesheet sprite)
         {
@@ -20,7 +20,7 @@
             this.state = State.IDLE;
         }
 
-        public bool Alive => state != State.DEAD;
+        public bool Alive => this.state != State.DEAD;
 
         public Vector Position { get; set; }
 
@@ -32,7 +32,7 @@
         
         public virtual void Die()
         {
-            state = State.DEAD;
+            this.state = State.DEAD;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace GameOne.Source.Sound
 {
-    using Microsoft.Xna.Framework.Audio;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Media;
 
@@ -12,8 +11,6 @@
         private Song hurtEffect;
 
         #endregion Fields
-
-        //===================================================================
 
         #region Methods
 

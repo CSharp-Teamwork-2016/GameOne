@@ -1,16 +1,12 @@
 ﻿namespace GameOne.Source
 {
-    using Microsoft.Xna.Framework.Input;
-
     using Enumerations;
+    using Microsoft.Xna.Framework.Input;
 
     public class Input
     {
         private KeyboardState kbPrevious;
         private MouseState msPrevious;
-
-        public double MouseX => msPrevious.X;
-        public double MouseY => msPrevious.Y;
 
         public Input(KeyboardState keyboardState, MouseState mouseState)
         {
@@ -21,25 +17,29 @@
 #endif
         }
 
+        public double MouseX => this.msPrevious.X;
+
+        public double MouseY => this.msPrevious.Y;
+
         internal UserInput Update(KeyboardState keyboardState, MouseState mouseState)
         {
             UserInput result = UserInput.Empty;
             foreach (Keys key in keyboardState.GetPressedKeys())
             {
-				switch (key)
-				{
-					case Keys.Up:
-						result = UserInput.MoveUp;
-						break;
-					case Keys.Down:
-						result = UserInput.MoveDown;
-						break;
-					case Keys.Left:
-						result = UserInput.MoveLeft;
-						break;
-					case Keys.Right:
-						result = UserInput.MoveRight;
-						break;
+                switch (key)
+                {
+                    case Keys.Up:
+                        result = UserInput.MoveUp;
+                        break;
+                    case Keys.Down:
+                        result = UserInput.MoveDown;
+                        break;
+                    case Keys.Left:
+                        result = UserInput.MoveLeft;
+                        break;
+                    case Keys.Right:
+                        result = UserInput.MoveRight;
+                        break;
                     case Keys.LeftControl:
                         result = UserInput.Attack;
                         break;
@@ -51,6 +51,7 @@
                         {
                             result = UserInput.DrinkPotion;
                         }
+
                         break;
                 }
 
@@ -63,6 +64,7 @@
                             {
                                 Loop.Console = Loop.Console.Substring(0, Loop.Console.Length - 1);
                             }
+
                             break;
                         case Keys.Space:
                             Loop.Console += " ";

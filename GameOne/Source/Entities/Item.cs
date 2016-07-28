@@ -15,12 +15,12 @@
 
         public override void Update(double time)
         {
-            //Loop.debugInfo += string.Format($"{Alive}\n");
+            // Loop.debugInfo += string.Format($"{Alive}\n");
         }
 
         public void Collect()
         {
-            state = State.DEAD;
+            this.state = State.DEAD;
         }
     }
 }

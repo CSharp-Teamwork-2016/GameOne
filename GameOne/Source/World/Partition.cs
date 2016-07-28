@@ -6,11 +6,9 @@
     {
         #region Fields
 
-        private Partition parent;
+        private readonly Partition parent;
 
         #endregion Fields
-
-        //===================================================================
 
         #region Constructors
 
@@ -24,8 +22,6 @@
         }
 
         #endregion Constructors
-
-        //===================================================================
 
         #region Properties
 
@@ -51,8 +47,6 @@
 
         #endregion Properties
 
-        //===================================================================
-
         #region Methods
 
         public bool TrySplit()
@@ -65,48 +59,9 @@
             return this.Split();
         }
 
-        private bool Split()
-        {
-            this.IsHorizontal = false; //false = horizontal, true = vertical
-
-            if ((double)this.Width / this.Height > LevelMaker.MAXRATIO)
-            {
-                this.IsHorizontal = true;
-            }
-            else if ((double)this.Height / this.Width > LevelMaker.MAXRATIO)
-            {
-                this.IsHorizontal = false;
-            }
-            else
-            {
-                this.IsHorizontal = LevelMaker.Rand(1) == 1; // 0 = horizontal, 1 = vertical
-            }
-
-            if (!this.IsHorizontal)
-            { // top and bottom leaves
-                if (this.Height <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.Height - 2 * LevelMaker.MINSIZE);
-                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.Height);
-                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.Height);
-                this.LeftLeaf = new Partition(this.X, this.Y, this.Width, half, this);
-                this.RightLeaf = new Partition(this.X, this.Y + half, this.Width, this.Height - half, this);
-            }
-            else
-            { // left and right leaves
-                if (this.Width <= 2 * LevelMaker.MINSIZE) return false;
-                var half = LevelMaker.MINSIZE + LevelMaker.Rand(this.Width - 2 * LevelMaker.MINSIZE);
-                half = (int)Math.Max(half, LevelMaker.MINRATIO * this.Width);
-                half = (int)Math.Min(half, LevelMaker.MAXRATIO * this.Width);
-                this.LeftLeaf = new Partition(this.X, this.Y, half, this.Height, this);
-                this.RightLeaf = new Partition(this.X + half, this.Y, this.Width - half, this.Height, this);
-            }
-
-            return true;
-        }
-
         public void MakeRoom()
         {
-            if (this.HasLeaves) //not sure
+            if (this.HasLeaves)
             {
                 this.LeftLeaf.MakeRoom();
                 this.RightLeaf.MakeRoom();
@@ -131,6 +86,52 @@
             }
         }
 
+        private bool Split()
+        {
+            this.IsHorizontal = false; // false = horizontal, true = vertical
+
+            if ((double)this.Width / this.Height > LevelMaker.Maxratio)
+            {
+                this.IsHorizontal = true;
+            }
+            else if ((double)this.Height / this.Width > LevelMaker.Maxratio)
+            {
+                this.IsHorizontal = false;
+            }
+            else
+            {
+                this.IsHorizontal = LevelMaker.Rand(1) == 1; // 0 = horizontal, 1 = vertical
+            }
+
+            if (!this.IsHorizontal)
+            { // top and bottom leaves
+                if (this.Height <= 2 * LevelMaker.Minsize)
+                {
+                    return false;
+                }
+
+                var half = LevelMaker.Minsize + LevelMaker.Rand(this.Height - (2 * LevelMaker.Minsize));
+                half = (int)Math.Max(half, LevelMaker.Minratio * this.Height);
+                half = (int)Math.Min(half, LevelMaker.Maxratio * this.Height);
+                this.LeftLeaf = new Partition(this.X, this.Y, this.Width, half, this);
+                this.RightLeaf = new Partition(this.X, this.Y + half, this.Width, this.Height - half, this);
+            }
+            else
+            { // left and right leaves
+                if (this.Width <= 2 * LevelMaker.Minsize)
+                {
+                    return false;
+                }
+
+                var half = LevelMaker.Minsize + LevelMaker.Rand(this.Width - (2 * LevelMaker.Minsize));
+                half = (int)Math.Max(half, LevelMaker.Minratio * this.Width);
+                half = (int)Math.Min(half, LevelMaker.Maxratio * this.Width);
+                this.LeftLeaf = new Partition(this.X, this.Y, half, this.Height, this);
+                this.RightLeaf = new Partition(this.X + half, this.Y, this.Width - half, this.Height, this);
+            }
+
+            return true;
+        }
         #endregion Methods
     }
 }

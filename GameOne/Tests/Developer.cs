@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace GameOne.Tests
+﻿namespace GameOne.Tests
 {
+    using System;
+
     public class Developer
     {
         public static void Init()
@@ -27,18 +27,21 @@ namespace GameOne.Tests
                     {
                         ListOf.OnDraw.Add(ListOf.tests[args[1]]);
                     }
+
                     break;
                 case "ONUPDATE":
                     if (ListOf.tests.ContainsKey(args[1]))
                     {
                         ListOf.OnUpdate.Add(ListOf.tests[args[1]]);
                     }
+
                     break;
                 case "EXEC":
                     if (ListOf.tests.ContainsKey(args[1]))
                     {
                         ListOf.tests[args[1]]();
                     }
+
                     break;
                 case "EXIT":
                     Environment.Exit(0);
