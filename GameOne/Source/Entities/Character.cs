@@ -8,6 +8,7 @@
     using Interfaces;
     using Renderer;
     using World;
+    using Containers;
 
     public abstract class Character : Model, IControlable, IMovable
     {
@@ -165,7 +166,7 @@
                     return;
                 }
 
-                foreach (Character entity in Loop.level.Entities.OfType<Character>().Where(e => e != this && (this.Position - e.Position).Length < 2))
+                foreach (Character entity in GameContainer.level.Entities.OfType<Character>().Where(e => e != this && (this.Position - e.Position).Length < 2))
                 {
                     double p1x = this.Position.X + (Math.Cos(this.Direction + Math.PI / 2) * 0.5);
                     double p1y = this.Position.Y + (Math.Sin(this.Direction + Math.PI / 2) * 0.5);

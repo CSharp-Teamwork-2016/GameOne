@@ -2,6 +2,7 @@
 {
     using Enumerations;
     using Microsoft.Xna.Framework.Input;
+    using Containers;
 
     public class Input
     {
@@ -60,52 +61,52 @@
                     switch (key)
                     {
                         case Keys.Back:
-                            if (Loop.Console.Length > 0)
+                            if (GameContainer.Console.Length > 0)
                             {
-                                Loop.Console = Loop.Console.Substring(0, Loop.Console.Length - 1);
+                                GameContainer.Console = GameContainer.Console.Substring(0, GameContainer.Console.Length - 1);
                             }
 
                             break;
                         case Keys.Space:
-                            Loop.Console += " ";
+                            GameContainer.Console += " ";
                             break;
                         case Keys.D2:
-                            Loop.Console += "2";
+                            GameContainer.Console += "2";
                             break;
                         case Keys.D3:
-                            Loop.Console += "3";
+                            GameContainer.Console += "3";
                             break;
                         case Keys.D4:
-                            Loop.Console += "4";
+                            GameContainer.Console += "4";
                             break;
                         case Keys.D5:
-                            Loop.Console += "5";
+                            GameContainer.Console += "5";
                             break;
                         case Keys.D6:
-                            Loop.Console += "6";
+                            GameContainer.Console += "6";
                             break;
                         case Keys.D7:
-                            Loop.Console += "7";
+                            GameContainer.Console += "7";
                             break;
                         case Keys.D8:
-                            Loop.Console += "8";
+                            GameContainer.Console += "8";
                             break;
                         case Keys.D9:
-                            Loop.Console += "9";
+                            GameContainer.Console += "9";
                             break;
                         case Keys.D0:
-                            Loop.Console += "0";
+                            GameContainer.Console += "0";
                             break;
 #if DEBUG
                         case Keys.Enter:
-                            Tests.Developer.Exec(Loop.Console);
-                            Loop.Console = string.Empty;
+                            Tests.Developer.Exec(GameContainer.Console);
+                            GameContainer.Console = string.Empty;
                             break;
 #endif
                         default:
                             if (key.ToString().Length == 1)
                             {
-                                Loop.Console += key.ToString();
+                                GameContainer.Console += key.ToString();
                             }
 
                             break;

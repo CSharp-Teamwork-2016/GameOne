@@ -1,4 +1,4 @@
-﻿namespace GameOne.Source
+﻿namespace GameOne.Source.Containers
 {
     using System;
     using System.Linq;
@@ -11,13 +11,14 @@
     using World;
     using Entities;
     using UI;
+    using Handlers;
 
     // Game contents
     // Level
     // Entities
     // Parameters
     // Main loop
-    public class Loop
+    public class GameContainer
     {
         #region Fields
 
@@ -35,7 +36,7 @@
 
         #region Constructors
 
-        public Loop(KeyboardState keyboardState, MouseState mouseState)
+        public GameContainer(KeyboardState keyboardState, MouseState mouseState)
         {
             level = new Level();
 

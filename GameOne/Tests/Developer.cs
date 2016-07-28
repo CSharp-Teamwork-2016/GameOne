@@ -1,6 +1,7 @@
 ﻿namespace GameOne.Tests
 {
     using System;
+    using Source.Containers;
 
     public class Developer
     {
@@ -47,10 +48,10 @@
                     Environment.Exit(0);
                     break;
                 case "RESPAWN":
-                    Source.Loop.level.Player.Respawn();
+                    GameContainer.level.Player.Respawn();
                     break;
                 case "WARP":
-                    Source.Loop.level.ExitTriggered = true;
+                    GameContainer.level.ExitTriggered = true;
                     break;
             }
         }

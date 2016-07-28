@@ -3,6 +3,7 @@
     using System;
     using Enumerations;
     using Renderer;
+    using Containers;
 
     public class Player : Character
     {
@@ -82,7 +83,7 @@
                     this.HealthPotions++;
                     break;
                 case ItemType.EndKey:
-                    Loop.level.ExitTriggered = true;
+                    GameContainer.level.ExitTriggered = true;
                     break;
             }
         }
@@ -94,7 +95,7 @@
             Primitive.CameraX = this.Position.X;
             Primitive.CameraY = this.Position.Y;
 
-            Loop.DebugInfo = $"Player stats:{Environment.NewLine}State: {this.state}{Environment.NewLine}Health: {this.Health} / {base.MaxHealth}{Environment.NewLine}Damage: {this.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.XpLevel}{Environment.NewLine}XP: {this.experience} / {this.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies remaining: {Loop.level.EnemyCount}{Environment.NewLine}";
+            GameContainer.DebugInfo = $"Player stats:{Environment.NewLine}State: {this.state}{Environment.NewLine}Health: {this.Health} / {base.MaxHealth}{Environment.NewLine}Damage: {this.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.XpLevel}{Environment.NewLine}XP: {this.experience} / {this.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies remaining: {GameContainer.level.EnemyCount}{Environment.NewLine}";
             // Loop.debugInfo += string.Format($"State: {state}\n");
         }
 

@@ -1,6 +1,5 @@
-﻿namespace GameOne.Source.World
+﻿namespace GameOne.Source.Handlers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -8,6 +7,7 @@
     using Enumerations;
     using Events;
     using Factories;
+    using World;
 
     public class EntityHandler
     {

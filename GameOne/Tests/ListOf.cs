@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Source.Containers;
 
     // Този клас зарежда методи, с които да тествате кода си
     // За да добавите нов тест, във метода Init() добавете към речника референция към функцията която искате да се закачи за
@@ -25,12 +26,12 @@
 
         internal static void Sample()
         {
-            Source.Loop.DebugInfo += string.Format($"This is a test{Environment.NewLine}");
+            GameContainer.DebugInfo += string.Format($"This is a test{Environment.NewLine}");
         }
 
         internal static void ShowFPS()
         {
-            Source.Loop.ShowFPS = !Source.Loop.ShowFPS;
+            GameContainer.ShowFPS = !GameContainer.ShowFPS;
         }
 
         internal static void DrawShapes()

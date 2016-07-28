@@ -6,6 +6,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
     using Renderer;
+    using Containers;
 
     public class LevelEditor
     {
@@ -69,10 +70,10 @@
         {
             int targetX = (int)Primitive.ToWorldX(input.MouseX);
             int targetY = (int)Primitive.ToWorldY(input.MouseY);
-            Tile target = Loop.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
+            Tile target = GameContainer.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
             if (target != null)
             {
-                Loop.level.Geometry.Remove(target);
+                GameContainer.level.Geometry.Remove(target);
             }
         }
 
@@ -80,12 +81,12 @@
         {
             int targetX = (int)Primitive.ToWorldX(input.MouseX);
             int targetY = (int)Primitive.ToWorldY(input.MouseY);
-            Tile target = Loop.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
+            Tile target = GameContainer.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
 
             if (target == null)
             {
                 target = TileFactory.GetTile(targetX, targetY, CurrentTile);
-                Loop.level.Geometry.Add(target);
+                GameContainer.level.Geometry.Add(target);
             }
         }
     }

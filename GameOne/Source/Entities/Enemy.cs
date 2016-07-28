@@ -5,6 +5,7 @@
 
     using Enumerations;
     using Renderer;
+    using Containers;
 
     public class Enemy : Character
     {
@@ -50,8 +51,8 @@
         public override void Die()
         {
             base.Die();
-            Loop.level.Player.GainXP(this.xpAward);
-            Loop.level.EnemySlain();
+            GameContainer.level.Player.GainXP(this.xpAward);
+            GameContainer.level.EnemySlain();
         }
 
         #region Methods/Behaviour

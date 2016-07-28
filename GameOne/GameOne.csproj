@@ -67,7 +67,7 @@
     <Compile Include="Source\Interfaces\IRenderable.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\UI\MainMenu.cs" />
-    <Compile Include="Source\World\EntityHandler.cs" />
+    <Compile Include="Source\Handlers\EntityHandler.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
     <Compile Include="Source\World\LevelEditor.cs" />
@@ -76,7 +76,7 @@
     <Compile Include="Source\World\Physics.cs" />
     <Compile Include="Source\World\Room.cs" />
     <Compile Include="Source\World\Tile.cs" />
-    <Compile Include="Source\Loop.cs" />
+    <Compile Include="Source\Containers\GameContainer.cs" />
     <Compile Include="Source\MonoInit.cs" />
     <Compile Include="Source\Renderer\Primitive.cs" />
     <Compile Include="Source\Renderer\Output.cs" />
@@ -104,6 +104,7 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

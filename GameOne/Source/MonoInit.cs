@@ -9,7 +9,7 @@
     public class MonoInit : Game
     {
         // Main loop
-        private Loop loop;
+        private Containers.GameContainer loop;
 
         // Graphics context
         private GraphicsDeviceManager graphics;
@@ -29,7 +29,7 @@
         protected override void Initialize()
         {
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
-            this.loop = new Loop(Keyboard.GetState(), Mouse.GetState());
+            this.loop = new Containers.GameContainer(Keyboard.GetState(), Mouse.GetState());
             Renderer.Output.Init(this.spriteBatch, this.GraphicsDevice);
             this.audioManager.PlayBackgroundMusic(this.Content);
             base.Initialize();
