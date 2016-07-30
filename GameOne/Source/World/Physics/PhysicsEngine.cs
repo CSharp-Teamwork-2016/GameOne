@@ -1,4 +1,4 @@
-﻿namespace GameOne.Source.World
+﻿namespace GameOne.Source.World.Physics
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
 
     using Entities;
 
-    public class Physics
+    public static class PhysicsEngine
     {
         public static readonly double UpDirection = Math.Round(1.5 * Math.PI, 2);
         public static readonly double DownDirection = Math.Round(0.5 * Math.PI, 2);
@@ -16,8 +16,12 @@
 
         #region Methods
 
-        public static void CollisionResolution(List<Model> models)
+        public static void DetectCollisions(List<Model> models)
         {
+            // Save first item in a temp variable
+            // Remove from list
+            // Check temp item against remaining collection
+            // Repeat until collection is empty
             foreach (Model model in models)
             {
                 Hitscan(model, models.Where(current => current != model).ToList());
@@ -36,11 +40,11 @@
         {
             foreach (Model model in models)
             {
-                Resolve(current, model);
+                ResolveCollision(current, model);
             }
         }
 
-        private static void Resolve(Model e1, Model e2)
+        private static void ResolveCollision(Model e1, Model e2)
         {
             if (!e1.Alive || !e2.Alive)
             {

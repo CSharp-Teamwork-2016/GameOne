@@ -8,6 +8,7 @@
     using Events;
     using Factories;
     using World;
+    using World.Physics;
 
     public class EntityHandler
     {
@@ -25,7 +26,7 @@
                 entity.Update(time);
             }
 
-            Physics.CollisionResolution(entities
+            PhysicsEngine.DetectCollisions(entities
                     .OfType<Model>()
                     .Where(e => e.Alive)
                     .ToList());
@@ -33,7 +34,7 @@
             var modelEntitiesTo = entities.OfType<Model>().ToList();
             var tileWalls = tiles.Where(tile => tile.TileType == TileType.Wall).ToList();
 
-            Physics.BoundsCheck(modelEntitiesTo, tileWalls);
+            PhysicsEngine.BoundsCheck(modelEntitiesTo, tileWalls);
 
             // Add new entities to list
             foreach (var item in this.register)

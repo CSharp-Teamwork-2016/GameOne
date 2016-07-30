@@ -7,10 +7,10 @@
     using Events;
     using Interfaces;
     using Renderer;
-    using World;
+    using World.Physics;
     using Containers;
 
-    public abstract class Character : Model, IControlable, IMovable
+    public abstract class Character : Model, IControlable
     {
         #region Fields
         
@@ -18,6 +18,7 @@
         private Vector velocity;
         private double attackTime;
         private double damageTime;
+        private new IPhysicsBody physicsBody;
 
         #endregion Fields
 
@@ -61,25 +62,25 @@
 
         public void MoveUp()
         {
-            this.Direction = Physics.UpDirection;
+            this.Direction = PhysicsEngine.UpDirection;
             this.velocity.Y = -3;
         }
 
         public void MoveDown()
         {
-            this.Direction = Physics.DownDirection;
+            this.Direction = PhysicsEngine.DownDirection;
             this.velocity.Y = 3;
         }
 
         public void MoveLeft()
         {
-            this.Direction = Physics.LeftDirection;
+            this.Direction = PhysicsEngine.LeftDirection;
             this.velocity.X = -3;
         }
 
         public void MoveRight()
         {
-            this.Direction = Physics.RightDirection;
+            this.Direction = PhysicsEngine.RightDirection;
             this.velocity.X = 3;
         }
 

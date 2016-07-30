@@ -4,7 +4,7 @@
     using System.Windows;
     using Entities;
     using Enumerations;
-    using World;
+    using World.Physics;
 
     public class ProjectileFactory
     {
@@ -16,19 +16,19 @@
             double velocityX = 0;
             double velocityY = 0;
 
-            if (direction == Physics.UpDirection)
+            if (direction == PhysicsEngine.UpDirection)
             {
                 velocityY = -BulletSpeed;
             }
-            else if (direction == Physics.DownDirection)
+            else if (direction == PhysicsEngine.DownDirection)
             {
                 velocityY = BulletSpeed;
             }
-            else if (direction == Physics.LeftDirection)
+            else if (direction == PhysicsEngine.LeftDirection)
             {
                 velocityX = -BulletSpeed;
             }
-            else if (direction == Physics.RightDirection)
+            else if (direction == PhysicsEngine.RightDirection)
             {
                 velocityX = BulletSpeed;
             }

@@ -4,8 +4,9 @@
 
     public interface IMovable
     {
-        Vector Position { get; }
-
-        double Direction { get; }
+        Vector Velocity { get; }
+        void TurnTo(double direction);
+        void Accelerate(Vector acceleration);
+        void Stop();
     }
 }

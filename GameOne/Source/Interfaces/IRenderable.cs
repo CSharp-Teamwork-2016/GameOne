@@ -5,14 +5,6 @@
 
     public interface IRenderable
     {
-        bool Alive { get; }
-
-        Vector Position { get; }
-
-        double Direction { get; }
-
-        double Radius { get; }
-
-        State State { get; }
+        // Return position and rendering strategy
     }
 }
