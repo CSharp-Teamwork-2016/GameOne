@@ -1,7 +1,7 @@
 ﻿namespace GameOne.Source.World.Physics
 {
     using System.Windows;
-    using GameOne.Source.Interfaces;
+    using Interfaces;
 
     public class MovableBody : RigidBody, IMovable
     {

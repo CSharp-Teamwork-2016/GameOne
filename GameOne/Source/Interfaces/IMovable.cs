@@ -2,11 +2,8 @@
 {
     using System.Windows;
 
-    public interface IMovable
+    public interface IMovable : ICollidable
     {
         Vector Velocity { get; }
-        void TurnTo(double direction);
-        void Accelerate(Vector acceleration);
-        void Stop();
     }
 }

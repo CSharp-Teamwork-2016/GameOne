@@ -5,6 +5,7 @@
 
     public interface IRenderable
     {
-        // Return position and rendering strategy
+        Vector Position { get; }
+        IRenderingStrategy RenderingStrategy();
     }
 }

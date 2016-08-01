@@ -4,8 +4,8 @@
     using System.Collections.Generic;
 
     using Enumerations;
-    using Renderer;
     using Containers;
+    using Interfaces;
 
     public class Enemy : Character
     {
@@ -21,7 +21,7 @@
 
         #region Constructors
 
-        public Enemy(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType, EnemyType type, int xpAward)
+        public Enemy(double x, double y, double direction, double radius, IRenderingStrategy sprite, int health, int damage, AttackType attackType, EnemyType type, int xpAward)
             : base(x, y, direction, radius, sprite, health, damage, attackType)
         {
             this.type = type;

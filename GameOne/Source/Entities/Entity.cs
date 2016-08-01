@@ -11,7 +11,5 @@
         }
 
         public ulong Id { get; }
-
-        public abstract void Update(double time);
     }
 }

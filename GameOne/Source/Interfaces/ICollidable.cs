@@ -2,7 +2,7 @@
 {
     public interface ICollidable : IPhysicsBody
     {
-        bool IsSolid { get; set; }
+        bool IsSolid { get; }
         Enumerations.CollisionResponse Response { get; }
         Enumerations.Shape CollisionShape { get; }
     }

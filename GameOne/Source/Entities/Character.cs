@@ -3,28 +3,27 @@
     using System;
     using System.Linq;
     using System.Windows;
+
     using Enumerations;
     using Events;
     using Interfaces;
-    using Renderer;
     using World.Physics;
     using Containers;
 
-    public abstract class Character : Model, IControlable
+    public abstract class Character : Model, IControllable, ICharacter, IUpdatable
     {
         #region Fields
-        
+
         protected double timeToNextAction;
         private Vector velocity;
         private double attackTime;
         private double damageTime;
-        private new IPhysicsBody physicsBody;
 
         #endregion Fields
 
         #region Constructors
 
-        protected Character(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType = AttackType.Melee)
+        protected Character(double x, double y, double direction, double radius, IRenderingStrategy sprite, int health, int damage, AttackType attackType = AttackType.Melee)
             : base(x, y, direction, radius, sprite)
         {
             this.velocity = new Vector(0, 0);
@@ -63,33 +62,45 @@
         public void MoveUp()
         {
             this.Direction = PhysicsEngine.UpDirection;
-            this.velocity.Y = -3;
+            this.velocity.Y = -PhysicsEngine.NominalVelocity;
         }
 
         public void MoveDown()
         {
             this.Direction = PhysicsEngine.DownDirection;
-            this.velocity.Y = 3;
+            this.velocity.Y = PhysicsEngine.NominalVelocity;
         }
 
         public void MoveLeft()
         {
             this.Direction = PhysicsEngine.LeftDirection;
-            this.velocity.X = -3;
+            this.velocity.X = -PhysicsEngine.NominalVelocity;
         }
 
         public void MoveRight()
         {
             this.Direction = PhysicsEngine.RightDirection;
-            this.velocity.X = 3;
+            this.velocity.X = PhysicsEngine.NominalVelocity;
         }
 
         public void MoveForward()
         {
-            double x = 3 * Math.Cos(this.Direction);
-            double y = 3 * Math.Sin(this.Direction);
-            this.velocity.X = x;
-            this.velocity.Y = y;
+            this.velocity = PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(this.Direction);
+        }
+
+        public void TurnTo(double direction)
+        {
+            this.Direction = direction;
+        }
+
+        public void Accelerate(Vector acceleration)
+        {
+            this.velocity += acceleration;
+        }
+
+        public void Stop()
+        {
+            this.velocity = new Vector(0, 0);
         }
 
         #endregion Methods/Movement
@@ -149,14 +160,14 @@
             }
         }
 
-        public override void Update(double time)
+        public virtual void Update(double time)
         {
             if (this.state == State.DEAD)
             {
                 return;
             }
 
-            if ((this.state & State.ATTACK) == State.ATTACK)
+            if (this.state.HasFlag(State.ATTACK))
             {
                 this.attackTime += time;
 
@@ -243,11 +254,8 @@
 
         public void Knockback()
         {
-            double x = -5 * Math.Cos(this.Direction);
-            double y = -5 * Math.Sin(this.Direction);
-
-            this.velocity.X = x;
-            this.velocity.Y = y;
+            // TODO: knockback should be opposite source position, not based on target direction
+            this.velocity = PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(-this.Direction);
         }
 
         #endregion Methods

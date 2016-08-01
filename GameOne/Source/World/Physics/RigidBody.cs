@@ -1,7 +1,7 @@
 ﻿namespace GameOne.Source.World.Physics
 {
     using Enumerations;
-    using GameOne.Source.Interfaces;
+    using Interfaces;
 
     public class RigidBody : Body, ICollidable
     {

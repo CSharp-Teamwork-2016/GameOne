@@ -26,7 +26,7 @@
 
             damage += (int)(damage * difficulty / 3.0);
             hp += (int)(hp * difficulty / 12.0);
-            Enemy enemy = new Enemy(x, y, direction, 0.3, null, hp, damage, AttackType.Melee, type, hp);
+            Enemy enemy = new Enemy(x, y, direction, 0.3, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Character), hp, damage, AttackType.Melee, type, hp);
             return enemy;
         }
     }

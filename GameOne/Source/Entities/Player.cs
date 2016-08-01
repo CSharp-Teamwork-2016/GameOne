@@ -4,7 +4,7 @@
     using Enumerations;
     using Renderer;
     using Containers;
-
+    using Factories;
     public class Player : Character
     {
         #region Fields
@@ -19,7 +19,7 @@
         #region Constructors
 
         public Player(double x, double y, double direction, int xpLevel = 1)
-            : base(x, y, direction, 0.30, new Spritesheet(), 100, 30)
+            : base(x, y, direction, 0.30, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Character), 100, 30)
         {
             this.XpLevel = xpLevel;
             this.experience = 0;

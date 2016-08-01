@@ -6,6 +6,7 @@
         Ignore,
         Immovable,
         Project,
-        DestroyOnImpact
+        DestroyOnImpact,
+        PickUp
     }
 }

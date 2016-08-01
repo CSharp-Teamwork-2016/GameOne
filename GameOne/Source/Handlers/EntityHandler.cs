@@ -9,7 +9,7 @@
     using Factories;
     using World;
     using World.Physics;
-
+    using Interfaces;
     public class EntityHandler
     {
         private readonly List<Entity> register;
@@ -21,9 +21,9 @@
 
         public void ProcessEntities(List<Entity> entities, List<Tile> tiles, double time)
         {
-            foreach (Entity entity in entities)
+            foreach (Entity entity in entities.OfType<IUpdatable>())
             {
-                entity.Update(time);
+                ((IUpdatable)entity).Update(time);
             }
 
             PhysicsEngine.DetectCollisions(entities

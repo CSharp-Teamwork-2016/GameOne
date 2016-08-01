@@ -108,7 +108,7 @@
                 Tile currentTile = this.GetRandomTile();
                 // 30% chance for Quartz Flask (inventory potion)
                 ItemType type = LevelMaker.RandDouble() > 0.7 ? ItemType.QuartzFlask : ItemType.PotionHealth;
-                Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), type);
+                Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Item), type);
                 this.Entities.Add(item);
             }
         }
@@ -206,7 +206,7 @@
                 }
             }
             // produce EndKey
-            this.ExitPortal = new Item(end.Room.OriginX, end.Room.OriginY, 0, 0.3, new Spritesheet(), ItemType.EndKey);
+            this.ExitPortal = new Item(end.Room.OriginX, end.Room.OriginY, 0, 0.3, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Item), ItemType.EndKey);
 
             foreach (Room room in rooms)
             {

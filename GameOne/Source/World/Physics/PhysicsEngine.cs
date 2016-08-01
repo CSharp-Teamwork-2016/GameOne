@@ -13,6 +13,8 @@
         public static readonly double DownDirection = Math.Round(0.5 * Math.PI, 2);
         public static readonly double LeftDirection = Math.Round(Math.PI, 2);
         public static readonly double RightDirection = 0.0;
+        public const double NominalVelocity = 3;
+        public const double ProjectileSpeed = 8;
 
         #region Methods
 
@@ -81,6 +83,14 @@
                     ((Character)e2).TakeDamage(((Character)e1).Damage);
                 }
             }
+        }
+
+        internal static Vector GetDirectedVector(double direction)
+        {
+            double x = Math.Cos(direction);
+            double y = Math.Sin(direction);
+            Vector result = new Vector(x, y);
+            return result;
         }
 
         private static bool HandleItems(Model e1, Model e2)

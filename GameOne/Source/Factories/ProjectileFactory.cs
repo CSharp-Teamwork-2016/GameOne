@@ -8,8 +8,6 @@
 
     public class ProjectileFactory
     {
-        private const double BulletSpeed = 8;
-
         public static Projectile MakeProjectile(Character source, ProjectileType type)
         {
             double direction = source.Direction % (2 * Math.PI);
@@ -18,19 +16,19 @@
 
             if (direction == PhysicsEngine.UpDirection)
             {
-                velocityY = -BulletSpeed;
+                velocityY = -PhysicsEngine.ProjectileSpeed;
             }
             else if (direction == PhysicsEngine.DownDirection)
             {
-                velocityY = BulletSpeed;
+                velocityY = PhysicsEngine.ProjectileSpeed;
             }
             else if (direction == PhysicsEngine.LeftDirection)
             {
-                velocityX = -BulletSpeed;
+                velocityX = -PhysicsEngine.ProjectileSpeed;
             }
             else if (direction == PhysicsEngine.RightDirection)
             {
-                velocityX = BulletSpeed;
+                velocityX = PhysicsEngine.ProjectileSpeed;
             }
 
             double radius;
