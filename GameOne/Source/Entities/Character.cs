@@ -1,14 +1,12 @@
 ﻿namespace GameOne.Source.Entities
 {
     using System;
-    using System.Linq;
     using System.Windows;
 
     using Enumerations;
     using Events;
     using Interfaces;
     using World.Physics;
-    using Containers;
 
     public abstract class Character : Model, IControllable, ICharacter, IUpdatable
     {
@@ -40,6 +38,7 @@
         #region Events
 
         public event EventHandler<ProjectileEventArgs> FireProjectileEvent;
+        public event EventHandler<MeleeAttackEventArgs> AttackEvent;
 
         #endregion
 
@@ -172,11 +171,14 @@
                 return;
             }
 
-            if ((this.state & State.ATTACK) != State.ATTACK)
+            if (!this.state.HasFlag(State.ATTACK))
             {
                 this.state |= State.ATTACK;
                 this.attackTime = 0;
                 this.timeToNextAction = 0.6;
+                // Raise event
+                MeleeAttackEventArgs args = new MeleeAttackEventArgs(this);
+                AttackEvent(this, args);
             }
         }
 
@@ -192,6 +194,7 @@
                 this.attackTime = 0;
                 this.timeToNextAction = 0.3;
 
+                // Raise event
                 ProjectileEventArgs args = new ProjectileEventArgs();
                 args.Type = ProjectileType.Bullet;
                 this.FireProjectileEvent(this, args);
@@ -200,11 +203,13 @@
 
         public virtual void Update(double time)
         {
+            // Don't update if not active
             if (this.state == State.DEAD)
             {
                 return;
             }
 
+            // Attack animation
             if (this.state.HasFlag(State.ATTACK))
             {
                 this.attackTime += time;
@@ -213,30 +218,10 @@
                 {
                     this.state ^= State.ATTACK;
                     this.attackTime = 0;
-                    return;
-                }
-
-                foreach (Character entity in GameContainer.level.Entities.OfType<Character>().Where(e => e != this && (this.Position - e.Position).Length < 2))
-                {
-                    double p1x = this.Position.X + (Math.Cos(this.Direction + Math.PI / 2) * 0.5);
-                    double p1y = this.Position.Y + (Math.Sin(this.Direction + Math.PI / 2) * 0.5);
-
-                    double pw = (1.2 * Math.Cos(this.Direction)) + (1 * Math.Sin(this.Direction));
-                    double ph = (1.2 * Math.Sin(this.Direction)) - (1 * Math.Cos(this.Direction));
-
-                    double leftA = Math.Min(p1x, p1x + pw);
-                    double rightA = Math.Max(p1x, p1x + pw);
-                    double topA = Math.Min(p1y, p1y + ph);
-                    double bottomA = Math.Max(p1y, p1y + ph);
-
-                    if (entity.Position.X >= leftA && entity.Position.X <= rightA &&
-                        entity.Position.Y >= topA && entity.Position.Y <= bottomA)
-                    {
-                        entity.TakeDamage(this.Damage);
-                    }
                 }
             }
 
+            // Invincibility frames
             if ((this.state & State.HURT) == State.HURT)
             {
                 this.damageTime += time;
@@ -250,7 +235,6 @@
 
             // Ability cooldown
             this.timeToNextAction -= time;
-
             if (this.timeToNextAction < 0)
             {
                 this.timeToNextAction = 0;
@@ -269,7 +253,7 @@
         public void Knockback()
         {
             // TODO: knockback should be opposite source position, not based on target direction
-            this.velocity = PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(-this.Direction);
+            this.velocity = -PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(this.Direction);
         }
 
         #endregion Methods

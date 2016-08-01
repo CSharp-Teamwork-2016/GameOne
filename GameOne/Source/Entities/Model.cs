@@ -7,7 +7,6 @@
 
     public abstract class Model : Entity, IRenderable, IPhysicsBody
     {
-        protected State state;
         private IRenderingStrategy sprite;
 
         protected Model(double x, double y, double direction, double radius, IRenderingStrategy sprite)
@@ -18,8 +17,6 @@
             this.sprite = sprite;
             this.state = State.IDLE;
         }
-
-        public bool Alive => !this.state.HasFlag(State.DEAD);
 
         public Vector Position { get; set; }
 

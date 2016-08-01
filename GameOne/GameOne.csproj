@@ -47,6 +47,8 @@
     <Compile Include="Source\Entities\Model.cs" />
     <Compile Include="Source\Entities\Player.cs" />
     <Compile Include="Source\Entities\Projectile.cs" />
+    <Compile Include="Source\Entities\Zone.cs" />
+    <Compile Include="Source\Entities\Zones\DamageZone.cs" />
     <Compile Include="Source\Enumerations\ActionAI.cs" />
     <Compile Include="Source\Enumerations\AttackType.cs" />
     <Compile Include="Source\Enumerations\CollisionResponse.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="Source\Enumerations\State.cs" />
     <Compile Include="Source\Enumerations\TileType.cs" />
     <Compile Include="Source\Enumerations\UserInput.cs" />
+    <Compile Include="Source\Events\MeleeAttackEventArgs.cs" />
     <Compile Include="Source\Events\ProjectileEventArgs.cs" />
     <Compile Include="Source\Factories\EnemyFactory.cs" />
     <Compile Include="Source\Factories\PhysicsBodyFactory.cs" />
@@ -74,9 +77,11 @@
     <Compile Include="Source\Interfaces\IControllable.cs" />
     <Compile Include="Source\Interfaces\IMovable.cs" />
     <Compile Include="Source\Interfaces\IPhysicsBody.cs" />
+    <Compile Include="Source\Interfaces\IRemovable.cs" />
     <Compile Include="Source\Interfaces\IRenderable.cs" />
     <Compile Include="Source\Interfaces\IRenderingStrategy.cs" />
     <Compile Include="Source\Interfaces\IUpdatable.cs" />
+    <Compile Include="Source\Interfaces\IZone.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\Strategies\CharacterRenderer.cs" />
     <Compile Include="Source\Strategies\ItemRenderer.cs" />
