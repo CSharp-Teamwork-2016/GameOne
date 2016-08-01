@@ -1,6 +1,7 @@
 ﻿namespace GameOne.Source.World.Physics
 {
     using System.Windows;
+    using Enumerations;
     using Interfaces;
 
     public class MovableBody : RigidBody, IMovable
@@ -13,9 +14,17 @@
             {
                 return this.velocity;
             }
-            private set
+            set
             {
                 this.velocity = value;
+            }
+        }
+
+        public MovementType MovementType
+        {
+            get
+            {
+                return MovementType.Normal;
             }
         }
 

@@ -2,7 +2,7 @@
 {
     using System.Windows;
 
-    public interface IControllable
+    public interface IControllable : IMovable
     {
         void MoveUp();
         void MoveDown();

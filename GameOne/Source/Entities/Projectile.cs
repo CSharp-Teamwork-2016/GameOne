@@ -4,11 +4,11 @@
     using Enumerations;
     using Interfaces;
 
-    public class Projectile : Model, IMovable, IUpdatable
+    public class Projectile : Model, IMovable
     {
         #region Fields
 
-        private readonly Vector velocity;
+        private Vector velocity;
         private ProjectileType type; // for later use
 
         #endregion Fields
@@ -35,6 +35,10 @@
             {
                 return this.velocity;
             }
+            set
+            {
+                this.velocity = value;
+            }
         }
 
         public bool IsSolid { get; private set; }
@@ -55,18 +59,14 @@
             }
         }
 
-        #endregion Properties
-
-        #region Methods
-
-        public void Update(double time)
+        public MovementType MovementType
         {
-            if (this.Alive)
+            get
             {
-                this.Position += this.velocity * time;
+                return MovementType.Frictionless;
             }
         }
 
-        #endregion Methods
+        #endregion Properties
     }
 }

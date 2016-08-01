@@ -53,6 +53,44 @@
 
         public AttackType AttackType { get; }
 
+        public Vector Velocity
+        {
+            get
+            {
+                return this.velocity;
+            }
+            set
+            {
+                this.velocity = value;
+            }
+        }
+
+        public MovementType MovementType
+        {
+            get
+            {
+                return MovementType.Normal;
+            }
+        }
+
+        public bool IsSolid { get; private set; }
+
+        public CollisionResponse Response
+        {
+            get
+            {
+                return CollisionResponse.Project;
+            }
+        }
+
+        public Shape CollisionShape
+        {
+            get
+            {
+                return Shape.Circle;
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -210,36 +248,12 @@
                 }
             }
 
+            // Ability cooldown
             this.timeToNextAction -= time;
 
             if (this.timeToNextAction < 0)
             {
                 this.timeToNextAction = 0;
-            }
-
-            // Motion
-            if (this.velocity.Length > 0)
-            {
-                this.Position += this.velocity * time;
-                // Friction
-                Vector friction = this.velocity;
-
-                friction.Negate();
-                friction.Normalize();
-
-                friction *= 15 * time;
-                this.velocity += friction;
-
-                if (this.velocity.Length <= friction.Length)
-                {
-                    this.velocity.X = 0;
-                    this.velocity.Y = 0;
-                }
-                else if (this.velocity.Length < 0.1)
-                {
-                    this.velocity.X = 0;
-                    this.velocity.Y = 0;
-                }
             }
         }
 

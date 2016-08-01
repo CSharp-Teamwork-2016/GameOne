@@ -21,9 +21,15 @@
 
         public void ProcessEntities(List<Entity> entities, List<Tile> tiles, double time)
         {
+            // Update internal state
             foreach (Entity entity in entities.OfType<IUpdatable>())
             {
                 ((IUpdatable)entity).Update(time);
+            }
+            // Update physical state
+            foreach (Entity entity in entities.OfType<IMovable>())
+            {
+                PhysicsHandler.UpdateMovement(((IMovable)entity), time);
             }
 
             PhysicsEngine.DetectCollisions(entities

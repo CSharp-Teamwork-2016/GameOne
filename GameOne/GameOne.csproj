@@ -54,6 +54,7 @@
     <Compile Include="Source\Enumerations\EnemyType.cs" />
     <Compile Include="Source\Enumerations\GameState.cs" />
     <Compile Include="Source\Enumerations\ItemType.cs" />
+    <Compile Include="Source\Enumerations\MovementType.cs" />
     <Compile Include="Source\Enumerations\ProjectileType.cs" />
     <Compile Include="Source\Enumerations\RenderingMethod.cs" />
     <Compile Include="Source\Enumerations\Shape.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Source\Factories\ProjectileFactory.cs" />
     <Compile Include="Source\Factories\RenderingStrategyFactory.cs" />
     <Compile Include="Source\Factories\TileFactory.cs" />
+    <Compile Include="Source\Handlers\PhysicsHandler.cs" />
     <Compile Include="Source\Input.cs" />
     <Compile Include="Source\Interfaces\ICharacter.cs" />
     <Compile Include="Source\Interfaces\ICollidable.cs" />
