@@ -91,6 +91,7 @@
     <Compile Include="Source\Interfaces\IUpdatable.cs" />
     <Compile Include="Source\Interfaces\IZone.cs" />
     <Compile Include="Source\Interfaces\MainMenu\IButton.cs" />
+    <Compile Include="Source\Interfaces\MainMenu\IMenu.cs" />
     <Compile Include="Source\SaveAndLoad\SaveData.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\Strategies\CharacterRenderer.cs" />
@@ -107,10 +108,12 @@
     <Compile Include="Source\UI\MainMenu\Buttons\SaveGameButton.cs" />
     <Compile Include="Source\UI\MainMenu\Buttons\NewGameButton.cs" />
     <Compile Include="Source\UI\MainMenu\Buttons\SaveSlotButton.cs" />
+    <Compile Include="Source\UI\MainMenu\CreditsMenu.cs" />
     <Compile Include="Source\UI\MainMenu\MainMenu.cs" />
     <Compile Include="Source\Handlers\EntityHandler.cs" />
-    <Compile Include="Source\UI\MainMenu\SaveAndLoadGame\LoadGame.cs" />
-    <Compile Include="Source\UI\MainMenu\SaveAndLoadGame\SaveGame.cs" />
+    <Compile Include="Source\UI\MainMenu\LoadGameMenu.cs" />
+    <Compile Include="Source\UI\MainMenu\Menu.cs" />
+    <Compile Include="Source\UI\MainMenu\SaveGameMenu.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
     <Compile Include="Source\World\LevelEditor.cs" />
