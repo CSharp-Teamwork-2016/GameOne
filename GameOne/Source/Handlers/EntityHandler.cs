@@ -1,41 +1,47 @@
 ﻿namespace GameOne.Source.Handlers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Windows;
 
     using Entities;
+    using Entities.Zones;
     using Enumerations;
     using Events;
     using Factories;
+    using Interfaces;
     using World;
     using World.Physics;
-    using Interfaces;
-    using Entities.Zones;
-    using Microsoft.Xna.Framework;
-    using System;
-    using System.Windows;
+
     public class EntityHandler
     {
         private readonly List<Entity> register;
         private readonly List<DamageZone> damageZones;
 
-        public EntityHandler()
+        private Level level;
+
+        public EntityHandler(Level level)
         {
+            this.level = level;
             this.register = new List<Entity>();
             damageZones = new List<DamageZone>();
         }
 
-        public void ProcessEntities(List<Entity> entities, List<Tile> tiles, double time)
+        public void ProcessEntities(double time)
         {
-            // Update internal state
-            foreach (Entity entity in entities.OfType<IUpdatable>())
+            foreach (var entity in level.Entities)
             {
-                ((IUpdatable)entity).Update(time);
-            }
-            // Update physical state
-            foreach (Entity entity in entities.OfType<IMovable>())
-            {
-                PhysicsHandler.UpdateMovement(((IMovable)entity), time);
+                // Update internal state
+                if (entity is IUpdatable)
+                {
+                    ((IUpdatable)entity).Update(time);
+                }
+                // Update physical state
+                if (entity is IMovable)
+                {
+                    PhysicsHandler.UpdateMovement(((IMovable)entity), time);
+                }
             }
             // Update damage zones
             foreach (var zone in damageZones)
@@ -43,28 +49,28 @@
                 zone.Update(time);
             }
 
-            PhysicsEngine.DetectCollisions(entities
+            PhysicsEngine.DetectCollisions(level.Entities
                     .OfType<Model>()
                     .Where(e => e.Alive)
                     .ToList());
 
-            var modelEntitiesTo = entities.OfType<Model>().ToList();
-            var tileWalls = tiles.Where(tile => tile.TileType == TileType.Wall).ToList();
+            var modelEntitiesTo = level.Entities.OfType<Model>().ToList();
+            var tileWalls = level.Geometry.Where(tile => tile.TileType == TileType.Wall).ToList();
 
             PhysicsEngine.BoundsCheck(modelEntitiesTo, tileWalls);
 
-            // Add new entities to list
+            // Add projectile entities to list
             foreach (var item in this.register)
             {
-                entities.Add(item);
+                level.Entities.Add(item);
             }
 
-            this.NotifyInDamageZone(entities);
+            this.NotifyInDamageZone(level.Entities);
 
             this.register.Clear();
 
             // Remove dead entities
-            this.RemoveDead(entities);
+            this.RemoveDead(level.Entities);
             this.RemoveDeadZones(damageZones);
         }
 
@@ -91,10 +97,12 @@
         {
             foreach (var entity in entities)
             {
-                if (entity is Character && !(entity is Player))
+                if (entity is Enemy)
                 {
-                    ((Character)entity).FireProjectileEvent += this.RegisterProjectile;
-                    ((Character)entity).AttackEvent += this.RegisterAttack;
+                    Enemy character = (Enemy)entity;
+                    character.FireProjectileEvent += this.RegisterProjectile;
+                    character.AttackEvent += this.RegisterAttack;
+                    character.KilledEvent += this.RegisterKill;
                 }
             }
         }
@@ -146,6 +154,12 @@
 
             DamageZone zone = new DamageZone(leftA, topA, rightA - leftA, bottomA - topA, e.Source, 0.2);
             damageZones.Add(zone);
+        }
+
+        private void RegisterKill(object source, KilledEventArgs e)
+        {
+            this.level.EnemySlain();
+            this.level.Player.GainXP(e.XpAward);
         }
     }
 }

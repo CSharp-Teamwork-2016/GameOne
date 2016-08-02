@@ -10,14 +10,16 @@
 
     public class LevelEditor
     {
+        private static Level level;
         private static Input input;
         private static double panSpeed = 3;
 
         public static TileType CurrentTile { get; set; }
 
-        public static void Init(Input newInput)
+        public static void Init(Input newInput, Level inLevel)
         {
             input = newInput;
+            level = inLevel;
             CurrentTile = TileType.Wall;
         }
 
@@ -70,10 +72,10 @@
         {
             int targetX = (int)Primitive.ToWorldX(input.MouseX);
             int targetY = (int)Primitive.ToWorldY(input.MouseY);
-            Tile target = GameContainer.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
+            Tile target = level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
             if (target != null)
             {
-                GameContainer.level.Geometry.Remove(target);
+                level.Geometry.Remove(target);
             }
         }
 
@@ -81,12 +83,12 @@
         {
             int targetX = (int)Primitive.ToWorldX(input.MouseX);
             int targetY = (int)Primitive.ToWorldY(input.MouseY);
-            Tile target = GameContainer.level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
+            Tile target = level.Geometry.FirstOrDefault(t => t.X == targetX && t.Y == targetY);
 
             if (target == null)
             {
                 target = TileFactory.GetTile(targetX, targetY, CurrentTile);
-                GameContainer.level.Geometry.Add(target);
+                level.Geometry.Add(target);
             }
         }
     }

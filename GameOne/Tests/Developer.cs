@@ -1,12 +1,15 @@
 ﻿namespace GameOne.Tests
 {
     using System;
-    using Source.Containers;
+    using Source.World;
 
     public class Developer
     {
-        public static void Init()
+        public static Level Level { get; set; }
+
+        public static void Init(Level InLevel)
         {
+            Level = InLevel;
             ListOf.Init();
         }
 
@@ -48,10 +51,14 @@
                     Environment.Exit(0);
                     break;
                 case "RESPAWN":
-                    GameContainer.level.Player.Respawn();
+                    Level.Player.Respawn();
+                    Level.Entities.Add(Level.Player);
                     break;
                 case "WARP":
-                    GameContainer.level.ExitTriggered = true;
+                    Level.ExitTriggered = true;
+                    break;
+                case "LVLUP":
+                    Level.Player.GainXP(1000);
                     break;
             }
         }
