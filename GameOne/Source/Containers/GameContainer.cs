@@ -24,7 +24,7 @@
         #region Fields
 
         // Game objects
-        public static Level level;
+        private Level level;
         private readonly Input input;
         private readonly EntityHandler entityHandler;
 
@@ -39,16 +39,17 @@
 
         public GameContainer(KeyboardState keyboardState, MouseState mouseState)
         {
-            level = new Level();
+            this.level = new Level();
 
             DebugInfo = string.Empty;
             Console = string.Empty;
-            this.input = new Input(keyboardState, mouseState);
-            LevelEditor.Init(this.input);
+            this.input = new Input(keyboardState, mouseState, this.level);
+            LevelEditor.Init(this.input, this.level);
             this.MainMenu = new MainMenu();
-            this.entityHandler = new EntityHandler();
-            this.entityHandler.Subscribe(level.Entities);
-            this.entityHandler.SubscribeToPlayer(level.Player);
+            this.entityHandler = new EntityHandler(this.level);
+            this.entityHandler.Subscribe(this.level.Entities);
+            this.entityHandler.SubscribeToPlayer(this.level.Player);
+            this.level.Player.ExitTriggeredEvent += this.OnExitTriggered;
         }
 
         #endregion Constructors
@@ -67,6 +68,11 @@
         #endregion Properties
 
         #region Methods
+
+        private void OnExitTriggered(object sender, EventArgs e)
+        {
+            this.level.ExitTriggered = true;
+        }
 
         internal void Update(GameTime time, KeyboardState keyboardState, MouseState mouseState)
         {
@@ -105,6 +111,39 @@
             }
         }
 
+        private void GameUpdate(GameTime time, KeyboardState keyboardState, MouseState mouseState)
+        {
+            DebugInfo = string.Empty;
+            this.level.Player.Input(this.input.Update(keyboardState, mouseState));
+
+            if (this.level.ExitOpen)
+            {
+                this.level.ExitOpen = false;
+                this.level.SetExit();
+            }
+
+            if (this.level.ExitTriggered)
+            {
+                this.level.ExitTriggered = false;
+                this.level.NextLevel();
+                this.entityHandler.Subscribe(this.level.Entities);
+            }
+
+            this.entityHandler.ProcessEntities(time.ElapsedGameTime.Milliseconds / 1000.0);
+
+            // Execute tests
+            foreach (Action test in Tests.ListOf.OnUpdate)
+            {
+                test();
+            }
+            // Debug info
+            DebugInfo = $"Player stats:{Environment.NewLine}State: {this.level.Player.State}{Environment.NewLine}Health: {this.level.Player.Health} / {this.level.Player.MaxHealth}{Environment.NewLine}Damage: {this.level.Player.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.level.Player.XpLevel}{Environment.NewLine}XP: {this.level.Player.Experience} / {this.level.Player.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies remaining: {this.level.EnemyCount}{Environment.NewLine}";
+            if (ShowFPS)
+            {
+                DebugInfo += $"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}";
+            }
+        }
+
         internal void Render()
         {
             switch (this.gameState)
@@ -139,14 +178,14 @@
                     //Output.Draw(this.MainMenu.CurrentScreen, Vector2.Zero);
                     break;
                 case GameState.Gameplay:
-                    double hpc = (double)level.Player.Health / level.Player.MaxHealth;
-                    UserInterface.DrawSideBar(hpc, level.Player.HealthPotions, Level.CurrentLevel);
-                    level.Geometry.ForEach(Primitive.DrawTileMini);
-                    Primitive.DrawModelMini(level.Player);
+                    double hpc = (double)this.level.Player.Health / this.level.Player.MaxHealth;
+                    UserInterface.DrawSideBar(hpc, this.level.Player.HealthPotions, Level.CurrentLevel);
+                    this.level.Geometry.ForEach(Primitive.DrawTileMini);
+                    Primitive.DrawModelMini(this.level.Player);
 
-                    if (level.Entities.Contains(level.ExitPortal))
+                    if (this.level.Entities.Contains(this.level.ExitPortal))
                     {
-                        Primitive.DrawModelMini(level.ExitPortal);
+                        Primitive.DrawModelMini(this.level.ExitPortal);
                     }
 
                     UserInterface.DrawConsole(DebugInfo, Console);
@@ -162,42 +201,10 @@
             }
         }
 
-        private void GameUpdate(GameTime time, KeyboardState keyboardState, MouseState mouseState)
-        {
-            DebugInfo = string.Empty;
-            level.Player.Input(this.input.Update(keyboardState, mouseState));
-
-            if (level.ExitOpen)
-            {
-                level.ExitOpen = false;
-                level.SetExit();
-            }
-
-            if (level.ExitTriggered)
-            {
-                level.ExitTriggered = false;
-                level.NextLevel();
-                this.entityHandler.Subscribe(level.Entities);
-            }
-
-            this.entityHandler.ProcessEntities(level.Entities, level.Geometry, time.ElapsedGameTime.Milliseconds / 1000.0);
-
-            // Execute tests
-            foreach (Action test in Tests.ListOf.OnUpdate)
-            {
-                test();
-            }
-            // Debug info
-            if (ShowFPS)
-            {
-                DebugInfo += $"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}";
-            }
-        }
-
         private void RenderLevel()
         {
-            level.Geometry.ForEach(Primitive.DrawTile);
-            foreach (var entity in level.Entities.Where(e => e is Model))
+            this.level.Geometry.ForEach(Primitive.DrawTile);
+            foreach (var entity in this.level.Entities.Where(e => e is Model))
             {
                 var model = (Model)entity;
                 Primitive.DrawModel(model);
@@ -206,7 +213,7 @@
 
         private void RendeGrid()
         {
-            level.Geometry.ForEach(Primitive.DrawGrid);
+            this.level.Geometry.ForEach(Primitive.DrawGrid);
             Tile target = new Tile((int)Primitive.ToWorldX(this.input.MouseX), (int)Primitive.ToWorldY(this.input.MouseY), LevelEditor.CurrentTile);
             Primitive.DrawTile(target);
         }

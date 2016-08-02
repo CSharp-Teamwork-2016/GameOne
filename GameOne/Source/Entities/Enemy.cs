@@ -6,6 +6,7 @@
     using Enumerations;
     using Containers;
     using Interfaces;
+    using Events;
 
     public class Enemy : Character
     {
@@ -33,6 +34,8 @@
 
         #endregion Constructors
 
+        public event EventHandler<KilledEventArgs> KilledEvent;
+
         public EnemyType Type => this.type;
 
         #region Methods
@@ -51,8 +54,10 @@
         public override void Die()
         {
             base.Die();
-            GameContainer.level.Player.GainXP(this.xpAward);
-            GameContainer.level.EnemySlain();
+            KilledEventArgs args = new KilledEventArgs(this.xpAward);
+            KilledEvent(this, args);
+            //GameContainer.level.Player.GainXP();
+            //GameContainer.level.EnemySlain();
         }
 
         #region Methods/Behaviour

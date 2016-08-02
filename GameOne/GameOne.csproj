@@ -63,6 +63,7 @@
     <Compile Include="Source\Enumerations\State.cs" />
     <Compile Include="Source\Enumerations\TileType.cs" />
     <Compile Include="Source\Enumerations\UserInput.cs" />
+    <Compile Include="Source\Events\KilledEventArgs.cs" />
     <Compile Include="Source\Events\MeleeAttackEventArgs.cs" />
     <Compile Include="Source\Events\ProjectileEventArgs.cs" />
     <Compile Include="Source\Factories\EnemyFactory.cs" />
