@@ -3,8 +3,9 @@
     using System;
     using Enumerations;
     using Renderer;
-    using Containers;
     using Factories;
+
+    [Serializable]
     public class Player : Character
     {
         #region Fields
@@ -30,6 +31,7 @@
 
         #endregion Constructors
 
+        [field: NonSerialized]
         public event EventHandler ExitTriggeredEvent;
 
         #region Properties

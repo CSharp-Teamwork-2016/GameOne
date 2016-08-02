@@ -39,8 +39,8 @@
         private SaveGame saveGame;
 
         //Save and Load
-        SaveManager save;
-        bool saved = false;
+        //SaveManager save;
+        //bool saved = false;
 
         #endregion Fields
 

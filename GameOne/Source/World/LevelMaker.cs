@@ -9,6 +9,7 @@
     /// Temporary geometry generator; to be replaced with file loader
     /// <para>/!\ DO NOT MODIFY /!\</para>
     /// </summary>
+    [Serializable]
     internal class LevelMaker
     {
         #region Fields

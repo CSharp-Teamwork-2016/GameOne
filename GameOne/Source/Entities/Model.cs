@@ -4,7 +4,9 @@
 
     using Enumerations;
     using Interfaces;
+    using System;
 
+    [Serializable]
     public abstract class Model : Entity, IRenderable, IPhysicsBody
     {
         private IRenderingStrategy sprite;

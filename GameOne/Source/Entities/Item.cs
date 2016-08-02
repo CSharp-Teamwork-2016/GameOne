@@ -2,7 +2,9 @@
 {
     using Enumerations;
     using Interfaces;
+    using System;
 
+    [Serializable]
     public class Item : Model, ICollidable
     {
         public Item(double x, double y, double direction, double radius, IRenderingStrategy sprite, ItemType type)

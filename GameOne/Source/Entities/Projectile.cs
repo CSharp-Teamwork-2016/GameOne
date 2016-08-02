@@ -3,7 +3,9 @@
     using System.Windows;
     using Enumerations;
     using Interfaces;
+    using System;
 
+    [Serializable]
     public class Projectile : Model, IMovable
     {
         #region Fields

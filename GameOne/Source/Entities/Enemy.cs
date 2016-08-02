@@ -8,6 +8,7 @@
     using Interfaces;
     using Events;
 
+    [Serializable]
     public class Enemy : Character
     {
         #region Fields
@@ -34,6 +35,7 @@
 
         #endregion Constructors
 
+        [field: NonSerialized]
         public event EventHandler<KilledEventArgs> KilledEvent;
 
         public EnemyType Type => this.type;

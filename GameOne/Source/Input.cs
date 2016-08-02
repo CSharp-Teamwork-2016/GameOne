@@ -4,10 +4,14 @@
     using Microsoft.Xna.Framework.Input;
     using Containers;
     using World;
+    using System;
 
+    [Serializable]
     public class Input
     {
+        [NonSerialized]
         private KeyboardState kbPrevious;
+        [NonSerialized]
         private MouseState msPrevious;
 
         public Input(KeyboardState keyboardState, MouseState mouseState, Level level)
