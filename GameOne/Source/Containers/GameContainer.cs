@@ -52,14 +52,12 @@
             DebugInfo = string.Empty;
             Console = string.Empty;
             this.input = new Input(keyboardState, mouseState, this.level);
-            LevelEditor.Init(this.input, this.level);
+
             this.MainMenu = new MainMenu(this);
             this.saveGame = new SaveGame(this);
             this.loadGame = new LoadGame(this);
-            this.entityHandler = new EntityHandler(this.level);
-            this.entityHandler.Subscribe(this.level.Entities);
-            this.entityHandler.SubscribeToPlayer(this.level.Player);
-            this.level.Player.ExitTriggeredEvent += this.OnExitTriggered;
+
+            this.LevelSetters();
 
             //string saveFolder = "SaveManagerTest"; // put your save folder name here
             //string saveFile = "test.sav"; // put your save file name here
@@ -107,13 +105,18 @@
                 this.level = (Level)bin.Deserialize(stream);
             }
 
+            this.LevelSetters();
+
+            this.gameState = GameState.Gameplay;
+        }
+
+        private void LevelSetters()
+        {
             LevelEditor.Init(this.input, this.level);
             this.entityHandler = new EntityHandler(this.level);
             this.entityHandler.Subscribe(this.level.Entities);
             this.entityHandler.SubscribeToPlayer(this.level.Player);
             this.level.Player.ExitTriggeredEvent += this.OnExitTriggered;
-
-            this.gameState = GameState.Gameplay;
         }
 
         private void OnExitTriggered(object sender, EventArgs e)
