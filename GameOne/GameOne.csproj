@@ -82,13 +82,15 @@
     <Compile Include="Source\Interfaces\IRenderingStrategy.cs" />
     <Compile Include="Source\Interfaces\IUpdatable.cs" />
     <Compile Include="Source\Interfaces\IZone.cs" />
+    <Compile Include="Source\Interfaces\MainMenu\IButton.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\Strategies\CharacterRenderer.cs" />
     <Compile Include="Source\Strategies\ItemRenderer.cs" />
     <Compile Include="Source\Strategies\ProjectileRenderer.cs" />
     <Compile Include="Source\Strategies\RenderingStrategy.cs" />
     <Compile Include="Source\Strategies\TileRenderer.cs" />
-    <Compile Include="Source\UI\MainMenu.cs" />
+    <Compile Include="Source\UI\MainMenu\Button.cs" />
+    <Compile Include="Source\UI\MainMenu\MainMenu.cs" />
     <Compile Include="Source\Handlers\EntityHandler.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />

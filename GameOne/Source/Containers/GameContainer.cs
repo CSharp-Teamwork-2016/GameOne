@@ -12,6 +12,7 @@
     using Entities;
     using UI;
     using Handlers;
+    using UI.MainMenu;
 
     // Game contents
     // Level
@@ -72,13 +73,13 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    this.gameState = this.MainMenu.Update(time);
+                    //this.gameState = this.MainMenu.Update(time);
                     break;
                 case GameState.Gameplay:
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                     {
                         this.gameState = GameState.MainMenu;
-                        this.MainMenu.CurrentScreen = this.MainMenu.ResumeScreen;
+                        //this.MainMenu.CurrentScreen = this.MainMenu.ResumeScreen;
                     }
                     else
                     {
@@ -90,7 +91,7 @@
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                     {
                         this.gameState = GameState.MainMenu;
-                        this.MainMenu.CurrentScreen = this.MainMenu.ResumeScreen;
+                        //this.MainMenu.CurrentScreen = this.MainMenu.ResumeScreen;
                     }
                     else
                     {
@@ -134,7 +135,8 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    Output.Draw(this.MainMenu.CurrentScreen, Vector2.Zero);
+                    this.MainMenu.Draw();
+                    //Output.Draw(this.MainMenu.CurrentScreen, Vector2.Zero);
                     break;
                 case GameState.Gameplay:
                     double hpc = (double)level.Player.Health / level.Player.MaxHealth;

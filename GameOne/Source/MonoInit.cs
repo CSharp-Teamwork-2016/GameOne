@@ -44,11 +44,11 @@
                 throw new ArgumentException("Main Menu not initialized");
             }
 
-            this.loop.MainMenu.LoadTextures(
-                this.Content.Load<Texture2D>("Images/Menu/MainMenu"),
-                this.Content.Load<Texture2D>("Images/Menu/ResumeGame"),
-                this.Content.Load<Texture2D>("Images/Menu/Credits"),
-                this.Content.Load<Texture2D>("Images/Menu/WePromise"));
+            //this.loop.MainMenu.LoadTextures(
+            //    this.Content.Load<Texture2D>("Images/Menu/MainMenu"),
+            //    this.Content.Load<Texture2D>("Images/Menu/ResumeGame"),
+            //    this.Content.Load<Texture2D>("Images/Menu/Credits"),
+            //    this.Content.Load<Texture2D>("Images/Menu/WePromise"));
             Renderer.Primitive.FloorTile = this.Content.Load<Texture2D>("Images/floor");
             Renderer.Primitive.WallTile = this.Content.Load<Texture2D>("Images/wall");
         }
