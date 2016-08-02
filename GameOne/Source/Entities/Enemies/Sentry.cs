@@ -3,7 +3,9 @@ namespace GameOne.Source.Entities.Enemies
 {
     using Enumerations;
     using Interfaces;
+    using System;
 
+    [Serializable]
     public class Sentry : Enemy
     {
         private const double SentryRadius = 0.30;

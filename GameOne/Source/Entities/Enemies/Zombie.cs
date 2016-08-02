@@ -2,7 +2,9 @@
 {
     using Enumerations;
     using Interfaces;
+    using System;
 
+    [Serializable]
     public class Zombie : Enemy
     {
         private const double ZombieRadius = 0.30;
