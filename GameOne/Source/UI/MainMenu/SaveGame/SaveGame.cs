@@ -1,9 +1,8 @@
-﻿namespace GameOne.Source.UI.MainMenu
+﻿namespace GameOne.Source.UI.MainMenu.SaveGame
 {
     using System;
     using Buttons;
     using Containers;
-    using Enumerations;
     using Events;
     using Interfaces.MainMenu;
     using Microsoft.Xna.Framework.Input;
@@ -13,7 +12,7 @@
     public delegate void OnMouseHoverEventHandler(object sender, MousePositionEventArgs args);
 
     [Serializable]
-    public class MainMenu
+    public class SaveGame
     {
         #region Properties
 
@@ -21,23 +20,24 @@
 
         #endregion Properties
 
-        public MainMenu(GameContainer gameContainer)
+        public SaveGame(GameContainer gameContainer)
         {
             this.buttons = new ButtonContainer();
             // Sad
-            this.buttons.AddButton(new NewGameButton(250, 100));
-            this.buttons.AddButton(new SaveGameButton(250, 150));
-            this.buttons.AddButton(new LoadGameButton(250, 200));
-            this.buttons.AddButton(new LevelEditorButton(250, 250));
-            this.buttons.AddButton(new CreditsButton(250, 300));
-            this.buttons.AddButton(new ExitButton(250, 350));
+            this.buttons.AddButton(new SaveSlotButton("Game 1", 250, 100));
+            this.buttons.AddButton(new SaveSlotButton("Game 2", 250, 150));
+            this.buttons.AddButton(new SaveSlotButton("Game 3", 250, 200));
 
             foreach (IButton button in this.buttons)
             {
                 this.OnMouseHover += button.OnMouseHover;
                 this.OnMouseClick += button.OnMouseClick;
-                button.OnButtonClick += gameContainer.ButtonHandler;
+                button.OnButtonClick += gameContainer.SaveButtonHandler;
             }
+
+            var backButton = new BackButton(250, 350);
+            backButton.OnButtonClick += gameContainer.ButtonHandler;
+            this.buttons.AddButton(backButton);
         }
 
         public event OnMouseHoverEventHandler OnMouseHover;

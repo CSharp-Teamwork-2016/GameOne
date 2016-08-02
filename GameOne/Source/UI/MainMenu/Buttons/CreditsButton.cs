@@ -1,22 +1,15 @@
 ﻿namespace GameOne.Source.UI.MainMenu.Buttons
 {
-    using System;
-    using Events;
-    using Renderer;
+    using Enumerations;
 
     public class CreditsButton : Button
     {
         private const string Text = "Credits";
+        private const GameState GameState = Enumerations.GameState.Credits;
 
         public CreditsButton(int x, int y) 
-            : base(Text, x, y)
+            : base(Text, x, y, GameState)
         {
-
-        }
-
-        public override void OnMouseClick(object sender, MousePositionEventArgs args)
-        {
-            throw new NotImplementedException();
         }
     }
 }

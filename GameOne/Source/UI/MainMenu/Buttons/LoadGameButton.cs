@@ -1,22 +1,15 @@
 ﻿namespace GameOne.Source.UI.MainMenu.Buttons
 {
-    using System;
-    using Events;
-    using Renderer;
+    using Enumerations;
 
     public class LoadGameButton : Button
     {
         private const string Text = "Load Game";
+        private const GameState GameState = Enumerations.GameState.LoadGame;
 
         public LoadGameButton(int x, int y) 
-            : base(Text, x, y)
+            : base(Text, x, y, GameState)
         {
-
-        }
-
-        public override void OnMouseClick(object sender, MousePositionEventArgs args)
-        {
-            throw new NotImplementedException();
         }
     }
 }

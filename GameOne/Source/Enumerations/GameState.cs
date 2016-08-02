@@ -5,6 +5,10 @@
         MainMenu,
         Gameplay,
         EndOfGame,
-        LevelEditor
+        LevelEditor,
+        Credits,
+        Exit,
+        LoadGame,
+        SaveGame
     }
 }

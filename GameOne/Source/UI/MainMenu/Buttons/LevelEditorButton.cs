@@ -1,22 +1,15 @@
 ﻿namespace GameOne.Source.UI.MainMenu.Buttons
 {
-    using System;
-    using Events;
-    using Renderer;
+    using Enumerations;
 
     public class LevelEditorButton : Button
     {
         private const string Text = "Level Editor";
+        private const GameState GameState = Enumerations.GameState.LevelEditor;
 
         public LevelEditorButton(int x, int y) 
-            : base(Text, x, y)
+            : base(Text, x, y, GameState)
         {
-
-        }
-
-        public override void OnMouseClick(object sender, MousePositionEventArgs args)
-        {
-            throw new NotImplementedException();
         }
     }
 }

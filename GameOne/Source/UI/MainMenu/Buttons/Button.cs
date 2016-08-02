@@ -1,9 +1,11 @@
 ﻿namespace GameOne.Source.UI.MainMenu.Buttons
 {
     using System;
+    using Enumerations;
     using Events;
     using Interfaces.MainMenu;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Input;
     using Renderer;
 
     public abstract class Button : IButton
@@ -16,54 +18,56 @@
         protected int x;
         protected int y;
         protected Color color;
+        protected GameState gameState;
+        private bool isMousePressedOnButton;
 
         //private int width;
         //private int height;
 
-        protected Button(string name, int x, int y)
+        protected Button(string name, int x, int y, GameState gameState)
         {
             this.name = name;
             this.x = x;
             this.y = y;
             this.color = this.DefaultColor;
+            this.gameState = gameState;
         }
 
-        /**
-         * @return true: If a player enters the button with mouse
-         */
-        //public bool enterButton()
-        //{
-        //    if (MouseInput.getMouseX() < buttonX + Texture.Width &&
-        //            MouseInput.getMouseX() > buttonX &&
-        //            MouseInput.getMouseY() < buttonY + Texture.Height &&
-        //            MouseInput.getMouseY() > buttonY)
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
+        public event EventHandler<OnButtonClickEventArgs> OnButtonClick;
 
-        //public void Update(GameTime gameTime)
-        //{
-        //    if (enterButton() && MouseInput.LastMouseState.LeftButton == ButtonState.Released &&
-        //        MouseInput.MouseState.LeftButton == ButtonState.Pressed)
-        //    {
-        //        switch (Name)
-        //        {
-        //            case "buy_normal_fish": //the name of the button
-        //                if (Player.Gold >= 10)
-        //                {
-        //                    ScreenManager.addFriendly("normal_fish", new Vector2(100, 100), 100, -3, 10, 100);
-        //                    Player.Gold -= 10;
-        //                }
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //    }
-        //}
-
-        public abstract void OnMouseClick(object sender, MousePositionEventArgs args);
+        public void OnMouseClick(object sender, MousePositionEventArgs args)
+        {
+            if (
+                (args.X >= this.x) &&
+                (args.X <= this.x + Width) &&
+                (args.Y >= this.y) &&
+                args.Y <= this.y + Height &&
+                args.MouseState.LeftButton == ButtonState.Pressed)
+            {
+                this.isMousePressedOnButton = true;
+                this.color = Color.Blue;
+            }
+            else if (
+                (args.X >= this.x) &&
+                (args.X <= this.x + Width) &&
+                (args.Y >= this.y) &&
+                args.Y <= this.y + Height &&
+                args.MouseState.LeftButton == ButtonState.Released && 
+                this.isMousePressedOnButton)
+            {
+                this.OnButtonClick?.Invoke(null, new OnButtonClickEventArgs(this.gameState));
+                this.isMousePressedOnButton = false;
+                // Sad
+                if (this is NewGameButton)
+                {
+                    this.name = "Resume Game";
+                }
+            }
+            else
+            {
+                this.isMousePressedOnButton = false;
+            }
+        }
 
         public void OnMouseHover(object sender, MousePositionEventArgs args)
         {

@@ -5,17 +5,17 @@
 
     public class MousePositionEventArgs : EventArgs
     {
-        public MousePositionEventArgs(int x, int y, bool leftButtonPressed)
+        public MousePositionEventArgs(int x, int y, MouseState mouseState)
         {
             this.X = x;
             this.Y = y;
-            this.LeftButtonPressed = leftButtonPressed;
+            this.MouseState = mouseState;
         }
 
         public int X { get; }
 
         public int Y { get; }
 
-        public bool LeftButtonPressed { get; }
+        public MouseState MouseState { get; }
     }
 }
