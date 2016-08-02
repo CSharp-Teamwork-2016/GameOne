@@ -138,9 +138,17 @@
                 Tile currentTile = this.GetRandomTile(validTiles);
                 EnemyType enemyType = EnemyType.Zombie;
 
-                if (LevelMaker.RandDouble(0, 1) >= 0.7)
+                if (LevelMaker.RandDouble(0, 1) >= 0.9)
+                {
+                    enemyType = EnemyType.Lumber;
+                }
+                else if (LevelMaker.RandDouble(0, 1) >= 0.7)
                 {
                     enemyType = EnemyType.Sentry;
+                }
+                else if (LevelMaker.RandDouble(0, 1) >= 0.4)
+                {
+                    enemyType = EnemyType.Charger;
                 }
 
                 Enemy enemy = EnemyFactory.MakeEnemy(currentTile.X, currentTile.Y, enemyType, CurrentLevel);

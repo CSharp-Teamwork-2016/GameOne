@@ -41,6 +41,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Source\Entities\Character.cs" />
+    <Compile Include="Source\Entities\Enemies\Charger.cs" />
+    <Compile Include="Source\Entities\Enemies\Lumber.cs" />
+    <Compile Include="Source\Entities\Enemies\Sentry.cs" />
+    <Compile Include="Source\Entities\Enemies\Zombie.cs" />
     <Compile Include="Source\Entities\Enemy.cs" />
     <Compile Include="Source\Entities\Entity.cs" />
     <Compile Include="Source\Entities\Item.cs" />

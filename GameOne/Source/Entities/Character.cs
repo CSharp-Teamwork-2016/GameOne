@@ -90,6 +90,8 @@
             }
         }
 
+        protected virtual double VelocityModifier => 1;
+
         #endregion Properties
 
         #region Methods
@@ -99,30 +101,30 @@
         public void MoveUp()
         {
             this.Direction = PhysicsEngine.UpDirection;
-            this.velocity.Y = -PhysicsEngine.NominalVelocity;
+            this.velocity.Y = -PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveDown()
         {
             this.Direction = PhysicsEngine.DownDirection;
-            this.velocity.Y = PhysicsEngine.NominalVelocity;
+            this.velocity.Y = PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveLeft()
         {
             this.Direction = PhysicsEngine.LeftDirection;
-            this.velocity.X = -PhysicsEngine.NominalVelocity;
+            this.velocity.X = -PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveRight()
         {
             this.Direction = PhysicsEngine.RightDirection;
-            this.velocity.X = PhysicsEngine.NominalVelocity;
+            this.velocity.X = PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveForward()
         {
-            this.velocity = PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(this.Direction);
+            this.velocity = PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(this.Direction) * this.VelocityModifier;
         }
 
         public void TurnTo(double direction)

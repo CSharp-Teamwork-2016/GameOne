@@ -3,14 +3,8 @@
     public enum EnemyType
     {
         Zombie,
-        Crabs,
-        Monster,
-        Dragon,
-        Orc,
-        Ghoul,
-        Skeleton,
-        Scavanger,
-        Wraith,
-        Sentry
+        Sentry,
+        Lumber,
+        Charger
     }
 }
