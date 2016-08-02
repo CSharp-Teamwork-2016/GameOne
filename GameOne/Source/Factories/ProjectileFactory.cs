@@ -4,33 +4,31 @@
     using System.Windows;
     using Entities;
     using Enumerations;
-    using World;
+    using World.Physics;
 
     public class ProjectileFactory
     {
-        private const double BulletSpeed = 8;
-
         public static Projectile MakeProjectile(Character source, ProjectileType type)
         {
             double direction = source.Direction % (2 * Math.PI);
             double velocityX = 0;
             double velocityY = 0;
 
-            if (direction == Physics.UpDirection)
+            if (direction == PhysicsEngine.UpDirection)
             {
-                velocityY = -BulletSpeed;
+                velocityY = -PhysicsEngine.ProjectileSpeed;
             }
-            else if (direction == Physics.DownDirection)
+            else if (direction == PhysicsEngine.DownDirection)
             {
-                velocityY = BulletSpeed;
+                velocityY = PhysicsEngine.ProjectileSpeed;
             }
-            else if (direction == Physics.LeftDirection)
+            else if (direction == PhysicsEngine.LeftDirection)
             {
-                velocityX = -BulletSpeed;
+                velocityX = -PhysicsEngine.ProjectileSpeed;
             }
-            else if (direction == Physics.RightDirection)
+            else if (direction == PhysicsEngine.RightDirection)
             {
-                velocityX = BulletSpeed;
+                velocityX = PhysicsEngine.ProjectileSpeed;
             }
 
             double radius;

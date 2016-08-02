@@ -1,7 +1,9 @@
 ﻿namespace GameOne.Source.World
 {
     using Enumerations;
+    using System;
 
+    [Serializable]
     public class Tile
     {
         // 1x1 square from the playable level

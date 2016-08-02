@@ -1,15 +1,16 @@
 ﻿namespace GameOne.Source.Interfaces
 {
-    public interface IControlable
+    using System.Windows;
+
+    public interface IControllable : IMovable
     {
         void MoveUp();
-
         void MoveDown();
-
         void MoveLeft();
-
         void MoveRight();
-
         void MoveForward();
+        void TurnTo(double direction);
+        void Accelerate(Vector acceleration);
+        void Stop();
     }
 }

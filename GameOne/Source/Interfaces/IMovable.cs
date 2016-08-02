@@ -1,11 +1,11 @@
 ﻿namespace GameOne.Source.Interfaces
 {
+    using Enumerations;
     using System.Windows;
 
-    public interface IMovable
+    public interface IMovable : ICollidable
     {
-        Vector Position { get; }
-
-        double Direction { get; }
+        Vector Velocity { get; set; }
+        MovementType MovementType { get; }
     }
 }

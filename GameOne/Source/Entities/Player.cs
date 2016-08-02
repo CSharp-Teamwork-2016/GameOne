@@ -3,8 +3,9 @@
     using System;
     using Enumerations;
     using Renderer;
-    using Containers;
+    using Factories;
 
+    [Serializable]
     public class Player : Character
     {
         #region Fields
@@ -19,7 +20,7 @@
         #region Constructors
 
         public Player(double x, double y, double direction, int xpLevel = 1)
-            : base(x, y, direction, 0.30, new Spritesheet(), 100, 30)
+            : base(x, y, direction, 0.30, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Character), 100, 30)
         {
             this.XpLevel = xpLevel;
             this.experience = 0;
@@ -30,6 +31,9 @@
 
         #endregion Constructors
 
+        [field: NonSerialized]
+        public event EventHandler ExitTriggeredEvent;
+
         #region Properties
 
         public int Ammo { get; set; }
@@ -37,6 +41,14 @@
         public int HealthPotions { get; set; }
 
         public int XpLevel { get; private set; }
+
+        public int Experience
+        {
+            get
+            {
+                return this.experience;
+            }
+        }
 
         public int XpToNext { get; private set; }
 
@@ -83,7 +95,7 @@
                     this.HealthPotions++;
                     break;
                 case ItemType.EndKey:
-                    GameContainer.level.ExitTriggered = true;
+                    ExitTriggeredEvent(this, new EventArgs());
                     break;
             }
         }
@@ -94,9 +106,6 @@
 
             Primitive.CameraX = this.Position.X;
             Primitive.CameraY = this.Position.Y;
-
-            GameContainer.DebugInfo = $"Player stats:{Environment.NewLine}State: {this.state}{Environment.NewLine}Health: {this.Health} / {base.MaxHealth}{Environment.NewLine}Damage: {this.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.XpLevel}{Environment.NewLine}XP: {this.experience} / {this.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies remaining: {GameContainer.level.EnemyCount}{Environment.NewLine}";
-            // Loop.debugInfo += string.Format($"State: {state}\n");
         }
 
         public override void TakeDamage(int damage)
@@ -108,7 +117,7 @@
         public void Respawn()
         {
             this.state = State.IDLE;
-            this.Health = 100;
+            this.Health = this.MaxHealth;
         }
 
         internal void Input(UserInput input)

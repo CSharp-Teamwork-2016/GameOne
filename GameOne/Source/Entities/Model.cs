@@ -4,14 +4,14 @@
 
     using Enumerations;
     using Interfaces;
-    using Renderer;
+    using System;
 
-    public abstract class Model : Entity, IRenderable
+    [Serializable]
+    public abstract class Model : Entity, IRenderable, IPhysicsBody
     {
-        protected State state;
-        private Spritesheet sprite;
+        private IRenderingStrategy sprite;
 
-        protected Model(double x, double y, double direction, double radius, Spritesheet sprite)
+        protected Model(double x, double y, double direction, double radius, IRenderingStrategy sprite)
         {
             this.Position = new Vector(x, y);
             this.Direction = direction;
@@ -20,8 +20,6 @@
             this.state = State.IDLE;
         }
 
-        public bool Alive => this.state != State.DEAD;
-
         public Vector Position { get; set; }
 
         public double Direction { get; protected set; }
@@ -29,6 +27,11 @@
         public double Radius { get; set; }
 
         public State State => this.state;
+
+        public IRenderingStrategy RenderingStrategy()
+        {
+            return this.sprite;
+        }
         
         public virtual void Die()
         {

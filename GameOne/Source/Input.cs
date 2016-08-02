@@ -3,18 +3,23 @@
     using Enumerations;
     using Microsoft.Xna.Framework.Input;
     using Containers;
+    using World;
+    using System;
 
+    [Serializable]
     public class Input
     {
+        [NonSerialized]
         private KeyboardState kbPrevious;
+        [NonSerialized]
         private MouseState msPrevious;
 
-        public Input(KeyboardState keyboardState, MouseState mouseState)
+        public Input(KeyboardState keyboardState, MouseState mouseState, Level level)
         {
             this.kbPrevious = keyboardState;
             this.msPrevious = mouseState;
 #if DEBUG
-            Tests.Developer.Init();
+            Tests.Developer.Init(level);
 #endif
         }
 

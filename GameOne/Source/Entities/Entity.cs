@@ -1,9 +1,15 @@
 ﻿namespace GameOne.Source.Entities
 {
+    using Enumerations;
+    using Interfaces;
+    using System;
+
     // Base class for all non-geometry (non-Tile, see Level) objects
-    public abstract class Entity
+    [Serializable]
+    public abstract class Entity : IRemovable
     {
         private static ulong nextId;
+        protected State state;
 
         protected Entity()
         {
@@ -11,7 +17,7 @@
         }
 
         public ulong Id { get; }
-
-        public abstract void Update(double time);
+        
+        public bool Alive => !this.state.HasFlag(State.DEAD);
     }
 }

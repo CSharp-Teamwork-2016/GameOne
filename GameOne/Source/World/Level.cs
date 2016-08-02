@@ -6,8 +6,8 @@
     using Entities;
     using Enumerations;
     using Factories;
-    using Renderer;
 
+    [Serializable]
     public class Level
     {
         // Contains a collection of Tiles that define the geometry (collision map) and a collection of entities, including the player
@@ -108,7 +108,7 @@
                 Tile currentTile = this.GetRandomTile();
                 // 30% chance for Quartz Flask (inventory potion)
                 ItemType type = LevelMaker.RandDouble() > 0.7 ? ItemType.QuartzFlask : ItemType.PotionHealth;
-                Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, new Spritesheet(), type);
+                Item item = new Item(currentTile.X, currentTile.Y, 0, 0.2, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Item), type);
                 this.Entities.Add(item);
             }
         }
@@ -138,9 +138,17 @@
                 Tile currentTile = this.GetRandomTile(validTiles);
                 EnemyType enemyType = EnemyType.Zombie;
 
-                if (LevelMaker.RandDouble(0, 1) >= 0.7)
+                if (LevelMaker.RandDouble(0, 1) >= 0.9)
+                {
+                    enemyType = EnemyType.Lumber;
+                }
+                else if (LevelMaker.RandDouble(0, 1) >= 0.7)
                 {
                     enemyType = EnemyType.Sentry;
+                }
+                else if (LevelMaker.RandDouble(0, 1) >= 0.4)
+                {
+                    enemyType = EnemyType.Charger;
                 }
 
                 Enemy enemy = EnemyFactory.MakeEnemy(currentTile.X, currentTile.Y, enemyType, CurrentLevel);
@@ -206,7 +214,7 @@
                 }
             }
             // produce EndKey
-            this.ExitPortal = new Item(end.Room.OriginX, end.Room.OriginY, 0, 0.3, new Spritesheet(), ItemType.EndKey);
+            this.ExitPortal = new Item(end.Room.OriginX, end.Room.OriginY, 0, 0.3, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Item), ItemType.EndKey);
 
             foreach (Room room in rooms)
             {

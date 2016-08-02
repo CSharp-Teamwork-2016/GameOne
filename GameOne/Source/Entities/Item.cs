@@ -1,21 +1,37 @@
 ﻿namespace GameOne.Source.Entities
 {
     using Enumerations;
-    using Renderer;
+    using Interfaces;
+    using System;
 
-    public class Item : Model
+    [Serializable]
+    public class Item : Model, ICollidable
     {
-        public Item(double x, double y, double direction, double radius, Spritesheet sprite, ItemType type)
+        public Item(double x, double y, double direction, double radius, IRenderingStrategy sprite, ItemType type)
             : base(x, y, direction, radius, sprite)
         {
             this.Type = type;
+            IsSolid = true;
         }
 
         public ItemType Type { get; }
 
-        public override void Update(double time)
+        public bool IsSolid { get; private set; }
+
+        public CollisionResponse Response
         {
-            // Loop.debugInfo += string.Format($"{Alive}\n");
+            get
+            {
+                return CollisionResponse.PickUp;
+            }
+        }
+
+        public Shape CollisionShape
+        {
+            get
+            {
+                return Shape.Circle;
+            }
         }
 
         public void Collect()

@@ -1,19 +1,18 @@
 ﻿namespace GameOne.Source.Entities
 {
     using System;
-    using System.Linq;
     using System.Windows;
+
     using Enumerations;
     using Events;
     using Interfaces;
-    using Renderer;
-    using World;
-    using Containers;
+    using World.Physics;
 
-    public abstract class Character : Model, IControlable, IMovable
+    [Serializable]
+    public abstract class Character : Model, IControllable, ICharacter, IUpdatable
     {
         #region Fields
-        
+
         protected double timeToNextAction;
         private Vector velocity;
         private double attackTime;
@@ -23,7 +22,7 @@
 
         #region Constructors
 
-        protected Character(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType = AttackType.Melee)
+        protected Character(double x, double y, double direction, double radius, IRenderingStrategy sprite, int health, int damage, AttackType attackType = AttackType.Melee)
             : base(x, y, direction, radius, sprite)
         {
             this.velocity = new Vector(0, 0);
@@ -39,7 +38,10 @@
 
         #region Events
 
+        [field: NonSerialized]
         public event EventHandler<ProjectileEventArgs> FireProjectileEvent;
+        [field: NonSerialized]
+        public event EventHandler<MeleeAttackEventArgs> AttackEvent;
 
         #endregion
 
@@ -53,6 +55,46 @@
 
         public AttackType AttackType { get; }
 
+        public Vector Velocity
+        {
+            get
+            {
+                return this.velocity;
+            }
+            set
+            {
+                this.velocity = value;
+            }
+        }
+
+        public MovementType MovementType
+        {
+            get
+            {
+                return MovementType.Normal;
+            }
+        }
+
+        public bool IsSolid { get; private set; }
+
+        public CollisionResponse Response
+        {
+            get
+            {
+                return CollisionResponse.Project;
+            }
+        }
+
+        public Shape CollisionShape
+        {
+            get
+            {
+                return Shape.Circle;
+            }
+        }
+
+        protected virtual double VelocityModifier => 1;
+
         #endregion Properties
 
         #region Methods
@@ -61,34 +103,46 @@
 
         public void MoveUp()
         {
-            this.Direction = Physics.UpDirection;
-            this.velocity.Y = -3;
+            this.Direction = PhysicsEngine.UpDirection;
+            this.velocity.Y = -PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveDown()
         {
-            this.Direction = Physics.DownDirection;
-            this.velocity.Y = 3;
+            this.Direction = PhysicsEngine.DownDirection;
+            this.velocity.Y = PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveLeft()
         {
-            this.Direction = Physics.LeftDirection;
-            this.velocity.X = -3;
+            this.Direction = PhysicsEngine.LeftDirection;
+            this.velocity.X = -PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveRight()
         {
-            this.Direction = Physics.RightDirection;
-            this.velocity.X = 3;
+            this.Direction = PhysicsEngine.RightDirection;
+            this.velocity.X = PhysicsEngine.NominalVelocity * this.VelocityModifier;
         }
 
         public void MoveForward()
         {
-            double x = 3 * Math.Cos(this.Direction);
-            double y = 3 * Math.Sin(this.Direction);
-            this.velocity.X = x;
-            this.velocity.Y = y;
+            this.velocity = PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(this.Direction) * this.VelocityModifier;
+        }
+
+        public void TurnTo(double direction)
+        {
+            this.Direction = direction;
+        }
+
+        public void Accelerate(Vector acceleration)
+        {
+            this.velocity += acceleration;
+        }
+
+        public void Stop()
+        {
+            this.velocity = new Vector(0, 0);
         }
 
         #endregion Methods/Movement
@@ -122,11 +176,14 @@
                 return;
             }
 
-            if ((this.state & State.ATTACK) != State.ATTACK)
+            if (!this.state.HasFlag(State.ATTACK))
             {
                 this.state |= State.ATTACK;
                 this.attackTime = 0;
                 this.timeToNextAction = 0.6;
+                // Raise event
+                MeleeAttackEventArgs args = new MeleeAttackEventArgs(this);
+                AttackEvent(this, args);
             }
         }
 
@@ -142,20 +199,23 @@
                 this.attackTime = 0;
                 this.timeToNextAction = 0.3;
 
+                // Raise event
                 ProjectileEventArgs args = new ProjectileEventArgs();
                 args.Type = ProjectileType.Bullet;
                 this.FireProjectileEvent(this, args);
             }
         }
 
-        public override void Update(double time)
+        public virtual void Update(double time)
         {
+            // Don't update if not active
             if (this.state == State.DEAD)
             {
                 return;
             }
 
-            if ((this.state & State.ATTACK) == State.ATTACK)
+            // Attack animation
+            if (this.state.HasFlag(State.ATTACK))
             {
                 this.attackTime += time;
 
@@ -163,30 +223,10 @@
                 {
                     this.state ^= State.ATTACK;
                     this.attackTime = 0;
-                    return;
-                }
-
-                foreach (Character entity in GameContainer.level.Entities.OfType<Character>().Where(e => e != this && (this.Position - e.Position).Length < 2))
-                {
-                    double p1x = this.Position.X + (Math.Cos(this.Direction + Math.PI / 2) * 0.5);
-                    double p1y = this.Position.Y + (Math.Sin(this.Direction + Math.PI / 2) * 0.5);
-
-                    double pw = (1.2 * Math.Cos(this.Direction)) + (1 * Math.Sin(this.Direction));
-                    double ph = (1.2 * Math.Sin(this.Direction)) - (1 * Math.Cos(this.Direction));
-
-                    double leftA = Math.Min(p1x, p1x + pw);
-                    double rightA = Math.Max(p1x, p1x + pw);
-                    double topA = Math.Min(p1y, p1y + ph);
-                    double bottomA = Math.Max(p1y, p1y + ph);
-
-                    if (entity.Position.X >= leftA && entity.Position.X <= rightA &&
-                        entity.Position.Y >= topA && entity.Position.Y <= bottomA)
-                    {
-                        entity.TakeDamage(this.Damage);
-                    }
                 }
             }
 
+            // Invincibility frames
             if ((this.state & State.HURT) == State.HURT)
             {
                 this.damageTime += time;
@@ -198,36 +238,11 @@
                 }
             }
 
+            // Ability cooldown
             this.timeToNextAction -= time;
-
             if (this.timeToNextAction < 0)
             {
                 this.timeToNextAction = 0;
-            }
-
-            // Motion
-            if (this.velocity.Length > 0)
-            {
-                this.Position += this.velocity * time;
-                // Friction
-                Vector friction = this.velocity;
-
-                friction.Negate();
-                friction.Normalize();
-
-                friction *= 15 * time;
-                this.velocity += friction;
-
-                if (this.velocity.Length <= friction.Length)
-                {
-                    this.velocity.X = 0;
-                    this.velocity.Y = 0;
-                }
-                else if (this.velocity.Length < 0.1)
-                {
-                    this.velocity.X = 0;
-                    this.velocity.Y = 0;
-                }
             }
         }
 
@@ -242,11 +257,8 @@
 
         public void Knockback()
         {
-            double x = -5 * Math.Cos(this.Direction);
-            double y = -5 * Math.Sin(this.Direction);
-
-            this.velocity.X = x;
-            this.velocity.Y = y;
+            // TODO: knockback should be opposite source position, not based on target direction
+            this.velocity = -PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(this.Direction);
         }
 
         #endregion Methods

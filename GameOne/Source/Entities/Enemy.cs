@@ -4,26 +4,28 @@
     using System.Collections.Generic;
 
     using Enumerations;
-    using Renderer;
-    using Containers;
+    using Interfaces;
+    using Events;
 
-    public class Enemy : Character
+    public abstract class Enemy : Character
     {
         #region Fields
 
         private double elapsedTime;
         private double nextTime;
-        private Queue<Action> pattern;
+        protected Queue<Action> pattern;
         private readonly EnemyType type;
         private readonly int xpAward;
+        private double fireRate;
 
         #endregion Fields
 
         #region Constructors
 
-        public Enemy(double x, double y, double direction, double radius, Spritesheet sprite, int health, int damage, AttackType attackType, EnemyType type, int xpAward)
+        public Enemy(double x, double y, double direction, double radius, IRenderingStrategy sprite, int health, int damage, AttackType attackType, EnemyType type, int xpAward)
             : base(x, y, direction, radius, sprite, health, damage, attackType)
         {
+            this.fireRate = 0;
             this.type = type;
             this.xpAward = xpAward;
 
@@ -33,7 +35,12 @@
 
         #endregion Constructors
 
+        [field: NonSerialized]
+        public event EventHandler<KilledEventArgs> KilledEvent;
+
         public EnemyType Type => this.type;
+
+        protected abstract double FireRate { get; }
 
         #region Methods
 
@@ -51,19 +58,33 @@
         public override void Die()
         {
             base.Die();
-            GameContainer.level.Player.GainXP(this.xpAward);
-            GameContainer.level.EnemySlain();
+            KilledEventArgs args = new KilledEventArgs(this.xpAward);
+            KilledEvent(this, args);
         }
 
         #region Methods/Behaviour
 
-        private void WaitFor()
+        protected void WaitFor()
         {
         }
 
-        private void TurnRight()
+        protected void TurnRight()
         {
             this.Direction += Math.Round(Math.PI / 2, 2);
+            this.Direction %= Math.Round(2 * Math.PI, 2);
+            this.PrepareNext(0, -0.5);
+        }
+
+        protected void TurnLeft()
+        {
+            this.Direction -= Math.Round(Math.PI / 2, 2);
+            this.Direction %= Math.Round(2 * Math.PI, 2);
+            this.PrepareNext(0, -0.5);
+        }
+
+        protected void TurnAround()
+        {
+            this.Direction += Math.Round(Math.PI, 2);
             this.Direction %= Math.Round(2 * Math.PI, 2);
             this.PrepareNext(0, -0.5);
         }
@@ -85,48 +106,18 @@
 
             this.pattern.Peek()();
 
-            // Random firing pattern hack
-            double probability = 0.99;
-
-            if (this.type == EnemyType.Sentry)
-            {
-                probability = 0.95;
-            }
-
-            if (World.LevelMaker.RandDouble(0, 1) > probability)
+            if (World.LevelMaker.RandDouble(0, 1) > this.FireRate)
             {
                 this.FireProjectile();
             }
         }
 
-        private void PreparePattern()
+        protected virtual void PreparePattern()
         {
             this.elapsedTime = 0;
             this.nextTime = World.LevelMaker.RandDouble(1, 4);
 
             this.pattern = new Queue<Action>();
-            if (this.type == EnemyType.Zombie)
-            {
-                this.pattern.Enqueue(this.MoveForward);
-                this.pattern.Enqueue(this.WaitFor);
-                this.pattern.Enqueue(this.TurnRight);
-                this.pattern.Enqueue(this.WaitFor);
-                this.pattern.Enqueue(this.MoveForward);
-                this.pattern.Enqueue(this.WaitFor);
-                this.pattern.Enqueue(this.TurnRight);
-                this.pattern.Enqueue(this.TurnRight);
-                this.pattern.Enqueue(this.WaitFor);
-            }
-            else if (this.type == EnemyType.Sentry)
-            {
-                this.pattern.Enqueue(this.WaitFor);
-                this.pattern.Enqueue(this.TurnRight);
-                this.pattern.Enqueue(this.WaitFor);
-                this.pattern.Enqueue(this.WaitFor);
-                this.pattern.Enqueue(this.TurnRight);
-                this.pattern.Enqueue(this.TurnRight);
-                this.pattern.Enqueue(this.WaitFor);
-            }
         }
 
         #endregion Methods/Behaviour

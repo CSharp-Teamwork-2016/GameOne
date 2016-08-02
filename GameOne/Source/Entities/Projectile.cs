@@ -3,44 +3,72 @@
     using System.Windows;
     using Enumerations;
     using Interfaces;
-    using Renderer;
+    using System;
 
+    [Serializable]
     public class Projectile : Model, IMovable
     {
         #region Fields
 
-        private readonly Vector velocity;
+        private Vector velocity;
         private ProjectileType type; // for later use
 
         #endregion Fields
 
         #region Constructors
 
-        public Projectile(double x, double y, double direction, double radius, Spritesheet sprite, Character source, Vector velocity)
+        public Projectile(double x, double y, double direction, double radius, IRenderingStrategy sprite, ICharacter source, Vector velocity)
             : base(x, y, direction, radius, sprite)
         {
             this.Source = source;
             this.velocity = velocity;
+            this.IsSolid = true;
         }
 
         #endregion Constructors
-        
+
         #region Properties
 
-        public Character Source { get; }
+        public ICharacter Source { get; }
 
-        #endregion Properties
-
-        #region Methods
-
-        public override void Update(double time)
+        public Vector Velocity
         {
-            if (this.Alive)
+            get
             {
-                this.Position += this.velocity * time;
+                return this.velocity;
+            }
+            set
+            {
+                this.velocity = value;
             }
         }
 
-        #endregion Methods
+        public bool IsSolid { get; private set; }
+
+        public CollisionResponse Response
+        {
+            get
+            {
+                return CollisionResponse.DestroyOnImpact;
+            }
+        }
+
+        public Shape CollisionShape
+        {
+            get
+            {
+                return Shape.Circle;
+            }
+        }
+
+        public MovementType MovementType
+        {
+            get
+            {
+                return MovementType.Frictionless;
+            }
+        }
+
+        #endregion Properties
     }
 }
