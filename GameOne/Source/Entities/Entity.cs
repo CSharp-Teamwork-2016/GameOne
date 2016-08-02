@@ -2,8 +2,10 @@
 {
     using Enumerations;
     using Interfaces;
+    using System;
 
     // Base class for all non-geometry (non-Tile, see Level) objects
+    [Serializable]
     public abstract class Entity : IRemovable
     {
         private static ulong nextId;

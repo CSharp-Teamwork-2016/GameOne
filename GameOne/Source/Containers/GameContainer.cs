@@ -1,8 +1,9 @@
 ﻿namespace GameOne.Source.Containers
 {
     using System;
+    using System.IO;
     using System.Linq;
-
+    using System.Runtime.Serialization.Formatters.Binary;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
 
@@ -10,14 +11,19 @@
     using Enumerations;
     using World;
     using Entities;
+    using Events;
     using UI;
     using Handlers;
+    using SaveAndLoad;
+    using UI.MainMenu;
+    using UI.MainMenu.SaveGame;
 
     // Game contents
     // Level
     // Entities
     // Parameters
     // Main loop
+    [Serializable]
     public class GameContainer
     {
         #region Fields
@@ -30,7 +36,11 @@
         // initial game state
         private GameState gameState = GameState.MainMenu;
 
-        // Main Menu
+        private SaveGame saveGame;
+
+        //Save and Load
+        //SaveManager save;
+        //bool saved = false;
 
         #endregion Fields
 
@@ -39,16 +49,21 @@
         public GameContainer(KeyboardState keyboardState, MouseState mouseState)
         {
             this.level = new Level();
-
             DebugInfo = string.Empty;
             Console = string.Empty;
             this.input = new Input(keyboardState, mouseState, this.level);
             LevelEditor.Init(this.input, this.level);
-            this.MainMenu = new MainMenu();
+            this.MainMenu = new MainMenu(this);
+            this.saveGame = new SaveGame(this);
             this.entityHandler = new EntityHandler(this.level);
             this.entityHandler.Subscribe(this.level.Entities);
             this.entityHandler.SubscribeToPlayer(this.level.Player);
             this.level.Player.ExitTriggeredEvent += this.OnExitTriggered;
+
+            //string saveFolder = "SaveManagerTest"; // put your save folder name here
+            //string saveFile = "test.sav"; // put your save file name here
+
+            //this.save = new StorageDeviceSaveManager(saveFolder, saveFile, PlayerIndex.One);
         }
 
         #endregion Constructors
@@ -68,6 +83,20 @@
 
         #region Methods
 
+        public void ButtonHandler(object sender, OnButtonClickEventArgs args)
+        {
+            this.gameState = args.GameState;
+        }
+
+        public void SaveButtonHandler(object sender, EventArgs args)
+        {
+            using (Stream stream = File.Open("save.bin", FileMode.Create))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+                bin.Serialize(stream, this.level);
+            }
+        }
+
         private void OnExitTriggered(object sender, EventArgs e)
         {
             this.level.ExitTriggered = true;
@@ -78,13 +107,12 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    this.gameState = this.MainMenu.Update(time);
+                    this.MainMenu.Update(mouseState);
                     break;
                 case GameState.Gameplay:
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                     {
                         this.gameState = GameState.MainMenu;
-                        this.MainMenu.CurrentScreen = this.MainMenu.ResumeScreen;
                     }
                     else
                     {
@@ -96,7 +124,6 @@
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                     {
                         this.gameState = GameState.MainMenu;
-                        this.MainMenu.CurrentScreen = this.MainMenu.ResumeScreen;
                     }
                     else
                     {
@@ -107,6 +134,18 @@
                 case GameState.EndOfGame:
                     // TODO
                     break;
+                case GameState.Credits:
+                    break;
+                case GameState.Exit:
+                    Environment.Exit(1);
+                    break;
+                case GameState.LoadGame:
+                    break;
+                case GameState.SaveGame:
+                    this.saveGame.Update(mouseState);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -128,7 +167,7 @@
                 this.entityHandler.Subscribe(this.level.Entities);
             }
 
-            this.entityHandler.ProcessEntities(time.ElapsedGameTime.Milliseconds / 1000.0);
+            this.entityHandler.ProcessEntities(time.ElapsedGameTime.Milliseconds/1000.0);
 
             // Execute tests
             foreach (Action test in Tests.ListOf.OnUpdate)
@@ -139,7 +178,7 @@
             DebugInfo = $"Player stats:{Environment.NewLine}State: {this.level.Player.State}{Environment.NewLine}Health: {this.level.Player.Health} / {this.level.Player.MaxHealth}{Environment.NewLine}Damage: {this.level.Player.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.level.Player.XpLevel}{Environment.NewLine}XP: {this.level.Player.Experience} / {this.level.Player.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies remaining: {this.level.EnemyCount}{Environment.NewLine}";
             if (ShowFPS)
             {
-                DebugInfo += $"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}";
+                DebugInfo += $"{(1000/time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}";
             }
         }
 
@@ -173,10 +212,11 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    Output.Draw(this.MainMenu.CurrentScreen, Vector2.Zero);
+                    this.MainMenu.Draw();
+                    //Output.Draw(this.MainMenu.CurrentScreen, Vector2.Zero);
                     break;
                 case GameState.Gameplay:
-                    double hpc = (double)this.level.Player.Health / this.level.Player.MaxHealth;
+                    double hpc = (double) this.level.Player.Health/this.level.Player.MaxHealth;
                     UserInterface.DrawSideBar(hpc, this.level.Player.HealthPotions, Level.CurrentLevel);
                     this.level.Geometry.ForEach(Primitive.DrawTileMini);
                     Primitive.DrawModelMini(this.level.Player);
@@ -196,6 +236,17 @@
                 case GameState.EndOfGame:
                     // TODO
                     break;
+                case GameState.Credits:
+                    break;
+                case GameState.Exit:
+                    break;
+                case GameState.LoadGame:
+                    break;
+                case GameState.SaveGame:
+                    this.saveGame.Draw();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -204,7 +255,7 @@
             this.level.Geometry.ForEach(Primitive.DrawTile);
             foreach (var entity in this.level.Entities.Where(e => e is Model))
             {
-                var model = (Model)entity;
+                var model = (Model) entity;
                 Primitive.DrawModel(model);
             }
         }
@@ -212,7 +263,7 @@
         private void RendeGrid()
         {
             this.level.Geometry.ForEach(Primitive.DrawGrid);
-            Tile target = new Tile((int)Primitive.ToWorldX(this.input.MouseX), (int)Primitive.ToWorldY(this.input.MouseY), LevelEditor.CurrentTile);
+            Tile target = new Tile((int) Primitive.ToWorldX(this.input.MouseX), (int) Primitive.ToWorldY(this.input.MouseY), LevelEditor.CurrentTile);
             Primitive.DrawTile(target);
         }
 

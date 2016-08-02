@@ -8,6 +8,7 @@
     using Interfaces;
     using World.Physics;
 
+    [Serializable]
     public abstract class Character : Model, IControllable, ICharacter, IUpdatable
     {
         #region Fields
@@ -37,7 +38,9 @@
 
         #region Events
 
+        [field: NonSerialized]
         public event EventHandler<ProjectileEventArgs> FireProjectileEvent;
+        [field: NonSerialized]
         public event EventHandler<MeleeAttackEventArgs> AttackEvent;
 
         #endregion

@@ -35,6 +35,7 @@
 
         #endregion Constructors
 
+        [field: NonSerialized]
         public event EventHandler<KilledEventArgs> KilledEvent;
 
         public EnemyType Type => this.type;

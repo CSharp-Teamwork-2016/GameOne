@@ -40,6 +40,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Source\Containers\ButtonContainer.cs" />
     <Compile Include="Source\Entities\Character.cs" />
     <Compile Include="Source\Entities\Enemies\Charger.cs" />
     <Compile Include="Source\Entities\Enemies\Lumber.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="Source\Enumerations\UserInput.cs" />
     <Compile Include="Source\Events\KilledEventArgs.cs" />
     <Compile Include="Source\Events\MeleeAttackEventArgs.cs" />
+    <Compile Include="Source\Events\OnButtonClickEventArgs.cs" />
+    <Compile Include="Source\Events\MousePositionEventArgs.cs" />
     <Compile Include="Source\Events\ProjectileEventArgs.cs" />
     <Compile Include="Source\Factories\EnemyFactory.cs" />
     <Compile Include="Source\Factories\PhysicsBodyFactory.cs" />
@@ -87,14 +90,26 @@
     <Compile Include="Source\Interfaces\IRenderingStrategy.cs" />
     <Compile Include="Source\Interfaces\IUpdatable.cs" />
     <Compile Include="Source\Interfaces\IZone.cs" />
+    <Compile Include="Source\Interfaces\MainMenu\IButton.cs" />
+    <Compile Include="Source\SaveAndLoad\SaveData.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\Strategies\CharacterRenderer.cs" />
     <Compile Include="Source\Strategies\ItemRenderer.cs" />
     <Compile Include="Source\Strategies\ProjectileRenderer.cs" />
     <Compile Include="Source\Strategies\RenderingStrategy.cs" />
     <Compile Include="Source\Strategies\TileRenderer.cs" />
-    <Compile Include="Source\UI\MainMenu.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\Button.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\ExitButton.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\LoadGameButton.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\LevelEditorButton.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\CreditsButton.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\BackButton.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\SaveGameButton.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\NewGameButton.cs" />
+    <Compile Include="Source\UI\MainMenu\Buttons\SaveSlotButton.cs" />
+    <Compile Include="Source\UI\MainMenu\MainMenu.cs" />
     <Compile Include="Source\Handlers\EntityHandler.cs" />
+    <Compile Include="Source\UI\MainMenu\SaveGame\SaveGame.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
     <Compile Include="Source\World\LevelEditor.cs" />
