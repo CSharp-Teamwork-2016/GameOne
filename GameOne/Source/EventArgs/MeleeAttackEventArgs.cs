@@ -1,7 +1,7 @@
-﻿namespace GameOne.Source.Events
+﻿namespace GameOne.Source.EventArgs
 {
-    using Interfaces;
     using System;
+    using Interfaces;
 
     public class MeleeAttackEventArgs : EventArgs
     {

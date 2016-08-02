@@ -8,7 +8,7 @@
     using Entities;
     using Entities.Zones;
     using Enumerations;
-    using Events;
+    using EventArgs;
     using Factories;
     using Interfaces;
     using World;

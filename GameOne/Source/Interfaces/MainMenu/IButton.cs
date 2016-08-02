@@ -1,7 +1,7 @@
 ﻿namespace GameOne.Source.Interfaces.MainMenu
 {
     using System;
-    using Events;
+    using EventArgs;
 
     public interface IButton
     {

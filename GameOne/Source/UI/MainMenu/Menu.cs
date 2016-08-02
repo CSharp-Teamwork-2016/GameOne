@@ -2,7 +2,7 @@
 {
     using System;
     using Containers;
-    using Events;
+    using EventArgs;
     using Interfaces.MainMenu;
     using Microsoft.Xna.Framework.Input;
 

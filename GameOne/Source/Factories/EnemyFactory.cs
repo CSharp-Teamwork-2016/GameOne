@@ -32,6 +32,7 @@
                 default:
                     throw new ArgumentException("Unrecognized enemy type.");
             }
+
             return enemy;
         }
     }

@@ -11,7 +11,7 @@
     using Enumerations;
     using World;
     using Entities;
-    using Events;
+    using EventArgs;
     using Handlers;
     using Interfaces.MainMenu;
     using UI;

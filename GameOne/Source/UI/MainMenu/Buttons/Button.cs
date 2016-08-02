@@ -3,7 +3,7 @@
     using System;
     using Containers;
     using Enumerations;
-    using Events;
+    using EventArgs;
     using Interfaces.MainMenu;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;

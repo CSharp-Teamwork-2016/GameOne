@@ -4,8 +4,8 @@
     using System.Collections.Generic;
 
     using Enumerations;
+    using EventArgs;
     using Interfaces;
-    using Events;
 
     [Serializable]
     public abstract class Enemy : Character

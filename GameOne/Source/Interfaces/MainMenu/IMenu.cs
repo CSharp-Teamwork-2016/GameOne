@@ -1,7 +1,7 @@
 ﻿namespace GameOne.Source.Interfaces.MainMenu
 {
     using System;
-    using Events;
+    using EventArgs;
     using Microsoft.Xna.Framework.Input;
 
     public interface IMenu
