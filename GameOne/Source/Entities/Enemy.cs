@@ -7,6 +7,7 @@
     using Interfaces;
     using Events;
 
+    [Serializable]
     public abstract class Enemy : Character
     {
         #region Fields
