@@ -79,7 +79,7 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    //this.gameState = this.MainMenu.Update(time);
+                    this.MainMenu.Update(mouseState);
                     break;
                 case GameState.Gameplay:
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))

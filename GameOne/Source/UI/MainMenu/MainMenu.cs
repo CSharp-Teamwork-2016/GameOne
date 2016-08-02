@@ -1,55 +1,41 @@
 ﻿namespace GameOne.Source.UI.MainMenu
 {
-    using Enumerations;
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
+    using Buttons;
+    using Containers;
+    using Events;
+    using Interfaces.MainMenu;
     using Microsoft.Xna.Framework.Input;
+
+    public delegate void OnMouseClickEventHandler(object sender, MousePositionEventArgs args);
+
+    public delegate void OnMouseHoverEventHandler(object sender, MousePositionEventArgs args);
 
     public class MainMenu
     {
         #region Properties
 
-        private const int NumberOfButtons = 6;
-        private const int buttonStartX = 250;
-        private const int buttonStartY = 100;
-        private const int offsetX = 50;
-
-        // Sad
-        private string[] buttonsNames = new string[NumberOfButtons]
-        {
-            "New Game",
-            "Save Game",
-            "Load Game",
-            "Level Editor",
-            "Credits",
-            "Exit"
-        };
-
-        private Button[] buttons;
-        //public Texture2D MainMenuScreen { get; set; }
-
-        //public Texture2D ResumeScreen { get; set; }
-
-        //public Texture2D CreditsScreen { get; set; }
-
-        //public Texture2D WePromiseScreen { get; set; }
-
-        //public Texture2D CurrentScreen { get; set; }
+        private ButtonContainer buttons;
 
         #endregion Properties
 
         public MainMenu()
         {
-            this.buttons = new Button[6];
+            this.buttons = new ButtonContainer();
+            // Sad
+            this.buttons.AddButton(new NewGameButton(250, 100));
+            this.buttons.AddButton(new SaveGameButton(250, 150));
+            this.buttons.AddButton(new LoadGameButton(250, 200));
+            this.buttons.AddButton(new LevelEditorButton(250, 250));
+            this.buttons.AddButton(new CreditsButton(250, 300));
+            this.buttons.AddButton(new ExitButton(250, 350));
 
-            var x = buttonStartX;
-
-            for (int i = 0; i < NumberOfButtons; i++)
+            foreach (IButton button in this.buttons)
             {
-                this.buttons[i] = new Button(this.buttonsNames[i], x, buttonStartY);
-                x += offsetX;
+                this.OnMouseHover += button.OnMouseHover;
             }
         }
+
+        public event OnMouseHoverEventHandler OnMouseHover;
 
         #region Methods
 
@@ -154,10 +140,12 @@
 
         public void Draw()
         {
-            foreach (var button in this.buttons)
-            {
-                button.Draw();
-            }
+            this.buttons.Draw();
+        }
+
+        public void Update(MouseState mouseState)
+        {
+            this.OnMouseHover?.Invoke(null, new MousePositionEventArgs(mouseState.X, mouseState.Y, mouseState.LeftButton == ButtonState.Pressed));
         }
 
         #endregion Methods

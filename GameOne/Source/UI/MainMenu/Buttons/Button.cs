@@ -1,26 +1,31 @@
-﻿namespace GameOne.Source.UI.MainMenu
+﻿namespace GameOne.Source.UI.MainMenu.Buttons
 {
+    using System;
+    using Events;
     using Interfaces.MainMenu;
     using Microsoft.Xna.Framework;
     using Renderer;
 
-    public class Button : IButton
+    public abstract class Button : IButton
     {
-        private const int Width = 300;
-        private const int Height = 45;
+        protected const int Width = 300;
+        protected const int Height = 45;
+        protected Color DefaultColor = Color.Red;
 
-        private string name;
-        private int x;
-        private int y;
+        protected string name;
+        protected int x;
+        protected int y;
+        protected Color color;
 
         //private int width;
         //private int height;
 
-        public Button(string name, int x, int y)
+        protected Button(string name, int x, int y)
         {
             this.name = name;
             this.x = x;
             this.y = y;
+            this.color = this.DefaultColor;
         }
 
         /**
@@ -58,9 +63,27 @@
         //    }
         //}
 
+        public abstract void OnMouseClick(object sender, MousePositionEventArgs args);
+
+        public void OnMouseHover(object sender, MousePositionEventArgs args)
+        {
+            if (
+                (args.X >= this.x) && 
+                (args.X <= this.x + Width) &&
+                (args.Y >= this.y) &&
+                args.Y <= this.y + Height)
+            {
+                this.color = Color.Yellow;
+            }
+            else
+            {
+                this.color = this.DefaultColor;
+            }
+        }
+
         public void Draw()
         {
-            Output.FillRect(this.x, this.y, Width, Height, Color.Chocolate);
+            Output.FillRect(this.x, this.y, Width, Height, this.color);
             Output.DrawText(this.name, this.x, this.y);
         }
     }

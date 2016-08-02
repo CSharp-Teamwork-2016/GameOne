@@ -6,7 +6,6 @@
     using Entities;
     using Enumerations;
     using Factories;
-    using Renderer;
 
     public class Level
     {
