@@ -55,7 +55,7 @@
                 args.MouseState.LeftButton == ButtonState.Released && 
                 this.isMousePressedOnButton)
             {
-                this.OnButtonClick?.Invoke(null, new OnButtonClickEventArgs(this.gameState));
+                this.OnButtonClick?.Invoke(null, new OnButtonClickEventArgs(this.gameState, this.name));
                 this.isMousePressedOnButton = false;
                 // Sad
                 if (this is NewGameButton)

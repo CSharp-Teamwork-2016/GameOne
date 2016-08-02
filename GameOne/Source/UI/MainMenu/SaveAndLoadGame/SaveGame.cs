@@ -1,4 +1,4 @@
-﻿namespace GameOne.Source.UI.MainMenu.SaveGame
+﻿namespace GameOne.Source.UI.MainMenu.SaveAndLoadGame
 {
     using System;
     using Buttons;
@@ -23,10 +23,11 @@
         public SaveGame(GameContainer gameContainer)
         {
             this.buttons = new ButtonContainer();
+
             // Sad
-            this.buttons.AddButton(new SaveSlotButton("Game 1", 250, 100));
-            this.buttons.AddButton(new SaveSlotButton("Game 2", 250, 150));
-            this.buttons.AddButton(new SaveSlotButton("Game 3", 250, 200));
+            this.buttons.AddButton(new SaveSlotButton("Game1", 250, 100));
+            this.buttons.AddButton(new SaveSlotButton("Game2", 250, 150));
+            this.buttons.AddButton(new SaveSlotButton("Game3", 250, 200));
 
             foreach (IButton button in this.buttons)
             {
@@ -36,7 +37,11 @@
             }
 
             var backButton = new BackButton(250, 350);
+
+            this.OnMouseHover += backButton.OnMouseHover;
+            this.OnMouseClick += backButton.OnMouseClick;
             backButton.OnButtonClick += gameContainer.ButtonHandler;
+
             this.buttons.AddButton(backButton);
         }
 

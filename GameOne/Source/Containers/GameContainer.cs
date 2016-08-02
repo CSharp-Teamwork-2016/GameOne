@@ -12,11 +12,10 @@
     using World;
     using Entities;
     using Events;
-    using UI;
     using Handlers;
-    using SaveAndLoad;
+    using UI;
     using UI.MainMenu;
-    using UI.MainMenu.SaveGame;
+    using UI.MainMenu.SaveAndLoadGame;
 
     // Game contents
     // Level
@@ -31,12 +30,13 @@
         // Game objects
         private Level level;
         private readonly Input input;
-        private readonly EntityHandler entityHandler;
+        private EntityHandler entityHandler;
 
         // initial game state
         private GameState gameState = GameState.MainMenu;
 
         private SaveGame saveGame;
+        private LoadGame loadGame;
 
         //Save and Load
         //SaveManager save;
@@ -55,6 +55,7 @@
             LevelEditor.Init(this.input, this.level);
             this.MainMenu = new MainMenu(this);
             this.saveGame = new SaveGame(this);
+            this.loadGame = new LoadGame(this);
             this.entityHandler = new EntityHandler(this.level);
             this.entityHandler.Subscribe(this.level.Entities);
             this.entityHandler.SubscribeToPlayer(this.level.Player);
@@ -88,13 +89,31 @@
             this.gameState = args.GameState;
         }
 
-        public void SaveButtonHandler(object sender, EventArgs args)
+        public void SaveButtonHandler(object sender, OnButtonClickEventArgs args)
         {
-            using (Stream stream = File.Open("save.bin", FileMode.Create))
+            using (Stream stream = File.Open(args.Name, FileMode.Create))
             {
                 BinaryFormatter bin = new BinaryFormatter();
                 bin.Serialize(stream, this.level);
             }
+        }
+
+        public void LoadButtonHandler(object sender, OnButtonClickEventArgs args)
+        {
+            using (Stream stream = File.Open(args.Name, FileMode.Open))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+
+                this.level = (Level)bin.Deserialize(stream);
+            }
+
+            LevelEditor.Init(this.input, this.level);
+            this.entityHandler = new EntityHandler(this.level);
+            this.entityHandler.Subscribe(this.level.Entities);
+            this.entityHandler.SubscribeToPlayer(this.level.Player);
+            this.level.Player.ExitTriggeredEvent += this.OnExitTriggered;
+
+            this.gameState = GameState.Gameplay;
         }
 
         private void OnExitTriggered(object sender, EventArgs e)
@@ -140,6 +159,7 @@
                     Environment.Exit(1);
                     break;
                 case GameState.LoadGame:
+                    this.loadGame.Update(mouseState);
                     break;
                 case GameState.SaveGame:
                     this.saveGame.Update(mouseState);
@@ -241,6 +261,7 @@
                 case GameState.Exit:
                     break;
                 case GameState.LoadGame:
+                    this.loadGame.Draw();
                     break;
                 case GameState.SaveGame:
                     this.saveGame.Draw();

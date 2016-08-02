@@ -109,7 +109,8 @@
     <Compile Include="Source\UI\MainMenu\Buttons\SaveSlotButton.cs" />
     <Compile Include="Source\UI\MainMenu\MainMenu.cs" />
     <Compile Include="Source\Handlers\EntityHandler.cs" />
-    <Compile Include="Source\UI\MainMenu\SaveGame\SaveGame.cs" />
+    <Compile Include="Source\UI\MainMenu\SaveAndLoadGame\LoadGame.cs" />
+    <Compile Include="Source\UI\MainMenu\SaveAndLoadGame\SaveGame.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
     <Compile Include="Source\World\LevelEditor.cs" />
