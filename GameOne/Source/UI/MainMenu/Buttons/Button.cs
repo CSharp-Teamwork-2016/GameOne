@@ -1,7 +1,6 @@
 ﻿namespace GameOne.Source.UI.MainMenu.Buttons
 {
     using System;
-    using Containers;
     using Enumerations;
     using EventArgs;
     using Interfaces.MainMenu;
@@ -13,7 +12,9 @@
     {
         private const int Width = 300;
         private const int Height = 45;
-        private readonly Color DefaultColor = Color.Red;
+        private readonly Color DefaultColor = Color.DarkRed;
+        private readonly Color HighlightColor = Color.Red;
+        private readonly Color TextColor = Color.White;
 
         private string name;
         private Rectangle rectangle;
@@ -35,15 +36,13 @@
         {
             var point = new Point(args.X, args.Y);
 
-            if (
-                this.rectangle.Contains(point) &&
+            if (this.rectangle.Contains(point) &&
                 args.MouseState.LeftButton == ButtonState.Pressed)
             {
                 this.isMousePressedOnButton = true;
                 this.color = Color.Blue;
             }
-            else if (
-                this.rectangle.Contains(point) &&
+            else if (this.rectangle.Contains(point) &&
                 args.MouseState.LeftButton == ButtonState.Released && 
                 this.isMousePressedOnButton)
             {
@@ -65,13 +64,13 @@
         {
             var point = new Point(args.X, args.Y);
 
-            this.color = this.rectangle.Contains(point) ? Color.Yellow : this.DefaultColor;
+            this.color = this.rectangle.Contains(point) ? this.HighlightColor : this.DefaultColor;
         }
 
         public void Draw()
         {
             Output.FillRect(this.rectangle.X, this.rectangle.Y, Width, Height, this.color);
-            Output.DrawText(this.name, this.rectangle.X, this.rectangle.Y);
+            Output.DrawText(this.name, this.rectangle.X + 10, this.rectangle.Y + 10, this.TextColor, 1.5f);
         }
     }
 }

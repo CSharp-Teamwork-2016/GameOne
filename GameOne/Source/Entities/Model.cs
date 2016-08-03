@@ -26,13 +26,21 @@
 
         public double Radius { get; set; }
 
+        public Rect BoundingBox
+        {
+            get
+            {
+                return new Rect(this.Position.X - this.Radius, this.Position.Y - this.Radius, this.Radius * 2, this.Radius * 2);
+            }
+        }
+
         public State State => this.state;
 
         public IRenderingStrategy RenderingStrategy()
         {
             return this.sprite;
         }
-        
+
         public virtual void Die()
         {
             this.state = State.DEAD;

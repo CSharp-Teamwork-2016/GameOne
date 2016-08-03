@@ -22,6 +22,11 @@
 
         public static bool Intersect(ICollidable m1, ICollidable m2)
         {
+            // Bounding box check
+            if (!IntersectSquareSquare(m1, m2))
+            {
+                return false;
+            }
             if (m1.CollisionShape == Shape.Circle)
             {
                 if (m2.CollisionShape == Shape.Circle)
@@ -37,17 +42,17 @@
             {
                 if (m2.CollisionShape == Shape.Circle)
                 {
-                    return IntersectCircleCircle(m2, m1);
+                    return IntersectCircleSquare(m2, m1);
                 }
                 else if (m2.CollisionShape == Shape.Square)
                 {
-                    return IntersectSquareSquare(m1, m2);
+                    return true; // Already confirmed in preliminary check
                 }
             }
             return false;
         }
 
-        private static bool IntersectCircleCircle(ICollidable m1, ICollidable m2)
+        public static bool IntersectCircleCircle(ICollidable m1, ICollidable m2)
         {
             Vector separation = Vector.Subtract(m1.Position, m2.Position);
             double dist = separation.Length;
@@ -60,30 +65,42 @@
             return false;
         }
 
-        private static bool IntersectCircleSquare(ICollidable circle, ICollidable square)
+        public static bool IntersectCircleSquare(ICollidable circle, ICollidable square)
         {
-            double tileHalf = 0.5;
+            double horizontalHalf = square.BoundingBox.Width / 2;
+            double verticalHalf = square.BoundingBox.Height / 2;
             double distX = Math.Abs(square.Position.X - circle.Position.X);
             double distY = Math.Abs(square.Position.Y - circle.Position.Y);
 
-            if (distX > tileHalf + circle.Radius || distY > tileHalf + circle.Radius)
-            {
-                return false;
-            }
-            if (distX <= tileHalf + circle.Radius && distY <= tileHalf)
+            if (distX <= horizontalHalf + circle.Radius && distY <= verticalHalf)
             {
                 return true;
             }
-            if (distX <= tileHalf && distY <= tileHalf + circle.Radius)
+            if (distX <= horizontalHalf && distY <= verticalHalf + circle.Radius)
+            {
+                return true;
+            }
+            // Find closest vertex
+            double px1 = Math.Abs(square.BoundingBox.X - circle.Position.X);
+            double py1 = Math.Abs(square.BoundingBox.Y - circle.Position.Y);
+            double px2 = Math.Abs(square.BoundingBox.Right - circle.Position.X);
+            double py2 = Math.Abs(square.BoundingBox.Bottom - circle.Position.Y);
+            double cornerX = Math.Min(px1, px2);
+            double cornerY = Math.Min(py1, py2);
+            Vector distCorner = new Vector(cornerX, cornerY);
+            if (distCorner.Length < circle.Radius)
             {
                 return true;
             }
             return false;
         }
 
-        private static bool IntersectSquareSquare(ICollidable m1, ICollidable m2)
+        public static bool IntersectSquareSquare(ICollidable m1, ICollidable m2)
         {
-            // We don't have movable squares yet, so even if they intersect, the collision can't be resolved
+            if (m1.BoundingBox.IntersectsWith(m2.BoundingBox))
+            {
+                return true;
+            }
             return false;
         }
 

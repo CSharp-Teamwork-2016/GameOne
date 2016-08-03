@@ -86,9 +86,9 @@
         /// <summary>
         /// Draw text
         /// </summary>
-        private static void _DrawText(string text, float x, float y, Color color)
+        private static void _DrawText(string text, float x, float y, Color color, float scale)
         {
-            batch.DrawString(font, text, new Vector2(x, y), color);
+            batch.DrawString(font, text, new Vector2(x, y), color, 0, new Vector2(0, 0), scale * 0.25f, SpriteEffects.None, 0);
         }
 
         ///
@@ -102,7 +102,7 @@
         /// <param name="y">Top offset</param>
         public static void DrawText(string text, double x, double y)
         {
-            _DrawText(text, (float)x, (float)y, PenColor);
+            _DrawText(text, (float)x, (float)y, PenColor, 1);
         }
 
         ///
@@ -114,10 +114,41 @@
         /// <param name="text">String to be displayed</param>
         /// <param name="x">Left offset</param>
         /// <param name="y">Top offset</param>
-        /// <param name="color">Text color </param>
+        /// <param name="color">Text color</param>
         public static void DrawText(string text, double x, double y, Color color)
         {
-            _DrawText(text, (float)x, (float)y, color);
+            _DrawText(text, (float)x, (float)y, color, 1);
+        }
+
+        ///
+        /// <summary>
+        /// Outputs texts to the screen on the specified location, using the default color and specified scale
+        /// <para><paramref name="x"/> and <paramref name="y"/> are supplied in screen units</para>
+        /// <para>Origin point is the upper left corner of the resulting object</para>
+        /// </summary>
+        /// <param name="text">String to be displayed</param>
+        /// <param name="x">Left offset</param>
+        /// <param name="y">Top offset</param>
+        /// <param name="scale">Font scale</param>
+        public static void DrawText(string text, double x, double y, float scale)
+        {
+            _DrawText(text, (float)x, (float)y, PenColor, scale);
+        }
+
+        ///
+        /// <summary>
+        /// Outputs texts to the screen on the specified location, using the specified color and scale
+        /// <para><paramref name="x"/> and <paramref name="y"/> are supplied in screen units</para>
+        /// <para>Origin point is the upper left corner of the resulting object</para>
+        /// </summary>
+        /// <param name="text">String to be displayed</param>
+        /// <param name="x">Left offset</param>
+        /// <param name="y">Top offset</param>
+        /// <param name="color">Text color</param>
+        /// <param name="scale">Font scale</param>
+        public static void DrawText(string text, double x, double y, Color color, float scale)
+        {
+            _DrawText(text, (float)x, (float)y, color, scale);
         }
 
         ///
