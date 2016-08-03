@@ -4,6 +4,7 @@
     using Enumerations;
     using Renderer;
     using Factories;
+    using Interfaces;
 
     [Serializable]
     public class Player : Character
@@ -112,6 +113,25 @@
         {
             base.TakeDamage(damage);
             this.Knockback();
+        }
+
+        public override void Respond(ICollidable model)
+        {
+            if (model is Enemy)
+            {
+                this.TakeDamage(((Enemy)model).Damage);
+            }
+            else if (model is Item)
+            {
+                this.PickUpItem(((Item)model).Type);
+            }
+            else if (model is Projectile)
+            {
+                if (((Projectile)model).Source is Enemy)
+                {
+                    this.TakeDamage(((Projectile)model).Source.Damage);
+                }
+            }
         }
 
         public void Respawn()

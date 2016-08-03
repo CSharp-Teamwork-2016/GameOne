@@ -17,68 +17,92 @@
         public static readonly double RightDirection = 0.0;
         public const double NominalVelocity = 3;
         public const double ProjectileSpeed = 8;
+        public const double FrictionCoefficient = 15;
 
-        #region Methods
+        #region Collision detection
 
-        public static bool Intersect(ICollidable m1, ICollidable m2)
+        /// <summary>
+        /// Returns a vector, representing the ammount of interpenetration between two collision shapes
+        /// </summary>
+        /// <param name="m1">First shape</param>
+        /// <param name="m2">Second shape</param>
+        /// <returns>Penetration as a Vector; null, if no penetration occurs</returns>
+        public static Vector? Intersect(ICollidable m1, ICollidable m2)
         {
             // Bounding box check
-            if (!IntersectSquareSquare(m1, m2))
+            Vector? aabb = IntersectSquareSquare(m1, m2);
+            Vector? result = null;
+            if (aabb == null)
             {
-                return false;
+                return null;
             }
             if (m1.CollisionShape == Shape.Circle)
             {
                 if (m2.CollisionShape == Shape.Circle)
                 {
-                    return IntersectCircleCircle(m1, m2);
+                    result = IntersectCircleCircle(m1, m2);
                 }
                 else if (m2.CollisionShape == Shape.Square)
                 {
-                    return IntersectCircleSquare(m1, m2);
+                    result = IntersectCircleSquare(m1, m2);
                 }
             }
             else if (m1.CollisionShape == Shape.Square)
             {
                 if (m2.CollisionShape == Shape.Circle)
                 {
-                    return IntersectCircleSquare(m2, m1);
+                    // Since we swap the operands, we need to negate the result
+                    result = IntersectCircleSquare(m2, m1);
+                    result?.Negate();
                 }
                 else if (m2.CollisionShape == Shape.Square)
                 {
-                    return true; // Already confirmed in preliminary check
+                    result = aabb; // Already confirmed in preliminary check
                 }
             }
-            return false;
+            if (result != null && (!m1.IsSolid || !m2.IsSolid))
+            {
+                // If one of the operands is not solid, only indicate intersection occured
+                result = new Vector(0,0);
+            }
+            return result;
         }
 
-        public static bool IntersectCircleCircle(ICollidable m1, ICollidable m2)
+        public static Vector? IntersectCircleCircle(ICollidable m1, ICollidable m2)
         {
             Vector separation = Vector.Subtract(m1.Position, m2.Position);
-            double dist = separation.Length;
-            double penetration = dist - (m1.Radius + m2.Radius);
+            double dist = separation.LengthSquared;
+            double penetration = dist - (m1.Radius + m2.Radius) * (m1.Radius + m2.Radius);
 
             if (penetration < 0)
             {
-                return true;
+                penetration = Math.Sqrt(dist) - (m1.Radius + m2.Radius);
+                separation.Normalize();
+                separation *= penetration;
+                return separation;
             }
-            return false;
+            return null;
         }
 
-        public static bool IntersectCircleSquare(ICollidable circle, ICollidable square)
+        public static Vector? IntersectCircleSquare(ICollidable circle, ICollidable square)
         {
+            Vector separation = Vector.Subtract(circle.Position, square.Position);
             double horizontalHalf = square.BoundingBox.Width / 2;
             double verticalHalf = square.BoundingBox.Height / 2;
-            double distX = Math.Abs(square.Position.X - circle.Position.X);
-            double distY = Math.Abs(square.Position.Y - circle.Position.Y);
 
-            if (distX <= horizontalHalf + circle.Radius && distY <= verticalHalf)
+            if (Math.Abs(separation.X) <= horizontalHalf + circle.Radius && Math.Abs(separation.Y) <= verticalHalf)
             {
-                return true;
+                double penetration = separation.Length - (horizontalHalf + circle.Radius);
+                separation.Normalize();
+                separation *= penetration;
+                return separation;
             }
-            if (distX <= horizontalHalf && distY <= verticalHalf + circle.Radius)
+            if (Math.Abs(separation.X) <= horizontalHalf && Math.Abs(separation.Y) <= verticalHalf + circle.Radius)
             {
-                return true;
+                double penetration = separation.Length - (verticalHalf + circle.Radius);
+                separation.Normalize();
+                separation *= penetration;
+                return separation;
             }
             // Find closest vertex
             double px1 = Math.Abs(square.BoundingBox.X - circle.Position.X);
@@ -88,88 +112,27 @@
             double cornerX = Math.Min(px1, px2);
             double cornerY = Math.Min(py1, py2);
             Vector distCorner = new Vector(cornerX, cornerY);
-            if (distCorner.Length < circle.Radius)
+            if (distCorner.LengthSquared < circle.Radius * circle.Radius)
             {
-                return true;
+                double penetration = distCorner.Length - circle.Radius;
+                separation.Normalize();
+                separation *= penetration;
+                return separation;
             }
-            return false;
+            return null;
         }
 
-        public static bool IntersectSquareSquare(ICollidable m1, ICollidable m2)
+        public static Vector? IntersectSquareSquare(ICollidable m1, ICollidable m2)
         {
             if (m1.BoundingBox.IntersectsWith(m2.BoundingBox))
             {
-                return true;
+                // We don't really need this result yet, just indicate intersection
+                return new Vector();
             }
-            return false;
+            return null;
         }
 
-        public static void DetectCollisions(List<Model> models)
-        {
-            // Save first item in a temp variable
-            // Remove from list
-            // Check temp item against remaining collection
-            // Repeat until collection is empty
-            foreach (Model model in models)
-            {
-                Hitscan(model, models.Where(current => current != model).ToList());
-            }
-        }
-
-        public static void BoundsCheck(List<Model> models, List<Tile> tiles)
-        {
-            foreach (Model model in models)
-            {
-                Wallscan(model, tiles);
-            }
-        }
-
-        private static void Hitscan(Model current, List<Model> models)
-        {
-            foreach (Model model in models)
-            {
-                ResolveCollision(current, model);
-            }
-        }
-
-        private static void ResolveCollision(Model e1, Model e2)
-        {
-            if (!e1.Alive || !e2.Alive)
-            {
-                return;
-            }
-
-            Vector separation = Vector.Subtract(e1.Position, e2.Position);
-            double dist = separation.Length;
-            double penetration = dist - (e1.Radius + e2.Radius);
-
-            if (penetration < 0)
-            {
-                if (HandleItems(e1, e2))
-                {
-                    return;
-                }
-
-                if (HandleProjectiles(e1, e2))
-                {
-                    return;
-                }
-
-                separation.Normalize();
-                separation = Vector.Multiply(separation, penetration / 2);
-                e1.Position -= separation;
-                e2.Position += separation;
-                // Loop.DebugInfo += "Collision\n";
-                if (e1 is Player && e2 is Enemy)
-                {
-                    ((Character)e1).TakeDamage(((Character)e2).Damage);
-                }
-                else if (e2 is Player && e1 is Enemy)
-                {
-                    ((Character)e2).TakeDamage(((Character)e1).Damage);
-                }
-            }
-        }
+        #endregion
 
         internal static Vector GetDirectedVector(double direction)
         {
@@ -179,70 +142,12 @@
             return result;
         }
 
-        private static bool HandleItems(Model e1, Model e2)
+        public static void BoundsCheck(List<Model> models, List<Tile> tiles)
         {
-            if (e1 is Item)
+            foreach (Model model in models)
             {
-                Model t = e2;
-                e2 = e1;
-                e1 = t;
+                Wallscan(model, tiles);
             }
-
-            if (e2 is Item)
-            {
-                if (e1 is Player)
-                {
-                    ((Item)e2).Collect();
-                    ((Player)e1).PickUpItem(((Item)e2).Type);
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool HandleProjectiles(Model e1, Model e2)
-        {
-            if (e1 is Projectile)
-            {
-                Model t = e2;
-                e2 = e1;
-                e1 = t;
-            }
-
-            if (e2 is Projectile)
-            {
-                Projectile projectile = (Projectile)e2;
-                if (e1 is Character)
-                {
-                    Character target = (Character)e1;
-                    if (target is Player)
-                    {
-                        if (projectile.Source is Enemy)
-                        {
-                            projectile.Die();
-                            target.TakeDamage(projectile.Source.Damage);
-                        }
-
-                        return true;
-                    }
-                    else if (target is Enemy)
-                    {
-                        if (projectile.Source is Player)
-                        {
-                            projectile.Die();
-                            target.TakeDamage((int)(projectile.Source.Damage * 0.4));
-                        }
-
-                        return true;
-                    }
-                }
-
-                return true;
-            }
-
-            return false;
         }
 
         private static void Wallscan(Model current, List<Tile> tiles)
@@ -313,6 +218,5 @@
             }
         }
 
-        #endregion Methods
     }
 }

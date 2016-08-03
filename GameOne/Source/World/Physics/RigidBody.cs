@@ -7,8 +7,20 @@
     {
         public bool IsSolid { get; set; }
 
-        public CollisionResponse Response { get; set; }
+        public CollisionResponse CollisionResponse { get; set; }
+
+        public bool Alive => true;
 
         public Shape CollisionShape { get; set; }
+
+        public void Respond(ICollidable model)
+        {
+
+        }
+
+        public void Die()
+        {
+
+        }
     }
 }

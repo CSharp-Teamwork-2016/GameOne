@@ -19,5 +19,10 @@
         public ulong Id { get; }
         
         public bool Alive => !this.state.HasFlag(State.DEAD);
+
+        public virtual void Die()
+        {
+            this.state = State.DEAD;
+        }
     }
 }

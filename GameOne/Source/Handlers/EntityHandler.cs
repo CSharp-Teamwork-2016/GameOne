@@ -49,10 +49,8 @@
                 zone.Update(time);
             }
 
-            PhysicsEngine.DetectCollisions(level.Entities
-                    .OfType<Model>()
-                    .Where(e => e.Alive)
-                    .ToList());
+            PhysicsHandler.ResolveCollisions(level.Entities.OfType<Model>().Where(e => e.Alive)
+                    .Select(e => (ICollidable)e).ToList());
 
             var modelEntitiesTo = level.Entities.OfType<Model>().ToList();
             var tileWalls = level.Geometry.Where(tile => tile.TileType == TileType.Wall).ToList();

@@ -92,7 +92,6 @@
     <Compile Include="Source\Interfaces\IZone.cs" />
     <Compile Include="Source\Interfaces\MainMenu\IButton.cs" />
     <Compile Include="Source\Interfaces\MainMenu\IMenu.cs" />
-    <Compile Include="Source\SaveAndLoad\SaveData.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\Strategies\CharacterRenderer.cs" />
     <Compile Include="Source\Strategies\ItemRenderer.cs" />

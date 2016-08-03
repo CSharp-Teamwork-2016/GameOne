@@ -40,10 +40,5 @@
         {
             return this.sprite;
         }
-
-        public virtual void Die()
-        {
-            this.state = State.DEAD;
-        }
     }
 }

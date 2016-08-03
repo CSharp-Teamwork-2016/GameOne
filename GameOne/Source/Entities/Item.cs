@@ -18,7 +18,7 @@
 
         public bool IsSolid { get; private set; }
 
-        public CollisionResponse Response
+        public CollisionResponse CollisionResponse
         {
             get
             {
@@ -37,6 +37,14 @@
         public void Collect()
         {
             this.state = State.DEAD;
+        }
+
+        public void Respond(ICollidable model)
+        {
+            if (model is Player)
+            {
+                this.Collect();
+            }
         }
     }
 }
