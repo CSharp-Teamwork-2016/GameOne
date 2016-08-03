@@ -4,7 +4,7 @@
     using System.Windows;
 
     using Enumerations;
-    using Events;
+    using EventArgs;
     using Interfaces;
     using World.Physics;
 

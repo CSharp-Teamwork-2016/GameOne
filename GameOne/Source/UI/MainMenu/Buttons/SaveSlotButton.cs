@@ -1,7 +1,6 @@
 ﻿namespace GameOne.Source.UI.MainMenu.Buttons
 {
     using Enumerations;
-    using Events;
 
     public class SaveSlotButton : Button
     {

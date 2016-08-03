@@ -68,11 +68,11 @@
     <Compile Include="Source\Enumerations\State.cs" />
     <Compile Include="Source\Enumerations\TileType.cs" />
     <Compile Include="Source\Enumerations\UserInput.cs" />
-    <Compile Include="Source\Events\KilledEventArgs.cs" />
-    <Compile Include="Source\Events\MeleeAttackEventArgs.cs" />
-    <Compile Include="Source\Events\OnButtonClickEventArgs.cs" />
-    <Compile Include="Source\Events\MousePositionEventArgs.cs" />
-    <Compile Include="Source\Events\ProjectileEventArgs.cs" />
+    <Compile Include="Source\EventArgs\KilledEventArgs.cs" />
+    <Compile Include="Source\EventArgs\MeleeAttackEventArgs.cs" />
+    <Compile Include="Source\EventArgs\OnButtonClickEventArgs.cs" />
+    <Compile Include="Source\EventArgs\MousePositionEventArgs.cs" />
+    <Compile Include="Source\EventArgs\ProjectileEventArgs.cs" />
     <Compile Include="Source\Factories\EnemyFactory.cs" />
     <Compile Include="Source\Factories\PhysicsBodyFactory.cs" />
     <Compile Include="Source\Factories\ProjectileFactory.cs" />
@@ -91,6 +91,7 @@
     <Compile Include="Source\Interfaces\IUpdatable.cs" />
     <Compile Include="Source\Interfaces\IZone.cs" />
     <Compile Include="Source\Interfaces\MainMenu\IButton.cs" />
+    <Compile Include="Source\Interfaces\MainMenu\IMenu.cs" />
     <Compile Include="Source\SaveAndLoad\SaveData.cs" />
     <Compile Include="Source\Sound\AudioManager.cs" />
     <Compile Include="Source\Strategies\CharacterRenderer.cs" />
@@ -107,9 +108,12 @@
     <Compile Include="Source\UI\MainMenu\Buttons\SaveGameButton.cs" />
     <Compile Include="Source\UI\MainMenu\Buttons\NewGameButton.cs" />
     <Compile Include="Source\UI\MainMenu\Buttons\SaveSlotButton.cs" />
+    <Compile Include="Source\UI\MainMenu\CreditsMenu.cs" />
     <Compile Include="Source\UI\MainMenu\MainMenu.cs" />
     <Compile Include="Source\Handlers\EntityHandler.cs" />
-    <Compile Include="Source\UI\MainMenu\SaveGame\SaveGame.cs" />
+    <Compile Include="Source\UI\MainMenu\LoadGameMenu.cs" />
+    <Compile Include="Source\UI\MainMenu\Menu.cs" />
+    <Compile Include="Source\UI\MainMenu\SaveGameMenu.cs" />
     <Compile Include="Source\World\Hallway.cs" />
     <Compile Include="Source\World\Level.cs" />
     <Compile Include="Source\World\LevelEditor.cs" />
@@ -145,9 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

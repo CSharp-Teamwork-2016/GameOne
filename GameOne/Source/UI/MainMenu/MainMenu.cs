@@ -3,24 +3,11 @@
     using System;
     using Buttons;
     using Containers;
-    using Enumerations;
-    using Events;
     using Interfaces.MainMenu;
-    using Microsoft.Xna.Framework.Input;
-
-    public delegate void OnMouseClickEventHandler(object sender, MousePositionEventArgs args);
-
-    public delegate void OnMouseHoverEventHandler(object sender, MousePositionEventArgs args);
 
     [Serializable]
-    public class MainMenu
+    public class MainMenu : Menu
     {
-        #region Properties
-
-        private ButtonContainer buttons;
-
-        #endregion Properties
-
         public MainMenu(GameContainer gameContainer)
         {
             this.buttons = new ButtonContainer();
@@ -39,24 +26,5 @@
                 button.OnButtonClick += gameContainer.ButtonHandler;
             }
         }
-
-        public event OnMouseHoverEventHandler OnMouseHover;
-
-        public event OnMouseClickEventHandler OnMouseClick;
-
-        #region Methods
-
-        public void Draw()
-        {
-            this.buttons.Draw();
-        }
-
-        public void Update(MouseState mouseState)
-        {
-            this.OnMouseHover?.Invoke(null, new MousePositionEventArgs(mouseState.X, mouseState.Y, mouseState));
-            this.OnMouseClick?.Invoke(null, new MousePositionEventArgs(mouseState.X, mouseState.Y, mouseState));
-        }
-
-        #endregion Methods
     }
 }
