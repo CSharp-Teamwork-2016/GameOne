@@ -6,6 +6,8 @@
     using System.Windows;
 
     using Entities;
+    using Interfaces;
+    using Enumerations;
 
     public static class PhysicsEngine
     {
@@ -17,6 +19,73 @@
         public const double ProjectileSpeed = 8;
 
         #region Methods
+
+        public static bool Intersect(ICollidable m1, ICollidable m2)
+        {
+            if (m1.CollisionShape == Shape.Circle)
+            {
+                if (m2.CollisionShape == Shape.Circle)
+                {
+                    return IntersectCircleCircle(m1, m2);
+                }
+                else if (m2.CollisionShape == Shape.Square)
+                {
+                    return IntersectCircleSquare(m1, m2);
+                }
+            }
+            else if (m1.CollisionShape == Shape.Square)
+            {
+                if (m2.CollisionShape == Shape.Circle)
+                {
+                    return IntersectCircleCircle(m2, m1);
+                }
+                else if (m2.CollisionShape == Shape.Square)
+                {
+                    return IntersectSquareSquare(m1, m2);
+                }
+            }
+            return false;
+        }
+
+        private static bool IntersectCircleCircle(ICollidable m1, ICollidable m2)
+        {
+            Vector separation = Vector.Subtract(m1.Position, m2.Position);
+            double dist = separation.Length;
+            double penetration = dist - (m1.Radius + m2.Radius);
+
+            if (penetration < 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IntersectCircleSquare(ICollidable circle, ICollidable square)
+        {
+            double tileHalf = 0.5;
+            double distX = Math.Abs(square.Position.X - circle.Position.X);
+            double distY = Math.Abs(square.Position.Y - circle.Position.Y);
+
+            if (distX > tileHalf + circle.Radius || distY > tileHalf + circle.Radius)
+            {
+                return false;
+            }
+            if (distX <= tileHalf + circle.Radius && distY <= tileHalf)
+            {
+                return true;
+            }
+            if (distX <= tileHalf && distY <= tileHalf + circle.Radius)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IntersectSquareSquare(ICollidable m1, ICollidable m2)
+        {
+            // We don't have movable squares yet, so even if they intersect, the collision can't be resolved
+            return false;
+        }
 
         public static void DetectCollisions(List<Model> models)
         {
