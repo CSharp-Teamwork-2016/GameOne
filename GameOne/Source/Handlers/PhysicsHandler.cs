@@ -44,6 +44,18 @@
             return velocity;
         }
 
+        public static void ResolveCollisions(ICollidable model1, ICollidable model2)
+        {
+            Vector? result = PhysicsEngine.Intersect(model1, model2);
+            if (result != null)
+            {
+                Resolve(model1, model2, result.Value);
+                Resolve(model2, model1, -result.Value);
+                model1.Respond(model2);
+                model2.Respond(model1);
+            }
+        }
+
         public static void ResolveCollisions(IList<ICollidable> models)
         {
             while (models.Count > 0)

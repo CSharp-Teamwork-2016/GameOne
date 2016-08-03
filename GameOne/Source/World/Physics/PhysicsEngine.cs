@@ -86,7 +86,7 @@
 
         public static Vector? IntersectCircleSquare(ICollidable circle, ICollidable rectangle)
         {
-            Vector separation = Vector.Subtract(rectangle.Position, circle.Position);
+            Vector separation = Vector.Subtract(circle.Position, rectangle.Position);
             double horizontalHalf = rectangle.BoundingBox.Width / 2;
             double verticalHalf = rectangle.BoundingBox.Height / 2;
 
