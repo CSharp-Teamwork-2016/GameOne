@@ -3,5 +3,6 @@
     public interface IRemovable
     {
         bool Alive { get; }
+        void Die();
     }
 }

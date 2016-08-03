@@ -4,7 +4,7 @@
     using System.Windows;
 
     using Enumerations;
-    using Events;
+    using EventArgs;
     using Interfaces;
     using World.Physics;
 
@@ -32,6 +32,8 @@
             this.Damage = damage;
             this.AttackType = attackType;
             this.timeToNextAction = 0;
+
+            this.IsSolid = true;
         }
 
         #endregion Constructors
@@ -77,7 +79,7 @@
 
         public bool IsSolid { get; private set; }
 
-        public CollisionResponse Response
+        public CollisionResponse CollisionResponse
         {
             get
             {
@@ -260,6 +262,8 @@
             // TODO: knockback should be opposite source position, not based on target direction
             this.velocity = -PhysicsEngine.NominalVelocity * PhysicsEngine.GetDirectedVector(this.Direction);
         }
+
+        public abstract void Respond(ICollidable model);
 
         #endregion Methods
     }

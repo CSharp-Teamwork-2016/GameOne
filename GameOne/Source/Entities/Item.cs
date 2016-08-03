@@ -11,14 +11,14 @@
             : base(x, y, direction, radius, sprite)
         {
             this.Type = type;
-            IsSolid = true;
+            IsSolid = false;
         }
 
         public ItemType Type { get; }
 
         public bool IsSolid { get; private set; }
 
-        public CollisionResponse Response
+        public CollisionResponse CollisionResponse
         {
             get
             {
@@ -37,6 +37,14 @@
         public void Collect()
         {
             this.state = State.DEAD;
+        }
+
+        public void Respond(ICollidable model)
+        {
+            if (model is Player)
+            {
+                this.Collect();
+            }
         }
     }
 }

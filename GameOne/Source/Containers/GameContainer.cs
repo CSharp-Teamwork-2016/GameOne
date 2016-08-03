@@ -11,12 +11,11 @@
     using Enumerations;
     using World;
     using Entities;
-    using Events;
-    using UI;
+    using EventArgs;
     using Handlers;
-    using SaveAndLoad;
+    using Interfaces.MainMenu;
+    using UI;
     using UI.MainMenu;
-    using UI.MainMenu.SaveGame;
 
     // Game contents
     // Level
@@ -31,16 +30,16 @@
         // Game objects
         private Level level;
         private readonly Input input;
-        private readonly EntityHandler entityHandler;
+        private EntityHandler entityHandler;
 
         // initial game state
         private GameState gameState = GameState.MainMenu;
 
-        private SaveGame saveGame;
-
-        //Save and Load
-        //SaveManager save;
-        //bool saved = false;
+        //Menu
+        private IMenu mainMenu;
+        private IMenu saveGame;
+        private IMenu loadGame;
+        private IMenu credits;
 
         #endregion Fields
 
@@ -52,18 +51,13 @@
             DebugInfo = string.Empty;
             Console = string.Empty;
             this.input = new Input(keyboardState, mouseState, this.level);
-            LevelEditor.Init(this.input, this.level);
-            this.MainMenu = new MainMenu(this);
-            this.saveGame = new SaveGame(this);
-            this.entityHandler = new EntityHandler(this.level);
-            this.entityHandler.Subscribe(this.level.Entities);
-            this.entityHandler.SubscribeToPlayer(this.level.Player);
-            this.level.Player.ExitTriggeredEvent += this.OnExitTriggered;
 
-            //string saveFolder = "SaveManagerTest"; // put your save folder name here
-            //string saveFile = "test.sav"; // put your save file name here
+            this.mainMenu = new MainMenu(this);
+            this.saveGame = new SaveGameMenu(this);
+            this.loadGame = new LoadGameMenu(this);
+            this.credits = new CreditsMenu(this);
 
-            //this.save = new StorageDeviceSaveManager(saveFolder, saveFile, PlayerIndex.One);
+            this.LevelSetters();
         }
 
         #endregion Constructors
@@ -77,8 +71,6 @@
 
         public static bool ShowFPS { get; set; }
 
-        public MainMenu MainMenu { get; }
-
         #endregion Properties
 
         #region Methods
@@ -88,13 +80,36 @@
             this.gameState = args.GameState;
         }
 
-        public void SaveButtonHandler(object sender, EventArgs args)
+        public void SaveButtonHandler(object sender, OnButtonClickEventArgs args)
         {
-            using (Stream stream = File.Open("save.bin", FileMode.Create))
+            using (Stream stream = File.Open(args.Name, FileMode.Create))
             {
                 BinaryFormatter bin = new BinaryFormatter();
                 bin.Serialize(stream, this.level);
             }
+        }
+
+        public void LoadButtonHandler(object sender, OnButtonClickEventArgs args)
+        {
+            using (Stream stream = File.Open(args.Name, FileMode.Open))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+
+                this.level = (Level)bin.Deserialize(stream);
+            }
+
+            this.LevelSetters();
+
+            this.gameState = GameState.Gameplay;
+        }
+
+        private void LevelSetters()
+        {
+            LevelEditor.Init(this.input, this.level);
+            this.entityHandler = new EntityHandler(this.level);
+            this.entityHandler.Subscribe(this.level.Entities);
+            this.entityHandler.SubscribeToPlayer(this.level.Player);
+            this.level.Player.ExitTriggeredEvent += this.OnExitTriggered;
         }
 
         private void OnExitTriggered(object sender, EventArgs e)
@@ -107,45 +122,36 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    this.MainMenu.Update(mouseState);
+                    this.mainMenu.Update(mouseState);
                     break;
                 case GameState.Gameplay:
-                    if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    {
-                        this.gameState = GameState.MainMenu;
-                    }
-                    else
-                    {
-                        this.GameUpdate(time, Keyboard.GetState(), Mouse.GetState());
-                    }
-
+                    this.GameUpdate(time, Keyboard.GetState(), Mouse.GetState());
                     break;
                 case GameState.LevelEditor:
-                    if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    {
-                        this.gameState = GameState.MainMenu;
-                    }
-                    else
-                    {
-                        LevelEditor.Update(time, Keyboard.GetState(), Mouse.GetState());
-                    }
-
+                    LevelEditor.Update(time, Keyboard.GetState(), Mouse.GetState());
                     break;
                 case GameState.EndOfGame:
                     // TODO
                     break;
                 case GameState.Credits:
+                    this.credits.Update(mouseState);
                     break;
                 case GameState.Exit:
                     Environment.Exit(1);
                     break;
                 case GameState.LoadGame:
+                    this.loadGame.Update(mouseState);
                     break;
                 case GameState.SaveGame:
                     this.saveGame.Update(mouseState);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                this.gameState = GameState.MainMenu;
             }
         }
 
@@ -167,7 +173,7 @@
                 this.entityHandler.Subscribe(this.level.Entities);
             }
 
-            this.entityHandler.ProcessEntities(time.ElapsedGameTime.Milliseconds/1000.0);
+            this.entityHandler.ProcessEntities(time.ElapsedGameTime.Milliseconds / 1000.0);
 
             // Execute tests
             foreach (Action test in Tests.ListOf.OnUpdate)
@@ -175,10 +181,10 @@
                 test();
             }
             // Debug info
-            DebugInfo = $"Player stats:{Environment.NewLine}State: {this.level.Player.State}{Environment.NewLine}Health: {this.level.Player.Health} / {this.level.Player.MaxHealth}{Environment.NewLine}Damage: {this.level.Player.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.level.Player.XpLevel}{Environment.NewLine}XP: {this.level.Player.Experience} / {this.level.Player.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies remaining: {this.level.EnemyCount}{Environment.NewLine}";
+            DebugInfo = $"Player stats:{Environment.NewLine}State: {this.level.Player.State}{Environment.NewLine}Health: {this.level.Player.Health} / {this.level.Player.MaxHealth}{Environment.NewLine}Damage: {this.level.Player.Damage}{Environment.NewLine}{Environment.NewLine}Level {this.level.Player.XpLevel}{Environment.NewLine}XP: {this.level.Player.Experience} / {this.level.Player.XpToNext}{Environment.NewLine}{Environment.NewLine}Enemies: {this.level.EnemyCount}{Environment.NewLine}";
             if (ShowFPS)
             {
-                DebugInfo += $"{(1000/time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}";
+                DebugInfo += $"{(1000 / time.ElapsedGameTime.TotalMilliseconds):f2}{Environment.NewLine}";
             }
         }
 
@@ -212,11 +218,11 @@
             switch (this.gameState)
             {
                 case GameState.MainMenu:
-                    this.MainMenu.Draw();
+                    this.mainMenu.Draw();
                     //Output.Draw(this.MainMenu.CurrentScreen, Vector2.Zero);
                     break;
                 case GameState.Gameplay:
-                    double hpc = (double) this.level.Player.Health/this.level.Player.MaxHealth;
+                    double hpc = (double)this.level.Player.Health / this.level.Player.MaxHealth;
                     UserInterface.DrawSideBar(hpc, this.level.Player.HealthPotions, Level.CurrentLevel);
                     this.level.Geometry.ForEach(Primitive.DrawTileMini);
                     Primitive.DrawModelMini(this.level.Player);
@@ -237,10 +243,12 @@
                     // TODO
                     break;
                 case GameState.Credits:
+                    this.credits.Draw();
                     break;
                 case GameState.Exit:
                     break;
                 case GameState.LoadGame:
+                    this.loadGame.Draw();
                     break;
                 case GameState.SaveGame:
                     this.saveGame.Draw();
@@ -255,7 +263,7 @@
             this.level.Geometry.ForEach(Primitive.DrawTile);
             foreach (var entity in this.level.Entities.Where(e => e is Model))
             {
-                var model = (Model) entity;
+                var model = (Model)entity;
                 Primitive.DrawModel(model);
             }
         }
@@ -263,7 +271,7 @@
         private void RendeGrid()
         {
             this.level.Geometry.ForEach(Primitive.DrawGrid);
-            Tile target = new Tile((int) Primitive.ToWorldX(this.input.MouseX), (int) Primitive.ToWorldY(this.input.MouseY), LevelEditor.CurrentTile);
+            Tile target = new Tile((int)Primitive.ToWorldX(this.input.MouseX), (int)Primitive.ToWorldY(this.input.MouseY), LevelEditor.CurrentTile);
             Primitive.DrawTile(target);
         }
 

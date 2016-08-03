@@ -1,4 +1,4 @@
-﻿namespace GameOne.Source.Events
+﻿namespace GameOne.Source.EventArgs
 {
     using System;
 

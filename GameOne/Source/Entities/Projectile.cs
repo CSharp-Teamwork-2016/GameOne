@@ -22,7 +22,7 @@
         {
             this.Source = source;
             this.velocity = velocity;
-            this.IsSolid = true;
+            this.IsSolid = false;
         }
 
         #endregion Constructors
@@ -45,7 +45,7 @@
 
         public bool IsSolid { get; private set; }
 
-        public CollisionResponse Response
+        public CollisionResponse CollisionResponse
         {
             get
             {
@@ -70,5 +70,13 @@
         }
 
         #endregion Properties
+
+        public void Respond(ICollidable model)
+        {
+            if (model is Enemy && this.Source is Enemy) return;
+            if (model is Player && this.Source is Player) return;
+            if (!model.IsSolid) return;
+            Die();
+        }
     }
 }

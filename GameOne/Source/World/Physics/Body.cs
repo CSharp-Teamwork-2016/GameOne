@@ -5,10 +5,12 @@
 
     public class Body : IPhysicsBody
     {
-        public double Direction { get; protected set; }
+        public double Direction { get; set; }
 
         public Vector Position { get; set; }
 
-        public double Radius { get; private set; }
+        public double Radius { get; set; }
+
+        public Rect BoundingBox { get; set; }
     }
 }

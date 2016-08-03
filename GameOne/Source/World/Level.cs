@@ -48,6 +48,8 @@
 
         public List<Tile> Geometry { get; private set; }
 
+        public List<Tile> Walls { get; private set; }
+
         public List<Entity> Entities { get; private set; }
 
         public Player Player { get; }
@@ -88,10 +90,18 @@
             this.Geometry = this.generator.Tiles.Values.ToList();
             this.geometryMap = this.generator.Tiles;
 
+            this.Walls = new List<Tile>();
             this.validFloor = new List<Tile>();
-            foreach (Tile tile in this.Geometry.Where(t => t.TileType == TileType.Floor))
+            foreach (Tile tile in this.Geometry)
             {
-                this.validFloor.Add(tile);
+                if (tile.TileType == TileType.Floor)
+                {
+                    this.validFloor.Add(tile);
+                }
+                else if(tile.TileType == TileType.Wall)
+                {
+                    this.Walls.Add(tile);
+                }
             }
         }
 

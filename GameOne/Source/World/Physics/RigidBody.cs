@@ -5,36 +5,22 @@
 
     public class RigidBody : Body, ICollidable
     {
-        private bool isSolid;
-        private readonly CollisionResponse collisionResponse;
-        private readonly Shape collisionShape;
+        public bool IsSolid { get; set; }
 
-        public bool IsSolid
+        public CollisionResponse CollisionResponse { get; set; }
+
+        public bool Alive => true;
+
+        public Shape CollisionShape { get; set; }
+
+        public void Respond(ICollidable model)
         {
-            get
-            {
-                return this.isSolid;
-            }
-            set
-            {
-                this.isSolid = value;
-            }
+
         }
 
-        public CollisionResponse Response
+        public void Die()
         {
-            get
-            {
-                return this.collisionResponse;
-            }
-        }
 
-        public Shape CollisionShape
-        {
-            get
-            {
-                return this.collisionShape;
-            }
         }
     }
 }

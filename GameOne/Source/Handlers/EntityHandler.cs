@@ -8,7 +8,7 @@
     using Entities;
     using Entities.Zones;
     using Enumerations;
-    using Events;
+    using EventArgs;
     using Factories;
     using Interfaces;
     using World;
@@ -30,8 +30,14 @@
 
         public void ProcessEntities(double time)
         {
-            foreach (var entity in level.Entities)
+            // Hot pipeline
+            for (int i = 0; i < level.Entities.Count; i++)
             {
+                Entity entity = level.Entities[i];
+                if (!entity.Alive)
+                {
+                    continue;
+                }
                 // Update internal state
                 if (entity is IUpdatable)
                 {
@@ -42,6 +48,51 @@
                 {
                     PhysicsHandler.UpdateMovement(((IMovable)entity), time);
                 }
+                // Collision detection
+                if (entity is ICollidable)
+                {
+                    // Against entities
+                    for (int j = i + 1; j < level.Entities.Count; j++)
+                    {
+                        if (!level.Entities[j].Alive || !(level.Entities[j] is ICollidable))
+                        {
+                            continue;
+                        }
+                        PhysicsHandler.ResolveCollisions((ICollidable)entity, (ICollidable)level.Entities[j]);
+                    }
+                    // Against geometry
+                    for (int k = 0; k < level.Walls.Count; k++)
+                    {
+                        if (Math.Abs(((ICollidable)entity).Position.X - level.Walls[k].X) > 2 ||
+                            Math.Abs(((ICollidable)entity).Position.Y - level.Walls[k].Y) > 2) continue;
+                        PhysicsHandler.ResolveCollisions((ICollidable)entity, level.Walls[k]);
+                    }
+                }
+            }
+            /*
+            IList<ICollidable> collisionList = new List<ICollidable>();
+
+            foreach (var entity in level.Entities)
+            {
+                if (!entity.Alive)
+                {
+                    continue;
+                }
+                // Update internal state
+                if (entity is IUpdatable)
+                {
+                    ((IUpdatable)entity).Update(time);
+                }
+                // Update physical state
+                if (entity is IMovable)
+                {
+                    PhysicsHandler.UpdateMovement(((IMovable)entity), time);
+                }
+                // Add to collision list
+                if (entity is ICollidable)
+                {
+                    collisionList.Add((ICollidable)entity);
+                }
             }
             // Update damage zones
             foreach (var zone in damageZones)
@@ -49,15 +100,12 @@
                 zone.Update(time);
             }
 
-            PhysicsEngine.DetectCollisions(level.Entities
-                    .OfType<Model>()
-                    .Where(e => e.Alive)
-                    .ToList());
-
-            var modelEntitiesTo = level.Entities.OfType<Model>().ToList();
+            // Collision check
+            var modelEntitiesTo = new List<ICollidable>(collisionList);
+            PhysicsHandler.ResolveCollisions(collisionList);
             var tileWalls = level.Geometry.Where(tile => tile.TileType == TileType.Wall).ToList();
-
             PhysicsEngine.BoundsCheck(modelEntitiesTo, tileWalls);
+            */
 
             // Add projectile entities to list
             foreach (var item in this.register)

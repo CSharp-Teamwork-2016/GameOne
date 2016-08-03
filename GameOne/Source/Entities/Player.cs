@@ -4,6 +4,7 @@
     using Enumerations;
     using Renderer;
     using Factories;
+    using Interfaces;
 
     [Serializable]
     public class Player : Character
@@ -114,6 +115,25 @@
             this.Knockback();
         }
 
+        public override void Respond(ICollidable model)
+        {
+            if (model is Enemy)
+            {
+                this.TakeDamage(((Enemy)model).Damage);
+            }
+            else if (model is Item)
+            {
+                this.PickUpItem(((Item)model).Type);
+            }
+            else if (model is Projectile)
+            {
+                if (((Projectile)model).Source is Enemy)
+                {
+                    this.TakeDamage(((Projectile)model).Source.Damage);
+                }
+            }
+        }
+
         public void Respawn()
         {
             this.state = State.IDLE;
@@ -122,7 +142,7 @@
 
         internal void Input(UserInput input)
         {
-            if ((this.state & State.HURT) == State.HURT)
+            if (this.state.HasFlag(State.HURT))
             {
                 return; // don't let the player move if he's hit
             }

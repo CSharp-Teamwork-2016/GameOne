@@ -4,8 +4,8 @@
     using System.Collections.Generic;
 
     using Enumerations;
+    using EventArgs;
     using Interfaces;
-    using Events;
 
     [Serializable]
     public abstract class Enemy : Character
@@ -61,6 +61,17 @@
             base.Die();
             KilledEventArgs args = new KilledEventArgs(this.xpAward);
             KilledEvent(this, args);
+        }
+
+        public override void Respond(ICollidable model)
+        {
+            if (model is Projectile)
+            {
+                if (((Projectile)model).Source is Player)
+                {
+                    this.TakeDamage(((Projectile)model).Source.Damage);
+                }
+            }
         }
 
         #region Methods/Behaviour

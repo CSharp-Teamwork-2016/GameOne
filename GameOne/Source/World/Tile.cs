@@ -1,10 +1,12 @@
 ﻿namespace GameOne.Source.World
 {
     using Enumerations;
+    using Interfaces;
     using System;
+    using System.Windows;
 
     [Serializable]
-    public class Tile
+    public class Tile : ICollidable
     {
         // 1x1 square from the playable level
         // Can be either transparent (floor, no collisions), opaque (walls) or clip (mobs collide, projectiles and effects pass trough)
@@ -17,7 +19,6 @@
         private int id;
 
         private bool transparent;
-        private string texture; // TODO
 
         #endregion Fields
 
@@ -30,18 +31,51 @@
             this.id = nextId++;
             this.TileType = tileType;
             this.transparent = transparent;
-            // this.texture = textureName;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public double X { get; }
+        public double X { get; private set; }
 
-        public double Y { get; }
+        public double Y { get; private set; }
 
         public TileType TileType { get; set; }
+
+        public bool IsSolid => true;
+
+        public CollisionResponse CollisionResponse => CollisionResponse.Immovable;
+
+        public Shape CollisionShape => Shape.Rectangle;
+
+        public double Direction => 0;
+
+        public Vector Position
+        {
+            get
+            {
+                return new Vector(this.X, this.Y);
+            }
+
+            set
+            {
+                this.X = value.X;
+                this.Y = value.Y;
+            }
+        }
+
+        public double Radius => 0.5;
+
+        public Rect BoundingBox
+        {
+            get
+            {
+                return new Rect(this.X - 0.5, this.Y - 0.5, 1, 1);
+            }
+        }
+
+        public bool Alive => true;
 
         #endregion Properties
 
@@ -55,6 +89,14 @@
         public bool IsTransparent()
         {
             return this.transparent;
+        }
+
+        public void Respond(ICollidable model)
+        {
+        }
+
+        public void Die()
+        {
         }
 
         #endregion Methods
