@@ -12,8 +12,8 @@
     {
         #region Fields
 
-        private double elapsedTime;
-        private double nextTime;
+        protected double elapsedTime;
+        protected double nextTime;
         protected Queue<Action> pattern;
         private readonly EnemyType type;
         private readonly int xpAward;
@@ -60,7 +60,7 @@
         {
             base.Die();
             KilledEventArgs args = new KilledEventArgs(this.xpAward);
-            KilledEvent(this, args);
+            KilledEvent?.Invoke(this, args);
         }
 
         public override void Respond(ICollidable model)
@@ -101,7 +101,7 @@
             this.PrepareNext(0, -0.5);
         }
 
-        private void PrepareNext(double delay = 0, double extend = 0)
+        protected virtual void PrepareNext(double delay = 0, double extend = 0)
         {
             this.elapsedTime = 0;
             this.nextTime = World.LevelMaker.RandDouble(0 + delay, 1 + delay + extend);

@@ -12,7 +12,7 @@
     using Factories;
     using Interfaces;
     using World;
-    using World.Physics;
+    using Entities.Enemies;
 
     public class EntityHandler
     {
@@ -69,45 +69,14 @@
                     }
                 }
             }
-            /*
-            IList<ICollidable> collisionList = new List<ICollidable>();
 
-            foreach (var entity in level.Entities)
-            {
-                if (!entity.Alive)
-                {
-                    continue;
-                }
-                // Update internal state
-                if (entity is IUpdatable)
-                {
-                    ((IUpdatable)entity).Update(time);
-                }
-                // Update physical state
-                if (entity is IMovable)
-                {
-                    PhysicsHandler.UpdateMovement(((IMovable)entity), time);
-                }
-                // Add to collision list
-                if (entity is ICollidable)
-                {
-                    collisionList.Add((ICollidable)entity);
-                }
-            }
             // Update damage zones
             foreach (var zone in damageZones)
             {
                 zone.Update(time);
             }
 
-            // Collision check
-            var modelEntitiesTo = new List<ICollidable>(collisionList);
-            PhysicsHandler.ResolveCollisions(collisionList);
-            var tileWalls = level.Geometry.Where(tile => tile.TileType == TileType.Wall).ToList();
-            PhysicsEngine.BoundsCheck(modelEntitiesTo, tileWalls);
-            */
-
-            // Add projectile entities to list
+            // Add registered entities to list
             foreach (var item in this.register)
             {
                 level.Entities.Add(item);
@@ -161,6 +130,11 @@
             player.AttackEvent += this.RegisterAttack;
         }
 
+        public void SubscribeToBoss(object boss)
+        {
+            ((Harvester)boss).BossActionHandler += OnBossAction;
+        }
+
         private void RemoveDead(List<Entity> entities)
         {
             List<Entity> result = entities.Where(e => !e.Alive).ToList();
@@ -208,6 +182,23 @@
         {
             this.level.EnemySlain();
             this.level.Player.GainXP(e.XpAward);
+        }
+        
+        private void OnBossAction(object caller, BossActionArgs args)
+        {
+            switch (args.Action)
+            {
+                case BossAction.RaiseChargers:
+                    Enemy charger1 = EnemyFactory.MakeEnemy(args.X - 4, args.Y - 4, EnemyType.Charger, 4);
+                    Enemy charger2 = EnemyFactory.MakeEnemy(args.X + 4, args.Y - 4, EnemyType.Charger, 4);
+                    Enemy charger3 = EnemyFactory.MakeEnemy(args.X - 4, args.Y + 4, EnemyType.Charger, 4);
+                    Enemy charger4 = EnemyFactory.MakeEnemy(args.X + 4, args.Y + 4, EnemyType.Charger, 4);
+                    register.Add(charger1);
+                    register.Add(charger2);
+                    register.Add(charger3);
+                    register.Add(charger4);
+                    break;
+            }
         }
     }
 }

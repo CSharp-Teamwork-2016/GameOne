@@ -29,6 +29,9 @@
                 case EnemyType.Charger:
                     enemy = new Charger(x, y, direction, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Character), hpModifier, damageModifier, hpModifier);
                     break;
+                case EnemyType.Harvester:
+                    enemy = new Harvester(x, y, direction, RenderingStrategyFactory.MakeStrategy(RenderingMethod.Character), hpModifier, damageModifier, hpModifier);
+                    break;
                 default:
                     throw new ArgumentException("Unrecognized enemy type.");
             }
