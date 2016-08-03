@@ -42,12 +42,12 @@
                 {
                     result = IntersectCircleCircle(m1, m2);
                 }
-                else if (m2.CollisionShape == Shape.Square)
+                else if (m2.CollisionShape == Shape.Rectangle)
                 {
                     result = IntersectCircleSquare(m1, m2);
                 }
             }
-            else if (m1.CollisionShape == Shape.Square)
+            else if (m1.CollisionShape == Shape.Rectangle)
             {
                 if (m2.CollisionShape == Shape.Circle)
                 {
@@ -55,7 +55,7 @@
                     result = IntersectCircleSquare(m2, m1);
                     result?.Negate();
                 }
-                else if (m2.CollisionShape == Shape.Square)
+                else if (m2.CollisionShape == Shape.Rectangle)
                 {
                     result = aabb; // Already confirmed in preliminary check
                 }
@@ -84,31 +84,31 @@
             return null;
         }
 
-        public static Vector? IntersectCircleSquare(ICollidable circle, ICollidable square)
+        public static Vector? IntersectCircleSquare(ICollidable circle, ICollidable rectangle)
         {
-            Vector separation = Vector.Subtract(circle.Position, square.Position);
-            double horizontalHalf = square.BoundingBox.Width / 2;
-            double verticalHalf = square.BoundingBox.Height / 2;
+            Vector separation = Vector.Subtract(rectangle.Position, circle.Position);
+            double horizontalHalf = rectangle.BoundingBox.Width / 2;
+            double verticalHalf = rectangle.BoundingBox.Height / 2;
 
             if (Math.Abs(separation.X) <= horizontalHalf + circle.Radius && Math.Abs(separation.Y) <= verticalHalf)
             {
-                double penetration = separation.Length - (horizontalHalf + circle.Radius);
-                separation.Normalize();
-                separation *= penetration;
+                double penetration = Math.Abs(separation.X) - (horizontalHalf + circle.Radius);
+                if (separation.X < 0) penetration *= -1;
+                separation = new Vector(penetration, 0);
                 return separation;
             }
             if (Math.Abs(separation.X) <= horizontalHalf && Math.Abs(separation.Y) <= verticalHalf + circle.Radius)
             {
-                double penetration = separation.Length - (verticalHalf + circle.Radius);
-                separation.Normalize();
-                separation *= penetration;
+                double penetration = Math.Abs(separation.Y) - (verticalHalf + circle.Radius);
+                if (separation.Y < 0) penetration *= -1;
+                separation = new Vector(0, penetration);
                 return separation;
             }
             // Find closest vertex
-            double px1 = Math.Abs(square.BoundingBox.X - circle.Position.X);
-            double py1 = Math.Abs(square.BoundingBox.Y - circle.Position.Y);
-            double px2 = Math.Abs(square.BoundingBox.Right - circle.Position.X);
-            double py2 = Math.Abs(square.BoundingBox.Bottom - circle.Position.Y);
+            double px1 = Math.Abs(rectangle.BoundingBox.X - circle.Position.X);
+            double py1 = Math.Abs(rectangle.BoundingBox.Y - circle.Position.Y);
+            double px2 = Math.Abs(rectangle.BoundingBox.Right - circle.Position.X);
+            double py2 = Math.Abs(rectangle.BoundingBox.Bottom - circle.Position.Y);
             double cornerX = Math.Min(px1, px2);
             double cornerY = Math.Min(py1, py2);
             Vector distCorner = new Vector(cornerX, cornerY);
@@ -142,15 +142,15 @@
             return result;
         }
 
-        public static void BoundsCheck(List<Model> models, List<Tile> tiles)
+        public static void BoundsCheck(List<ICollidable> models, List<Tile> tiles)
         {
-            foreach (Model model in models)
+            foreach (var model in models)
             {
                 Wallscan(model, tiles);
             }
         }
 
-        private static void Wallscan(Model current, List<Tile> tiles)
+        private static void Wallscan(ICollidable current, List<Tile> tiles)
         {
             foreach (Tile tile in tiles)
             {
@@ -158,7 +158,7 @@
             }
         }
 
-        private static void VrfyBounds(Model model, Tile tile)
+        private static void VrfyBounds(ICollidable model, Tile tile)
         {
             double tileHalf = 0.5; // this may have to change, if we start checking irregular boundaries
             double distX = Math.Abs(tile.X - model.Position.X);

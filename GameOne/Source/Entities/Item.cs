@@ -11,7 +11,7 @@
             : base(x, y, direction, radius, sprite)
         {
             this.Type = type;
-            IsSolid = true;
+            IsSolid = false;
         }
 
         public ItemType Type { get; }

@@ -142,7 +142,7 @@
 
         internal void Input(UserInput input)
         {
-            if ((this.state & State.HURT) == State.HURT)
+            if (this.state.HasFlag(State.HURT))
             {
                 return; // don't let the player move if he's hit
             }

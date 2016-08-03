@@ -49,15 +49,14 @@
             while (models.Count > 0)
             {
                 ICollidable current = models[models.Count - 1];
-                models.Remove(current);
+                models.RemoveAt(models.Count - 1);
                 foreach (var model in models)
                 {
                     Vector? result = PhysicsEngine.Intersect(current, model);
                     if (result != null)
                     {
-                        Vector remainder = Resolve(current, (Vector)result);
-                        remainder.Negate();
-                        Resolve(model, remainder);
+                        Resolve(current, model, (Vector)result);
+                        Resolve(model, current, -(Vector)result);
                         current.Respond(model);
                         model.Respond(current);
                     }
@@ -65,24 +64,26 @@
             }
         }
 
-        private static Vector Resolve(ICollidable model, Vector penetration)
+        private static void Resolve(ICollidable current, ICollidable model, Vector penetration)
         {
-            switch (model.CollisionResponse)
+            switch (current.CollisionResponse)
             {
-                case CollisionResponse.DestroyOnImpact:
-                    return penetration;
                 case CollisionResponse.Ignore:
-                    return new Vector(0,0);
+                    return;
                 case CollisionResponse.Immovable:
-                    return penetration;
+                    return;
+                case CollisionResponse.DestroyOnImpact:
+                    return;
                 case CollisionResponse.PickUp:
-                    return new Vector(0, 0);
+                    return;
                 case CollisionResponse.Project:
-                    penetration *= 0.5;
-                    model.Position -= penetration;
-                    return penetration;
+                    if (model.CollisionResponse == CollisionResponse.Project)
+                    {
+                        penetration *= 0.5;
+                    }
+                    current.Position -= penetration;
+                    return;
             }
-            return penetration;
         }
     }
 }

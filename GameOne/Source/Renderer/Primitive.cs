@@ -17,7 +17,7 @@
         #region Fields
 
         private const int Cameraxmodifier = 300;
-        private const int Cameraymodifier = 200;
+        private const int Cameraymodifier = 240;
         private const int GridSize = 40;
         private const int MiniMapSize = 3;
 
@@ -65,6 +65,21 @@
 
         #region Methods
 
+        public static bool OnScreen(double x, double y)
+        {
+            x = x * GridSize + CameraX - Cameraxmodifier;
+            y = y * GridSize + CameraY - Cameraymodifier;
+            if (x < -(Cameraxmodifier + GridSize) || x > Cameraxmodifier + GridSize)
+            {
+                return false;
+            }
+            if (y < -(Cameraymodifier + GridSize) || y > Cameraymodifier + GridSize)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static void PanCameraUp(double dist)
         {
             cameraY += dist;
@@ -87,6 +102,7 @@
 
         public static void DrawTile(Tile tile)
         {
+            if (!OnScreen(tile.X, tile.Y)) return;
             double left = (tile.X - 0.5) * GridSize;
             double top = (tile.Y - 0.5) * GridSize;
             double width = GridSize;
@@ -99,6 +115,7 @@
 
         public static void DrawGrid(Tile tile)
         {
+            if (!OnScreen(tile.X, tile.Y)) return;
             double left = (tile.X - 0.5) * GridSize;
             double top = (tile.Y - 0.5) * GridSize;
             double width = GridSize;
@@ -110,6 +127,7 @@
 
         public static void DrawModel(Model model)
         {
+            if (!OnScreen(model.Position.X, model.Position.Y)) return;
             if (model.State == State.DEAD)
             {
                 return;
