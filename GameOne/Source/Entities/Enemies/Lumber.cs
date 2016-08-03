@@ -7,7 +7,7 @@
     [Serializable]
     public class Lumber : Enemy
     {
-        private const double LumberRadius = 0.5;
+        private const double LumberRadius = 0.45;
         private const int LumberHealth = 150;
         private const int LumberDamage = 10;
         private const AttackType LumberAttackType = AttackType.Melee;

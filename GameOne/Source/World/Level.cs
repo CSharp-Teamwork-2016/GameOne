@@ -6,6 +6,7 @@
     using Entities;
     using Enumerations;
     using Factories;
+    using EventArgs;
 
     [Serializable]
     public class Level
@@ -37,6 +38,9 @@
         }
 
         #endregion Constructors
+
+        [field: NonSerialized]
+        public event EventHandler SpawnBossHandler;
 
         #region Properties
 
@@ -85,6 +89,7 @@
         {
             this.Entities.Add(this.ExitPortal);
         }
+
         private void GenerateGeometry()
         {
             this.Geometry = this.generator.Tiles.Values.ToList();
@@ -229,6 +234,15 @@
             foreach (Room room in rooms)
             {
                 this.SpawnEnemies(room);
+            }
+
+            // Final boss
+            if (CurrentLevel == 10)
+            {
+                Enemy boss = EnemyFactory.MakeEnemy(end.Room.OriginX, end.Room.OriginY, EnemyType.Harvester, 0);
+                this.SpawnBossHandler(boss, EventArgs.Empty);
+                Entities.Add(boss);
+                EnemyCount++;
             }
         }
 

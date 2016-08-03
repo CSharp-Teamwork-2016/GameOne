@@ -5,6 +5,7 @@
         Zombie,
         Sentry,
         Lumber,
-        Charger
+        Charger,
+        Harvester
     }
 }

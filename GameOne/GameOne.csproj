@@ -43,6 +43,7 @@
     <Compile Include="Source\Containers\ButtonContainer.cs" />
     <Compile Include="Source\Entities\Character.cs" />
     <Compile Include="Source\Entities\Enemies\Charger.cs" />
+    <Compile Include="Source\Entities\Enemies\Harvester.cs" />
     <Compile Include="Source\Entities\Enemies\Lumber.cs" />
     <Compile Include="Source\Entities\Enemies\Sentry.cs" />
     <Compile Include="Source\Entities\Enemies\Zombie.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Source\Entities\Zones\DamageZone.cs" />
     <Compile Include="Source\Enumerations\ActionAI.cs" />
     <Compile Include="Source\Enumerations\AttackType.cs" />
+    <Compile Include="Source\Enumerations\BossAction.cs" />
     <Compile Include="Source\Enumerations\CollisionResponse.cs" />
     <Compile Include="Source\Enumerations\EnemyRank.cs" />
     <Compile Include="Source\Enumerations\EnemyType.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Source\Enumerations\State.cs" />
     <Compile Include="Source\Enumerations\TileType.cs" />
     <Compile Include="Source\Enumerations\UserInput.cs" />
+    <Compile Include="Source\EventArgs\BossActionArgs.cs" />
     <Compile Include="Source\EventArgs\KilledEventArgs.cs" />
     <Compile Include="Source\EventArgs\MeleeAttackEventArgs.cs" />
     <Compile Include="Source\EventArgs\OnButtonClickEventArgs.cs" />

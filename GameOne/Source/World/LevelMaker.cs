@@ -14,8 +14,8 @@
     {
         #region Fields
 
-        public const int Minsize = 7;
-        public const int Maxsize = 15;
+        public static int Minsize = 7;
+        public static int Maxsize = 15;
         public const float Minratio = 0.33f;
         public const float Maxratio = 0.66f;
         public const int Hallsize = 5;
@@ -99,7 +99,14 @@
         {
             this.Depth += (int)Math.Max(2, this.Depth * 0.2);
             this.CalcSize();
-            this.MakeLevel();
+            if (this.Depth == 10)
+            {
+                this.MakeBossLevel();
+            }
+            else
+            {
+                this.MakeLevel();
+            }
             return this.Depth;
         }
 
@@ -123,6 +130,20 @@
             this.ProcessTiles();
             // SetTransparancy();
         }
+
+        public void MakeBossLevel()
+        {
+            this.Root = new Partition(0, 0, 20, 35, null);
+            Minsize = 12;
+            Maxsize = 15;
+            this.Root.TrySplit();
+            this.Root.MakeRoom();
+            this.Root.MakeHallway();
+            this.ProcessTiles();
+            Minsize = 7;
+            Maxsize = 15;
+        }
+
 
         // Extract geometry
         public List<Partition> GetBsp()

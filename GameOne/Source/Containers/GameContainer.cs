@@ -48,6 +48,7 @@
         public GameContainer(KeyboardState keyboardState, MouseState mouseState)
         {
             this.level = new Level();
+            this.level.SpawnBossHandler += RegisterBoss;
             DebugInfo = string.Empty;
             Console = string.Empty;
             this.input = new Input(keyboardState, mouseState, this.level);
@@ -101,6 +102,11 @@
             this.LevelSetters();
 
             this.gameState = GameState.Gameplay;
+        }
+
+        public void RegisterBoss(object sender, EventArgs args)
+        {
+            this.entityHandler.SubscribeToBoss(sender);
         }
 
         private void LevelSetters()
